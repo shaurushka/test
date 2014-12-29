@@ -26,6 +26,7 @@
 
 \ProcessOptions
 
+\RequirePackage{cmap}
 \RequirePackage[cp1251]{inputenc}
 %\RequirePackage[T2A]{fontenc}
 \RequirePackage{amssymb}
@@ -34,6 +35,7 @@
 \RequirePackage{euscript}
 \RequirePackage{upgreek}
 \RequirePackage[english,russian]{babel}
+\RequirePackage[displaymath,mathlines]{lineno}
 \RequirePackage{array}
 \RequirePackage{theorem}
 \RequirePackage[ruled]{algorithm}
@@ -54,6 +56,7 @@
 %\RequirePackage[colorlinks,urlcolor=blue]{hyperref}
 \RequirePackage{makeidx}
 \RequirePackage{pb-diagram}
+\RequirePackage{subfig}
 %\RequirePackage{lamsarrow, pb-lams, stmaryrd}  %% Gurov
 %% Двухколоночный набор:
 \RequirePackage{balance}  %% неверно обрабатываются сноски на балансируемой странице
@@ -66,6 +69,8 @@
 
 \renewcommand{\baselinestretch}{1}
 %\renewcommand{\baselinestretch}{1.1} %для печати с большим интервалом
+
+\renewcommand{\thesubfigure}{\asbuk{subfigure}}
 
 % Для A5
 %\textheight=175mm
@@ -132,7 +137,8 @@
 \newcommand\typeTocAuthorTitle[2]{{\unstretchspaces\itshape #1}\\ #2}
 \newcommand\typeAbstract[1]{%
     \par\vskip\vskipAfterTitle
-    \noindent\parbox{159.3mm}{\small #1}%
+    \noindent%\parbox{159.3mm}%
+    \begin{quotation}{\small #1}\end{quotation}%
 }
 
 % Вывод заголовка
@@ -148,7 +154,7 @@
     \def\@makefntext##1{\noindent $\m@th ^{\@thefnmark}$##1}%
     % вывод одноколоночного заголовка статьи, включая аннотацию
 %    \twocolumn[%
-        \parbox{\textwidth}{%
+        %\parbox{\textwidth}{%
             \begin{center}%
                 \vskip-6ex\vskip\vskipBeforeTitle%
                 %--------- основной заголовок
@@ -187,7 +193,7 @@
                 }}%
             \end{center}%
             \vskip-2ex\vskip\vskipAfterTitle
-        }%
+        %}%
 %    ]%
     % помещение сноски вниз страницы
     \ifthenelse{\equal{\@thanks@grant}{}}{}{\footnotetext{\@thanks@grant}}%
@@ -348,14 +354,14 @@
 \newcommand{\abstractRus}[1]{\gdef\@abstract@rus{{#1}}}
 
 % Библиографическая запись текущей статьи
-\def\paper@record{{%
+\def\paper@record{{
     %\textit{\@author} \@title~//
     \Russian
-    Машинное обучение и анализ данных, 2012. Т.\,1, \No\,4.\\
+    Машинное обучение и анализ данных, 2014. Т.\,1, \No\,10.\\
     \English
-    Machine Learning and Data Analysis, 2012. Vol.\,1\,(4).}%
-    %М.:~МАКС Пресс, 2009~---
-    %С.\,\globalpageref{\@paper@name:begin}--\globalpageref{\@paper@name:end}.
+    Machine Learning and Data Analysis, 2014. Vol.\,1\,(10).}
+%    %М.:~МАКС Пресс, 2009~---
+%    %С.\,\globalpageref{\@paper@name:begin}--\globalpageref{\@paper@name:end}.
 }
 
 % Оформление аннотации
@@ -394,7 +400,7 @@
 % Настройка разделов
 % INTERFACE
 \newcommand\typeSection[1]{%
-    \medskip
+    \bigskip
     \hangindent=3.5ex
     \hangafter=-6\noindent
     {\large\sffamily\bfseries #1}%
@@ -402,7 +408,7 @@
 }
 % INTERFACE
 \newcommand\typeParagraph[1]{%
-    \smallskip{\normalfont\rmfamily\bfseries #1 }%
+    \medskip{\normalfont\rmfamily\bfseries #1 }%
 }
 % INTERFACE
 \newcommand\typeChapter[3]{%
@@ -494,6 +500,7 @@
 %\def\BibUrl#1{\\{\footnotesize\url{http://#1}}}
 \def\BibAuthor#1{\emph{#1}}
 \def\BibTitle#1{{#1}}
+\def\BibJournal#1{\emph{#1}}
 %\def\BibTitle#1{}  % Возможно, названия потом уберут везде
 \def\BibUrl#1{{\small\url{#1}}}
 \def\BibHttp#1{{\small\url{http://#1}}}
