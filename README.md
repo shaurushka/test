@@ -26,6 +26,7 @@
 
 \ProcessOptions
 
+\RequirePackage{cmap}
 \RequirePackage[cp1251]{inputenc}
 %\RequirePackage[T2A]{fontenc}
 \RequirePackage{amssymb}
@@ -34,7 +35,7 @@
 \RequirePackage{euscript}
 \RequirePackage{upgreek}
 \RequirePackage[english,russian]{babel}
-\RequirePackage[displaymath,mathlines]{lineno} 
+\RequirePackage[displaymath,mathlines]{lineno}
 \RequirePackage{array}
 \RequirePackage{theorem}
 \RequirePackage[ruled]{algorithm}
@@ -136,7 +137,8 @@
 \newcommand\typeTocAuthorTitle[2]{{\unstretchspaces\itshape #1}\\ #2}
 \newcommand\typeAbstract[1]{%
     \par\vskip\vskipAfterTitle
-    \noindent\parbox{159.3mm}{\small #1}%
+    \noindent%\parbox{159.3mm}%
+    \begin{quotation}{\small #1}\end{quotation}%
 }
 
 % Вывод заголовка
@@ -152,7 +154,7 @@
     \def\@makefntext##1{\noindent $\m@th ^{\@thefnmark}$##1}%
     % вывод одноколоночного заголовка статьи, включая аннотацию
 %    \twocolumn[%
-        \parbox{\textwidth}{%
+        %\parbox{\textwidth}{%
             \begin{center}%
                 \vskip-6ex\vskip\vskipBeforeTitle%
                 %--------- основной заголовок
@@ -191,7 +193,7 @@
                 }}%
             \end{center}%
             \vskip-2ex\vskip\vskipAfterTitle
-        }%
+        %}%
 %    ]%
     % помещение сноски вниз страницы
     \ifthenelse{\equal{\@thanks@grant}{}}{}{\footnotetext{\@thanks@grant}}%
@@ -398,7 +400,7 @@
 % Настройка разделов
 % INTERFACE
 \newcommand\typeSection[1]{%
-    \medskip
+    \bigskip
     \hangindent=3.5ex
     \hangafter=-6\noindent
     {\large\sffamily\bfseries #1}%
@@ -406,7 +408,7 @@
 }
 % INTERFACE
 \newcommand\typeParagraph[1]{%
-    \smallskip{\normalfont\rmfamily\bfseries #1 }%
+    \medskip{\normalfont\rmfamily\bfseries #1 }%
 }
 % INTERFACE
 \newcommand\typeChapter[3]{%
