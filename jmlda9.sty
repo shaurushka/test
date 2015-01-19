@@ -26,8 +26,6 @@
 
 \ProcessOptions
 
-\RequirePackage{enumerate}
-\RequirePackage{cite}
 \RequirePackage{cmap}
 \RequirePackage[cp1251]{inputenc}
 %\RequirePackage[T2A]{fontenc}
@@ -112,13 +110,6 @@
 %    \footnotesep=3ex
 %}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Для обновленного пакета babel (version >= 1.2)%
-\newcommand*{\English}{\selectlanguage{english}}
-\newcommand*{\No}{\textnumero}
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Языковые настройки
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,12 +136,10 @@
 \newcommand\typeEmail[1]{{\ttfamily #1}}
 \newcommand\typeTocAuthorTitle[2]{{\unstretchspaces\itshape #1}\\ #2}
 \newcommand\typeAbstract[1]{%
-    \par
-    %\vskip\vskipAfterTitle
+    \par\vskip\vskipAfterTitle
     \noindent%\parbox{159.3mm}%
     \begin{quotation}{\small #1}\end{quotation}%
 }
-
 
 % Вывод заголовка
 \def\type@title{%
@@ -170,10 +159,7 @@
                 \vskip-6ex\vskip\vskipBeforeTitle%
                 %--------- основной заголовок
                 \ifthenelse{\equal{\@title}{}}{}%
-                    {\typeTitle\@title
-                    		\ifthenelse{\equal{\@thanks@grant}{}}{}{\footnotemark
-                    			\footnotetext{\@thanks@grant\\[2ex] 
-                    			\parbox{\textwidth}{\scriptsize\slshape\paper@record}}\setcounter{footnote}{0}}\\[1ex]}%
+                    {\typeTitle\@title\ifthenelse{\equal{\@thanks@grant}{}}{}{\footnotemark\setcounter{footnote}{0}}\\[1ex]}%
                 \ifthenelse{\equal{\@author@long}{}}{}%
                     {\typeAuthor\@author@long}%
                 \ifthenelse{\equal{\@email}{}}{}%
@@ -181,7 +167,7 @@
                 \ifthenelse{\equal{\@organization}{}}{}%
                     {\\{\typeOrganization\@organization}}%
                 \ifthenelse{\equal{\@abstract}{}}{}%
-                    {\vskip\vskipBeforeTitle \typeAbstract\@abstract\par\vskip\vskipAfterTitle}%
+                    {\typeAbstract\@abstract\par\vskip\vskipAfterTitle}%
                 \ruseng{{%
                 %--------- второй заголовок на английском для статей на русском
                 \English%
@@ -210,8 +196,8 @@
         %}%
 %    ]%
     % помещение сноски вниз страницы
-%    \ifthenelse{\equal{\@thanks@grant}{}}{}{\footnotetext{\@thanks@grant}}%
-%    \setcounter{footnote}{0}%
+    \ifthenelse{\equal{\@thanks@grant}{}}{}{\footnotetext{\@thanks@grant}}%
+    \setcounter{footnote}{0}%
     \endgroup
 }
 \def\maketitle{%
@@ -368,12 +354,12 @@
 \newcommand{\abstractRus}[1]{\gdef\@abstract@rus{{#1}}}
 
 % Библиографическая запись текущей статьи
-\def\paper@record{{
-    %\textit{\@author} \@title~//
-    \Russian
-    Машинное обучение и анализ данных, 2014. Т.\,1, \No\,9.\\
-    \English
-    Machine Learning and Data Analysis, 2014. Vol.\,1\,(9).}
+\def\paper@record{%{%
+%    %\textit{\@author} \@title~//
+%    \Russian
+%    Машинное обучение и анализ данных, 2013. Т.\,1, \No\,5.\\
+%    \English
+%    Machine Learning and Data Analysis, 2013. Vol.\,1\,(5).}%
 %    %М.:~МАКС Пресс, 2009~---
 %    %С.\,\globalpageref{\@paper@name:begin}--\globalpageref{\@paper@name:end}.
 }
@@ -394,7 +380,6 @@
         \rightmark\hfill\type@chapter@code\quad\thepage\\[-2ex]\hrule}}%
     \renewcommand{\@evenhead}{\parbox{\textwidth}{\footnotesize
         \thepage\quad\type@chapter@code\hfill\leftmark\\[-2ex]\hrule}}%
-    %\renewcommand{\@oddfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record}}
     \renewcommand{\@oddfoot}{}%
     \renewcommand{\@evenfoot}{}%
 }
@@ -403,8 +388,7 @@
         \rightmark\hfill\type@chapter@code\quad\thepage\\[-2ex]\hrule}}%
     \renewcommand{\@evenhead}{\parbox{\textwidth}{\footnotesize
         \thepage\quad\type@chapter@code\hfill\leftmark\\[-2ex]\hrule}}%
-    %\renewcommand{\@oddfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record}}
-    \renewcommand{\@oddfoot}{}%
+    \renewcommand{\@oddfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record}}%\hrule\vskip1ex
     \renewcommand{\@evenfoot}{\@oddfoot}%
 }
 \pagestyle{empty}
