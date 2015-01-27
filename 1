@@ -1,10 +1,5 @@
 \documentclass[12pt,twoside]{article}
 
-%\newcommand{\English}{\selectlanguage{english}}
-%\newcommand{\No}{\textnumero}
-
-\usepackage{enumerate}
-
 \usepackage{jmlda}
 
 \title
@@ -50,7 +45,7 @@
     Since the data consists of the measurements for~multiple people, in~their experiments, the authors run cross-validation with a single fold per~each
     person. In each iteration, an~internal cross-validation was also run to~fit hyperparameter. As a result, the algorithm achieves the performance
     of~0.92 in~terms of the mean F-measure. The experiments also show that the mixture of the three models is more stable than each of~its
-    components and achieves higher performance. Finally, the method proves to be significantly better than standard \mbox{$L_2$-regularized} 
+    components and achieves higher performance. Finally, the method proves to be significantly better than standard \mbox{$L\_2$-regularized} 
     Logistic Regression built up on the same feature set.
 
 \bigskip
@@ -100,7 +95,7 @@
 	\item спускается на лифте.
 \end{enumerate}
 
-Каждому из приведенных видов активности соответствует класс. В качестве объекта рассматриваются показания 3-х осей акселерометра и 3-х осей гироскопа (рис. \ref{fig:acc_gyro_example}).
+Каждому из приведенных видов активности соответствует класс. В качестве объекта рассматриваются показания 3-х осей акселерометра и 3-х осей гироскопа~(рис. \ref{fig:acc_gyro_example}).
 
 Таким образом, в выборке $ 12 $ классов по $ 5 \cdot 14 = 70 $ объектов в каждом.
 
@@ -259,13 +254,12 @@ $$ \mathcal V(x) = \{\tilde a(w) | w \in \mathcal W(x)\}, $$
 
 Для классификации внутри групп активных и пассивных классов используется общая модель, но обучение происходит отдельно. При этом в~группе пассивных действий классы, соответствующие передвижению на лифте вверх и вниз, на данном этапе объединены.
 
-В качестве признакового пространства используются низкочастотные половины (128 значений) амплитудных спектров всех шести сигналов, полученные с~помощью преобразования Фурье (рис. \ref{fig:fourier_features}). 
+В качестве признакового пространства используются низкочастотные половины (128 значений) амплитудных спектров всех шести сигналов, полученные с~помощью преобразования Фурье~(рис. \ref{fig:fourier_features}). 
 
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.5\textwidth]{ft_example}
 	\caption{Амплитудный спектр для показаний акселерометра. Для классификации используются только значения из левой половины графика}
-	\label{fig:fourier_features}
 \end{figure}
 
 Каждый признак центрируется и нормируется на квадратный корень из~нормы.
@@ -350,13 +344,13 @@ $$ \mathcal V(x) = \mathcal  V_1(x) \cup \mathcal V_2(x) \cup \mathcal V_3(x), $
 		обеспечивают почти оптимальное качество;
 
 	\item смесь из трех подмоделей (логистическая регрессия, random forest и NN) часто показывает лучшее качество, чем каждая подмодель в отдельности.
-		Это видно по графикам на рис. \ref{fig:models_cmp_all}, отображающим качество классификации для разных итераций скользящего контроля, соответствующих отдельным людям;
+		Это видно по графикам на рис.~\ref{fig:models_cmp_all}, отображающим качество классификации для разных итераций скользящего контроля, соответствующих отдельным людям;
 
 		\begin{figure}[t]
 			\centering
 			\includegraphics[width=0.5\textwidth]{models_cmp_all}
-			\caption{Качество подмоделей и их смеси на разных итерациях скользящего контроля}
 			\label{fig:models_cmp_all}
+			\caption{Качество подмоделей и их смеси на разных итерациях скользящего контроля}
 		\end{figure}
 
 	\item \textbf{вся композиция} на~трех независимых запусках показала качество 0,9202, 0,9216 и~0,9227.
@@ -439,19 +433,19 @@ $$ \mathcal V(x) = \mathcal  V_1(x) \cup \mathcal V_2(x) \cup \mathcal V_3(x), $
 
 
 \bibitem{AvciSurvey} %2
-	\BibAuthor{Avci\;A., Bosch\;S., Marin-Perianu\;M., Marin-Perianu\;R., Havinga\;P.}
+	\BibAuthor{Avci\;A., \textit{et al}.}
 	\BibTitle{Activity recognition using inertial sensing for healthcare, wellbeing and sports applications: A survey}~//
 {23rd Conference (International) on Architecture of Computing Systems (ARCS)}, 2010. P.\,1--10.
 \bibitem{ZhaoCrossPeople} %3
 	\BibAuthor{Zhao\;Z. et al.}
-	\BibTitle{Zhao\;Z., Chen\;Y., Liu\;J., Shen\;Z., Liu\;M.}~//
+	\BibTitle{Cross-people mobile-phone based activity recognition}~//
 {22nd Joint Conference (International) on Artificial Intelligence Proceedings}. AAAI Press, 2011. Vol.\,3. P.\,2545--2550.
 \bibitem{Dernbach} %4
-	\BibAuthor{Dernbach\;S., Das\;B., Krishnan\;N.\,C., Thomas\;B.\,L., Cook\;D.\,J.}
+	\BibAuthor{Dernbach\;S., \textit{et al.}}
 	\BibTitle{Simple and complex activity recognition through smart phones}~//
 {8th IEEE Conference (International) on Intelligent Environments}, 2012. P.\,214--221.
 \bibitem{YanAdaptive} %5
-	\BibAuthor{Yan\;Z., Subbaraju\;V., Chakraborty\;D., Misra\;A., Aberer\;K.}
+	\BibAuthor{Yan Z., \textit{et al.}}
 	\BibTitle{Energy-efficient continuous activity recognition on mobile phones: An activity-adaptive approach}~//
 	{16th IEEE Symposium (International) on Wearable Computers (ISWC)}, 2012. P.\,17--24.
 
@@ -473,7 +467,7 @@ $$ \mathcal V(x) = \mathcal  V_1(x) \cup \mathcal V_2(x) \cup \mathcal V_3(x), $
 	Pittsburgh, Pennsylvania, USA, 2012.
 
 \bibitem{liblinear} %9
-	\BibAuthor{Fan\;R.\,E., Chang\;K\,W., Hsieh\;C\,J, \textit{et al}.}
+	\BibAuthor{Fan\;R.\,E. et al.}
 	\BibTitle{LIBLINEAR: A library for large linear classification}~//
 	{J.~ Machine Learning Res.}, 2008. Vol. 9. P.~1871--1874.
 \bibitem{CuiCostEffectiveUseless}
