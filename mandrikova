@@ -1,7 +1,6 @@
 \documentclass[12pt,twoside]{article}
 \usepackage{jmlda}
-\setcounter{page}{1335}
-
+\usepackage{pscyr}
 %\NOREVIEWERNOTES
 \title
     [Оценка состояния геомагнитного поля] % Краткое название; не нужно, если полное название влезает в~колонтитул
@@ -31,7 +30,7 @@
 Paratunka, Kamchatka Region, Russia; $^2$Kamchatka State Technical University, Petropavlovsk-Kamchatsky, Russia}
 \abstractEng
    {
-\noindent
+\noinent
 The present paper is focused on the development of theoretical tools and software for the analysis of the geomagnetic field parameters and for the estimation of the geomagnetic field condition using modern methods of pattern recognition and digital signal processing. Existing methods for the geomagnetic data analysis do not allow to identify some regularities in the data and lead to the loss of important information.
 
 
@@ -44,11 +43,13 @@ On the basis of combination of  decisions of the developed neural networks, a~de
 
 	The method has been successfully tested on the geomagnetic data that were kindly provided to the authors by the Institute of Cosmophysical Research and Radio Wave Propagation  (Paratunka,  Kamchatka  Region,  Russia). Using the proposed method in combination with other methods and approaches allows to enhance the quality of geomagnetic data automatic  processing during  space weather forecast.
 
+
+		\bigskip
 \noindent
     \textbf{Keywords}: \emph{geomagntic data; neural networks; wavelet transform; data classification; Earth's magnetic field}}
 
 \begin{document}
-
+\setcounter{page}{1}
 \maketitle
 %\linenumbers
 \section{Введение}
