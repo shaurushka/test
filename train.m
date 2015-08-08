@@ -17,8 +17,6 @@ G = parameters(5, 1);
 if doBinarization == 0
     n = mean(sum(data,2)); % average length of codogram
     data = data./repmat(sum(data, 2), 1, size(data, 2)); %
-else
-    n = -1; % fake
 end;
 
 healthClassData = data(labels == 0, :);
@@ -29,29 +27,28 @@ if S ==2
 end;
 
 resultTrain = zeros(2, Kmax, nBlocks);
-for idx = 1:nBlocks
-    [resultTrain(1, :, idx), resultTrain(2,:, idx)] = chooseEtalons(healthClassData ,...
-        sickClassData, Kmax, S, G, doBinarization, binarizationBounds(idx), n);
+if doBinarization == 0
+    [resultTrain(1, :, 1), resultTrain(2,:, 1)] = chooseEtalons(healthClassData ,...
+        sickClassData, Kmax, S, G, doBinarization,  n);
+else
+    for idx = 1:nBlocks
+        [resultTrain(1, :, idx), resultTrain(2,:, idx)] = chooseEtalons(healthClassData ,...
+            sickClassData, Kmax, S, G, doBinarization, binarizationBounds(idx));
+    end;
 end;
 
 extraInfo = cell(1, 1);
 end
 
 function [ etalons, values ] = chooseEtalons( healthClassData,...
-    sickClassData, K, S, G, doBinarization, theta, n)
+    sickClassData, K, S, G, doBinarization, param)
 % Returns ranked lists of etalons and their weights
+% param = theta, if doBinarization = 1
 
-if doBinarization == 0
-    healthClassFrequences = findFrequences(healthClassData);
-    sickClassFrequences = findFrequences(sickClassData);
-    healthClassRegFrequences = findRegFrequences(healthClassData, doBinarization, n);
-    sickClassRegFrequences = findRegFrequences(sickClassData, doBinarization, n);
-else
-    healthClassFrequences = findFrequences(healthClassData, theta);
-    sickClassFrequences = findFrequences(sickClassData, theta);
-    healthClassRegFrequences = findRegFrequences(healthClassData, doBinarization, theta);
-    sickClassRegFrequences = findRegFrequences(sickClassData, doBinarization, theta);
-end;
+healthClassFrequences = findFrequences(healthClassData, doBinarization, param);
+sickClassFrequences = findFrequences(sickClassData, doBinarization, param);
+healthClassRegFrequences = findRegFrequences(healthClassData, doBinarization, param);
+sickClassRegFrequences = findRegFrequences(sickClassData, doBinarization, param);
 
 M = 300; % number of label permutations (if S = 8 or S = 9 or G = 6)
 
@@ -89,7 +86,7 @@ switch S
             permutation = randperm(length(labels));
             indMix = find(labels(permutation)==1);
             mixp = P(indMix,:); % new "sick" class
-            mixValue(idx,:) = findFrequences( mixp, theta );
+            mixValue(idx,:) = findFrequences( mixp, doBinarization, param );
         end;
         Dw = (2*baseValue - min(mixValue) - max(mixValue))./(max(mixValue) - min(mixValue));
         Dw(isnan(Dw)) = 0;
@@ -101,37 +98,15 @@ switch S
         end;
         etalons = ind1(1:K);       
     case 10
-        %greedyEtalons
-        etalons = 1:K;
-    case 11
-        %greedyInternalEtalons
-        etalons = 1:K;
+        etalons = newEtalons( healthClassData, sickClassData, K);
     otherwise
         disp('ERROR: etalonChoice is not valid')
 end
-if S < 10
-  values = getWeights(etalons, S, G, K, M, ...
-                      sickClassFrequences, healthClassFrequences, ...
-                      sickClassRegFrequences, healthClassRegFrequences, ...
-                      healthClassData, sickClassData, theta);
-else
-  [etalons, values] = greedyEtalons(S, G, K, M, ...
-                                    sickClassFrequences, ...
-                                    healthClassFrequences, ...
-                                    sickClassRegFrequences, ...
-                                    healthClassRegFrequences, ...
-                                    healthClassData, sickClassData, theta);
-end                  
-end
 
-function [values] = getWeights(etalons, S, G, K, M, ...
-                               sickClassFrequences, healthClassFrequences, ...
-                               sickClassRegFrequences, healthClassRegFrequences, ...
-                               healthClassData, sickClassData, theta)
 nonzeroEtalons = etalons(etalons~=0);
 switch G
     case 1
-        values = [ones(1, length(nonzeroEtalons)) zeros(1, K - length(nonzeroEtalons))];
+        values = ones(1,K);
     case 2
         values = [sickClassFrequences(nonzeroEtalons) zeros(1, K - length(nonzeroEtalons))];
     case 3
@@ -154,7 +129,7 @@ switch G
                 permutation = randperm(length(labels));
                 indMix = find(labels(permutation)==1);
                 mixp = P(indMix,:); %new "sick" class
-                mixValue(idx,:) = findFrequences( mixp, theta );
+                mixValue(idx,:) = findFrequences( mixp, doBinarization, param);
             end;
             Dw = (2*baseValue - min(mixValue) - max(mixValue))./(max(mixValue) - min(mixValue));
             Dw(isnan(Dw)) = 0;
@@ -163,120 +138,30 @@ switch G
     otherwise
         disp('ERROR: etalonWeight is not valid')
 end
+
 end
 
-function [ frequences ] = findFrequences( p, theta )
+function [ frequences ] = findFrequences( p, doBinarization, param )
 l = size(p,1);
-if nargin > 1
+if doBinarization == 1
     % calculate B_w
-    frequences = (sum(p > theta, 1))/l;
+    frequences = (sum(p > param, 1))/l;
 else
     % calculate F_w
     frequences = mean(p, 1);
 end;
 end
 
-function [ frequences ] = findRegFrequences( p, doBinarization, parameter )
+function [ frequences ] = findRegFrequences( p, doBinarization, param )
 l = size(p,1);
 if doBinarization == 1
     % calculate regularized B_w
-    frequences = (sum(p > parameter, 1) + 1)/(l + 2);
+    frequences = (sum(p > param, 1) + 1)/(l + 2);
 else
-    frequences = (sum(p,1)+2/parameter)/(size(p,1)+1);
+    frequences = (sum(p,1)+2/param)/(size(p,1)+1);
 end;
 end
 
-
-function [etalons] = naiveEtalons(healthClassData, sickClassData, K)
-%etalons = 1:K; %???
-rng(12345);  
-eps = 0.05;
-
-[data, classLabels] = getSubsetOfData(healthClassData, sickClassData);
-[L, featuresCount] = size(data);
-trainSize = floor(0.7 * L);
-
-featuresQeps = zeros(1, featuresCount);
-for featureIndex = 1:featuresCount
-  chain = makeChainWithGaps(data(:, featureIndex), classLabels);
-  
-  featuresQeps(featureIndex) = getQepsMC(chain, trainSize, eps);
+function [etalons] = newEtalons(healthClassData, sickClassData, K)
+etalons = 1:K; %???
 end
-[~, ind] = sort(featuresQeps);
-etalons = ind(1:K);
-
-end
-
-function [etalons, weights] = greedyEtalons(S, G, K, M, ...
-                                            sickClassFrequences, ...
-                                            healthClassFrequences, ...
-                                            sickClassRegFrequences, ...
-                                            healthClassRegFrequences, ...
-                                            healthClassData, sickClassData, ...
-                                            theta)
-rng(12345);  
-
-[data, classLabels] = getSubsetOfData(healthClassData, sickClassData);
-[L, featuresCount] = size(data);
-trainSize = floor(0.7 * L);
-
-weights = getWeights(1:featuresCount, S, G, K, M, ...
-                     sickClassFrequences, healthClassFrequences, ...
-                     sickClassRegFrequences, healthClassRegFrequences, ...
-                     healthClassData, sickClassData, theta);
-etalons = zeros(1, K);
-classifier = zeros(L, 1);
-notEtalons = 1:featuresCount;
-topFeatures = 1:featuresCount;
-topFeaturesSize = 10;
-maxBlockSize = 5;
-it = 1;
-numMCIt = 2000;
-trainIndices = generateTrainIndices(numMCIt, L, trainSize);
-while it <= length(etalons) 
-  %disp(it);
-  if mod(it, 20) == 0
-    featuresSet = notEtalons;
-  else
-    featuresSet = topFeatures;
-  end
-  %выбираем фичу
-  featuresOverfit = zeros(1, length(featuresSet));
-  for index = 1:length(featuresSet)
-    %disp(index);
-    featureIndex = featuresSet(index);
-    chain = makeChainWithGaps(classifier + weights(featureIndex) * data(:, featureIndex), ...
-                              classLabels);
-    if S == 10
-      featuresOverfit(index) = getOverfitValueMC(chain, trainIndices);
-    else
-      featuresOverfit(index) = min(sum(chain));
-    end
-  end
-  [~, ind] = sort(featuresOverfit);
-  if it > 10
-    blockSize = min([length(etalons) - it + 1 length(ind) maxBlockSize]);
-  else
-    blockSize = 1;
-  end
-  currentEtalons = featuresSet(ind(1:blockSize));
-  classifier = classifier + data(:, currentEtalons) * weights(currentEtalons)';
-  %обновляем множество топовых фичей
-  if mod(it, 20) == 0 && blockSize + 1 <= length(featuresSet)
-    topFeatures = featuresSet(ind(blockSize + 1 : ...
-                                  min(blockSize + topFeaturesSize + 1, ...
-                              length(featuresSet))));
-  end 
-  %убираем из рассмотрения добавленную фичу
-  if it + blockSize - 1 <= length(etalons)
-    etalons(it : it + blockSize - 1) = currentEtalons;
-    notEtalons = setxor(notEtalons, currentEtalons);
-    topFeatures = setxor(topFeatures, currentEtalons);
-  end
-  it = it + blockSize;
-end
-weights = weights(etalons);
-end
-
-
-
