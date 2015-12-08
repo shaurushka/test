@@ -1,0 +1,442 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{placeins}
+\usepackage{jmlda}
+\newcommand{\hdir}{.}
+\setcounter{page}{1762}
+
+%\NOREVIEWERNOTES
+\begin{document}
+\title {Метод быстрого сжатия изображений без потерь}
+\author {Е.\,П. Петров, Н.\,Л. Харина, П.\,Н. Сухих}
+\email {eppetrov@mail.ru}
+\organization {ФГБОУ ВО <<Вятский государственный университет>>, Киров, Россия}
+\abstract
+    {Предложен метод сжатия цифровых изображений, отличающийся простотой реализации и отсутствием вычислительных операций на этапе предсказания.
+     Метод включает  процедуру предсказания пикселов изображения на основе теории условных марковких процессов и процедуру кодирования.
+     Представлены результаты апробации алгоритма на реальных изображениях различных классов.
+
+\bigskip
+\noindent
+\textbf{Ключевые слова}: \emph {цепь Маркова; цифровое изображение; метод сжатия; алгоритм предсказания}}
+\titleEng
+    {Fast lossless image compression method}
+\authorEng
+    {E.\,P. Petrov, N.\,L. Kharina, and~P.\,N.~Sukhikh}
+\organizationEng
+    {Vyatka State University, Kirov, Russia}
+\abstractEng %todo
+    {
+	\noindent    	
+    	A suggested digital image compression method is characterized by simplicity of implementation and the lack of computing operations at the stage of prediction.
+
+    \noindent
+    \textbf{Background}: Miniature space watch facilities (small satellites)
+cannot provide a continuous data transmission because of the severely
+constrained requirements for energy resources usage efficiency
+that produces the necessity of new energy efficient low-cost digital
+images compression methods, which would not be inferior to the known multidigit digital images compression methods with high resolution but surpass them.
+
+    \noindent
+    \textbf{Methods}: The algorithm consists of the following procedures, splitting the digital images into binary images, predicting of each element of binary images being based on the theory of the conditional Markov processes with
+discrete states, and coding using any known algorithm
+(here, Huffman method is used).
+
+    \noindent
+    \textbf{Results}: To prove the efficiency of the proposed method,
+the compression of the Earth surface space pictures (group A)
+and photos (group B) is done. In each groupm, there were 50 one-type images.
+    The known lossless compression algorithms such as PNG, JPEG-LS, JPEG 2000,
+BMF, Qlic, and ImageZero, are used as analogs.
+    The obtained research results indicate that the proposed method performance and compression ratio  comparable with analogues.
+
+    \noindent
+    \textbf{Concluding Remarks}:  The suggested method has the following advantages: the capability of simultaneous binary images processing, the capability of digital images processing with digit capacity,
+and the lack of computational operations.
+
+    \noindent
+    \textbf{Keywords}: \emph{Markov chain; digital image; compression method; prediction algorithm}}
+\maketitle
+%\linenumbers
+\section{Введение}
+В настоящее время использование цифровых изображений в различных сферах
+деятельности, таких как медицина, геодезия, картография, системы мониторинга
+и~т.\,п., привело к необходимости использования различных методов сжатия
+изображений. Существующие методы сжатия, такие как JPEG-LS, JPEG2000, успешно
+справляются с~этой задачей~\cite{digital-image-processing, digital-image-processing-2}.
+Однако существует ряд приложений, где использование этих методов не всегда возможно
+из-за ограничений на вычислительные и~энергетические ресурсы, например
+системы дистанционного зондирования Земли, формирующие на борту космического
+аппарата огромные объемы информационных потоков, значительная часть которых
+связана с~передачей изображений. В~настоящее время для кодирования изображений
+используются различные алгоритмы, базирующиеся на следующих основных методах:
+BTC (block trancation coding~--- усеченное блочное кодирование),
+ДИКМ (дифференциальная импульсно-кодовая модуляция), DCT
+(discrete cosine transform~--- дискретное косинусное преобразование), DWT
+(discrete wavelet transform~--- дискретное вейв\-лет-пре\-обра\-зо\-ва\-ние)~ \cite{digital-image-processing, digital-image-processing-2}.
+
+Необходимость сжатия на борту космического аппарата изображений обусловлена
+рос\-том генерируемых современными космическими системами дистанционного
+зондирования информационных потоков (до нескольких сотен мегабит в~секунду).
+Это связано с увеличением как пространственного, так и спектрального разрешения
+съемочной аппаратуры при сохранении широкой полосы обзора, сравнительно невысокой
+пропускной способности радиоканалов и ограниченности частотного диапазона при
+передаче изображений на наземные приемные станции. В~большинстве современных
+систем дистанционного зондирования используется непрерывный режим
+непосредственной передачи или хранения изображений на бортовых записывающих
+устройствах. Большинство современных спутников обладают энергетическими
+возможностями для обеспечения непрерывного режима передачи информации,
+что требует больших вычислительных ресурсов на борту космического аппарата.
+
+Наметившаяся в последнее время тенденция на «миниатюризацию» космических
+средств наблюдения (малые спутники) и увеличение разрядности передаваемых
+цифровых изображений привела к необходимости сокращения вычислительных ресурсов на реализацию алгоритмов сжатия изображений, что не позволяет реализовать вышеперечисленные методы. Таким образом, для малых космических аппаратов необходимы новые методы сжатия изображений, не уступающие по своей эффективности известным методам, но требующие меньших вычислительных ресурсов.
+
+В данной работе предлагается один из возможных методов сжатия цифровых изображений (как панхроматических, так и цветных), удовлетворяющий указанным требованиям. Предложенный метод позволяет максимально удалить статистическую избыточность изображения, не имеет спектральных преобразований и вычислительных операций (таких, как умножение, сложение). Метод строится на процедуре предсказания на основе теории условных
+дискретно-значных марковских процессов. Сжатие осуществляется по битовым плоскостям, что позволяет обрабатывать их параллельно независимо друг от друга, при этом отсутствует ограничение на разрядность изображения.
+
+\section{Описание метода}
+Будем полагать, что $g$-разрядное изображение размером $m \times n$
+пикселей является двумерным марковским процессом с несколькими состояниями
+$N=2^g$ с вектором вероятностей начальных состояний $P = \begin{Vmatrix} p_1,
+p_2, \ldots, p_N \end{Vmatrix}^{\mathrm{T}}$ и~матрицами вероятностей переходов (МВП) $^{1}{\prod}$ и $^{2}{\prod}$ из $M_i$ в соседнее $M_j$ состояние $(i,j \in N)$ по горизонтали и вертикали соответственно \cite{article-1}:
+
+\noindent
+\begin{equation*}
+	^{1}{\prod} = \begin{Vmatrix}
+		^1{\pi}_{11} & ^1{\pi}_{12} & \cdots & ^1{\pi}_{1n} \\
+		^1{\pi}_{21} & ^1{\pi}_{22} & \cdots & ^1{\pi}_{2n} \\
+		\vdots & \vdots & \ddots & \vdots \\
+		^1{\pi}_{n1} & ^1{\pi}_{n2} & \cdots & ^1{\pi}_{nn}
+	\end{Vmatrix};\quad
+	^{2}{\prod} = \begin{Vmatrix}
+		^2{\pi}_{11} & ^2{\pi}_{12} & \cdots & ^2{\pi}_{1n} \\
+		^2{\pi}_{21} & ^2{\pi}_{22} & \cdots & ^2{\pi}_{2n} \\
+		\vdots & \vdots & \ddots & \vdots \\
+		^2{\pi}_{n1} & ^2{\pi}_{n2} & \cdots & ^2{\pi}_{nn}
+	\end{Vmatrix}.
+%	\label{f1}
+\end{equation*}
+Разработка метода сжатия изображений в таком представлении требует больших вычислительных ресурсов, особенно для снимков с большим разрешением.
+Поэтому предлагается разделить $g$-разрядное цифровое изображение на $g$ разрядных двоичных изображений (РДИ) (рис.~\ref{pic1}).
+\begin{figure} %[h]
+	\center
+	\includegraphics[width=0.8\linewidth]{\hdir/pic/pic1}
+	\caption{Разделение панхроматического изображения на РДИ}
+	\label{pic1}
+\end{figure}
+
+Каждое РДИ представляет собой двумерный марковский процесс с двумя ($N = 2$) равновероятными состояниями ($p_1 = p_2$) и МВП $^{1}{\prod}$ и $^{2}{\prod}$ из $M_i$ в соседнее $M_j$ состояние ($i,j \in N$) по горизонтали и вертикали соответственно \cite{article-1}:
+\begin{equation}
+	^{1}{\prod} = \begin{Vmatrix}
+		^1{\pi}_{11} & ^1{\pi}_{12} \\
+		^1{\pi}_{21} & ^1{\pi}_{22}
+	\end{Vmatrix}; \quad
+	^{2}{\prod} = \begin{Vmatrix}
+		^2{\pi}_{11} & ^2{\pi}_{12} \\
+		^2{\pi}_{21} & ^2{\pi}_{22}
+	\end{Vmatrix}.
+	\label{f2}
+\end{equation}
+Элементы МВП (1) удовлетворяют условию нормировки
+\begin{equation*}
+	\sum_{j=1}^{N}{^{q}{\pi}_{ij} = 1}, i \in N, q = \overline{1,2}\,,	
+%	\label{f3}
+\end{equation*}
+и стационарности
+\begin{equation*}
+	p_i = \sum_{j=1}^{N}{p_j{\pi}_{ij}}, i \in N\,.
+%	\label{f4}
+\end{equation*}
+
+Разрядное двоичное изображение
+представляет собой марковское случайное поле размером $m \times n$   на несимметричной полуплоскости, полученной классической разверткой с левого верхнего угла слева направо вниз (рис.~\ref{pic2}).
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.5\linewidth]{\hdir/pic/pic2}
+	\caption{Модель РДИ}
+	\label{pic2}
+\end{figure}
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.3\linewidth]{\hdir/pic/pic3}
+	\caption{Окрестность элемента РДИ}
+	\label{pic3}
+\end{figure}
+
+Состояние элемента $M_{i,j}$ $(i \in m, j \in n)$ зависит только от известных ранее обработанных элементов ${\Phi}_{i,j}$, в частности от подмножества ближайших элементов  ${\wedge}_{i,j}$, называемого окрестностью элемента $M_{i,j}$.
+Лучшим образом удовлетворяющее условию каузальности является конфигурация окрестности (рис.~\ref{pic3}) \cite{article-1}:
+\begin{equation*}
+	{\wedge}_{i,j} = \{ M_{i,j-1}, M_{i-1,j}, M_{i-1,j-1} \}\,.
+%	\label{f5}
+\end{equation*}
+Вероятности перехода от состояний элементов окрестности ${\wedge}_{i,j}$ к состоянию $M_{i,j}$ образуют МВП вида \cite{article-1}:
+\begin{equation}
+	^{3}{\prod} = \begin{Vmatrix}
+		{\pi}_{111} & {\pi}_{121} & {\pi}_{211} & {\pi}_{221} \\
+		{\pi}_{112} & {\pi}_{122} & {\pi}_{212} & {\pi}_{222}
+	\end{Vmatrix}^{\mathrm{T}}\,.
+	\label{f6}
+\end{equation}
+
+Основой алгоритма является процедура предсказания каждого элемента РДИ
+на основе известной окрестности ${\wedge}_{i,j}$ и МВП~\eqref{f6}, используя
+критерий максимальной вероятности.
+В~результате предсказания формируется РДИ по следующему правилу:
+если элемент предсказан верно, то~$0$, иначе $1$.
+При восстановлении РДИ нулевые элементы заменяются результатами
+предсказания, а~единичные~--– инверсией результата предсказания.
+В качестве примера на рис.~\ref{pic4},\,б приведен результат предсказания
+старшего разряда панхроматического цифрового изображения (см.\ рис.~\ref{pic1}),
+белым показаны области, предсказанные неверно \cite{article-2, article-3}.
+Применение кода Грея поэлементно позволяет увеличить успешность предсказания.
+\begin{figure}[h]
+	\center
+	\subfloat[Исходный разряд]{\includegraphics[width=.45\linewidth]{\hdir/pic/pic4}}
+	\qquad
+	\subfloat[Разряд после процедуры предсказания]{\includegraphics[width=.45\linewidth]{\hdir/pic/pic5}}
+	\caption{Старший разряд цифрового изображения}
+	\label{pic4}
+\end{figure}
+
+Разрядное двоичное устройство после предсказания представляет собой
+разреженную матрицу, что позволяет эффективно применять методы энтропийного
+кодирования.
+В~предложенном алгоритме применяется код Хаффмана.
+Данный метод можно использовать для работы с цветными изображениями
+путем обработки каждой цветовой компоненты в отдельности.
+Представление изображения в цветовом пространстве YCoCg повышает степень сжатия.
+
+Формализованное описание алгоритма:
+\begin{enumerate}[1)]
+	\item изображение преобразуется в цветовое пространство YCoCg;
+	\item код Грея попиксельно применяется к каждой цветовой компоненте;
+	\item каждая цветовая компонента разделяется на $g$ РДИ;
+	\item для каждого РДИ вычисляются МВП:
+		\begin{itemize}
+		\item по горизонтали $^{1}{\prod}$;
+		\item по вертикали $^{2}{\prod}$;
+		\end{itemize}
+	\item для каждого РДИ  исходя из МВП  $^{1}{\prod}$  и $^{2}{\prod}$  вычисляется МВП $^{3}{\prod}$:
+		\begin{itemize}
+		\item по горизонтали $^{1}{\prod}$;
+		\item по вертикали $^{2}{\prod}$;
+		\end{itemize}
+	\item для каждого РДИ выполняется процесс предсказания: прогнозируется элемент $\hat{M_{i,j}}$
+на основе МВП $^{3}{\prod}$ и окрестности ${\wedge}_{i,j}$:
+		\begin{itemize}
+		\item если  $M_{i,j} = \hat{M_{i,j}}$, то элемент предсказан верно;
+		\item если  $M_{i,j} \neq \hat{M_{i,j}}$, то элемент   предсказан неверно;
+		\end{itemize}
+	\item РДИ объединяются обратно в цветовые компоненты;
+	\item каждая цветовая компонента кодируется кодом Хаффмана;
+	\item полученные данные и служебная информация записываются в файл формата mrk.
+\end{enumerate}
+
+\section{Результаты экспериментов}
+Для исследования эффективности предложенного алгоритма (MRK)
+произведено сжатие снимков поверхности Земли со спутника (рис.~\ref{pic5},\,а)~\cite{images-1}
+и~базы изображений сайта {\sf imagecompression.info} (рис.~\ref{pic5},\,б)~\cite{images-2}.
+Исходное разрешение спутниковых снимков $8192\times8192$ пикселей, изображения
+с~сайта {\sf imagecompression.info} имеют различное разрешение
+в~диапазоне $2000\times3000$--$5000\times7000$~пикселей, все изображения цветные (24~бита/пиксель).
+Исследование проводилось на компьютере, обладающем следующими характеристиками: процессор
+Intel Celeron G1820~--- 2,7~ГГц, 8~ГБ оперативной памяти, SSD TOSHIBA 128~ГБ,
+операционная система Windows~7.
+
+\begin{figure}[h]
+	\center
+	\subfloat[Снимок со спутника]{\includegraphics[width=.45\linewidth]{\hdir/pic/pic6}}
+	\qquad
+	\subfloat[База изображений сайта {\sf imagecompression.info}]{\includegraphics[width=.45\linewidth]{\hdir/pic/pic7}}
+	\caption{Примеры снимков из выборки}
+	\label{pic5}
+\vspace{12pt}
+\end{figure}
+
+В качестве аналогов представлены известные алгоритмы сжатия без потерь PNG,
+JPEG-LS и~JPEG 2000, а также современные разработки BMF \cite{algo-1},
+Qlic~\cite{algo-2} и~ImageZero~\cite{algo-3}.
+На рис. \ref{pic9} представлены графики зависимости среднего коэффициента сжатия в зависимости от размера изображения.
+Для оценки быстродействия алгоритма на рис. \ref{pic10}
+представлены зависимости скорости работы алгоритма от размера изображения.
+Оценки скорости получены при работе в~однопоточном режиме.
+При работе в параллельном режиме скорость работы на современном четырехядерном процессоре увеличится в~3--4~раза.
+
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.9\linewidth]{\hdir/pic/pic8}\\
+(\textit{а})\\[6pt]
+	\includegraphics[width=0.9\linewidth]{\hdir/pic/pic10}\\
+(\textit{б})\\
+	\caption{Зависимость среднего коэффициента сжатия от размера
+изображения: (\textit{a})~спутниковые снимки; (\textit{б})~база изображений, сайт
+{\sf imagecompression.info}}
+	\label{pic9}
+\end{figure}
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.9\linewidth]{\hdir/pic/pic9}\\
+(\textit{а})\\[6pt]
+	\includegraphics[width=0.9\linewidth]{\hdir/pic/pic11}\\
+(\textit{б})\\
+	%\caption{Коэффициент сжатия (база изображений сайт imagecompression.info)}
+	%\label{pic11}
+%
+%\end{figure}
+	\caption{Зависимость скорости работы алгоритма от размера
+изображения: (\textit{а})~спутниковые снимки; (\textit{б})~база изображений, сайт
+{\sf imagecompression.info}}
+	\label{pic10}
+\end{figure}
+
+
+
+%\begin{figure}[t]
+%	\center
+%	\includegraphics[width=0.9\linewidth]{\hdir/pic/pic11}
+%	\caption{Скорость работы (база изображений сайт imagecompression.info)}
+%	\label{pic12}
+%\end{figure}
+
+
+%\FloatBarrier
+\section{Заключение}
+
+По результатам исследования видно, что предложенный метод обладает средним быст\-ро\-дей\-ст\-ви\-ем.
+Это связано с тем, что алгоритм построен на простых битовых операциях, тестирование произведено на компьютере, оперирующем байтами.
+Переход на оборудование, оперирующее битами, даст увеличение производительности в разы.
+Метод обладает потенциалом по увеличению производительности.
+Алгоритм имеет ряд преимуществ:
+\begin{itemize}
+	\item сжатие каждого РДИ происходит независимо от других, это дает возможность увеличения быстродействия за счет  параллельной обработки РДИ;
+	\item алгоритм позволяет обрабатывать изображения любой разрядности;
+	\item алгоритм не требователен к памяти и может работать на лету (для работы алгоритму необходимо хранить только две очередные строки изображения);
+	\item алгоритм строится на простых вычислительных
+операциях, что снижает требования к~элементной базе. Так,
+реализовав данный алгоритм на ПЛИС (программируемых логических интегральных
+схемах), можно существенно сократить энергетические затраты и~повысить быстродействие, что актуально
+для использования в~системах дистанционного зондирования Земли.
+\end{itemize}
+
+%\section{Литература}
+\renewcommand{\bibname}{Литература}
+\begin{thebibliography}{11}
+\bibitem{digital-image-processing}
+    \BibAuthor{Гонсалес Р., Вудс Р.}
+    Цифровая обработка изображений~/ Пер. с англ.~---
+    М.: Техносфера, 2005. 1072~с.
+    (\BibAuthor{Gonzalez~R., Woods~R.} Digital image processing.~--- 2nd ed.~--- Prentice Hall, 2002. 813 p.)
+\bibitem{digital-image-processing-2}
+    \BibAuthor{Яне Б.}
+    Цифровая обработка изображений~/ Пер. с англ.~---
+    М.: Техносфера, 2007. 584~с.
+    (\BibAuthor{Jahne B.} Digital image processing.~---  6th ed. ~--- Springer-Verlag, 2005. 639 p.)
+\bibitem{article-1}
+    \BibAuthor{Петров Е.\,П., Медведева Е.\,В., Харина Н.\,Л.}
+{Математическая модель цифровых полутоновых изображений Земли из космоса}~//
+{Мат-лы II Всеросс. НТК <<Актуальные проблемы ракетно-космической техники>>}. ---
+    Самара, 2011. С.~179--185.
+\bibitem{article-2}
+    \BibAuthor{Петров Е.\,П., Харина Н.\,Л., Ржаникова Е.\,Д.}
+{Метод сжатия цифровых полутоновых изображений на основе цепей Маркова с несколькими состояниями}~//
+{Мат-лы III Всеросс. НТК <<Актуальные проблемы ракетно-космической техники>>}. ---
+    Самара, 2013. С.~163--170.
+\bibitem{article-3}
+    \BibAuthor{Петров Е.\,П., Харина Н.\,Л., Ржаникова Е.\,Д.}
+{Метод сжатия цифровых изображений без потерь минимальными вычислительными ресурсами}~//
+{Тр. РНТОРЭС им.\ А.\,С.~Попова. Сер. Цифровая обработка сигналов и ее применение}. ---
+    М., 2015. С.\,544--548.
+\bibitem{images-1}
+    DigitalGlobe
+   \BibUrl{https://www.digitalglobe.com/resources/imagery-product-samples}.
+\bibitem{images-2}
+    The New Test Images~--- image compression benchmark.
+ \BibUrl{http://imagecompression.info/test_images}.
+\bibitem{algo-1}
+    BMF.
+ \BibUrl{http://www.compression.ru/ds/}.
+\bibitem{algo-2}
+\BibAuthor{Rhatus A.}
+   QLIC~--- Quick Lossless Image Compressor.
+ \BibUrl{http://www.imagecompression.info/gralic/qlic1d.zip}.
+\bibitem{algo-3}
+    ImageZero~--- fast lossless color image compression.
+ \BibUrl{http://imagezero.maxiom.de/}.
+
+
+\end{thebibliography}
+
+%\section{References}
+\renewcommand{\bibname}{References}
+\begin{thebibliography}{11}
+\bibitem{digital-image-processing}
+{Gonzalez, R., and R.~Woods.} 2002.
+    \BibTitle {Digital image processing.}
+    2nd ed.     Prentice Hall. 813~p.
+\bibitem{digital-image-processing-2}
+{Jahne, B.} 2005.
+    \BibTitle {Digital image processing.}
+    6th ed. Springer-Verlag. 639~p.
+\bibitem{article-1}
+    Petrov, E.\,P., E.\,V.~Medvedeva, and N.\,L.~Kharina. 2011.
+    Matematicheskaya model' tsifrovykh polutonovykh izobrazheniy Zemli iz
+kosmosa
+    [Mathematical model of digital half-tone images of Earth from space].
+    \BibJournal{Mat-ly II Vseross. NTK
+``Aktual'nye Problemy Raketno-Kosmicheskoy Tekhniki''}
+    [2nd Scientific-Technical Conference ``Actual Problems of the Missile and
+Space Equipment Proceedings'']. Samara.  179--185. (In Russian.)
+\bibitem{article-2}
+   Petrov,~E.\,P., N.\,L.~Kharina, and E.\,D.~Rzhanikova. 2013.
+   Metod szhatiya tsifrovykh polutonovykh izobrazheniy na osnove tsepey
+Markova s neskol'kimi sostoyaniyami
+   [Method of digital half-tone images compression on the basis of Markov
+chains with several states].
+   \BibJournal{Mat-ly III Vseross. NTK ``Aktual'nye Problemy
+Raketno-Kosmicheskoy Tekhniki''}
+   [3rd Scientific-Technical Conference ``Actual Problems of the Missile and
+Space Equipment'' Proceedings]. Samara. 163--170.  (In Russian.)
+\bibitem{article-3}
+    Petrov, E.\,P., N.\,L.~Kharina, and E.\,D.~Rzhanikova. 2015.
+    Metod szhatiya tsifrovykh izobrazheniy bez poter' minimal'nymi
+vychislitel'nymi resursami
+    [Method of digital images compression without loss with
+minimum computing resources].
+    \BibJournal {Tr. RNTORES im. A.\,S.~Popova.
+Ser. ``Tsifrovaya obrabotka signalov i~ee primenenie''}
+    [17th  Conference (International)  on Digital Signal Processing
+and its Applications Proceedings]. Moscow.  544--548. (In Russian.)
+\bibitem{images-1}
+    DigitalGlobe. Available at:
+ \BibUrl{https://www.digitalglobe.com/resources/imagery-product-samples}
+(accessed November~24, 2015).
+\bibitem{images-2}
+    The New Test Images~--- image compression benchmark.
+Available at:  \BibUrl{http://imagecompression.info/test_images}
+(accessed November~24, 2015).
+\bibitem{algo-1}
+    BMF.
+Available at: \BibUrl{http://www.compression.ru/ds/}
+(accessed November~24, 2015).
+\bibitem{algo-2}
+Rhatus,~A.
+   QLIC~---  Quick Lossless Image Compressor.
+Available at: \BibUrl{http://www.imagecompression.info/gralic/qlic1d.zip}
+(accessed November~24, 2015).
+
+\bibitem{algo-3}
+    ImageZero~--- fast lossless color image compression.
+Available at: \BibUrl{http://imagezero.maxiom.de/}
+(accessed November~24, 2015).
+
+
+
+\end{thebibliography}
+
+% Решение Программного Комитета:
+%\ACCEPTNOTE
+%\AMENDNOTE
+%\REJECTNOTE
+\end{document}
+
