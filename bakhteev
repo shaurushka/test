@@ -24,8 +24,9 @@
 %  \renewcommand{\tablename}{Tab.}
 %}
 
+\begin{document}
  
-\English
+ 
 \title[Panel matrix and ranking model recovery]{Panel matrix and ranking model recovery using mixed-scale measured data}
 \author
     {O. \,Y. ~Bakhteev}
@@ -34,17 +35,20 @@
     {bakhteev@phystech.edu}
 \organization
     {Moscow Institute of Physics and Technology}
-\abstract{ 	
+
+
+\abstract{
+\emph{Аннотация}. 
+Работа посвящена восстановлению ежегодных изменений рейтингов студентов при собеседовании в учебный центр. Рассматривается выборка, состоящая из экспертных оценок студентов, проходивших собеседование в учебный центр в течение нескольких лет и итоговых рейтингов студентов. Шкалы экспертных оценок меняются из года в год, но шкала рейтингов остается неизменной. Требуется восстановить ранжирующую модель, не зависящую от времени. Задача сводится к восстановлению панельной матрицы (то есть матрицы объект--признак--год), ставящей во взаимное соответствие некоторого студента (или усредненный ``портрет'' студента) и его предполагаемую оценку на собеседованиях за каждый год, и исследованию ранжирующей модели, полученной на основе этой матрицы, а так же анализу ее устойчивости на протяжении нескольких лет.  Предлагается метод восстановления панельной матрицы, основанный на решении многомерной задачи о назначениях. В качестве метода восстановления ранжирующей модели используется алгоритм многоклассовой классификации с отношением полного порядка на классах.
+
+
+\emph{Abstract}. 	
 We solve a decision-making problem in the field of operational research education. The paper presents a method for recovery of changes in ratings of student employees. These ratings are based on interviews at the IT training center. We consider a dataset consisting of expert estimates for assessments for different years and the overall rating for these students. The scales of the expert estimates vary from year to year, but the scale of the rating remains stable. One must recover the time-independent ranking model. The problem is stated as the object--feature--year panel matrix recovery. It is a map from student descriptions (or their generalized portraits) to  expected ratings for all years. We also research a stability of the ranking model produced by the panel matrix. We propose a new method of panel matrix recovery. It is based on a solution of multidimensional assignment problem. To construct a ranking model we use an ordinal classification algorithm with partially ordered feature sets and an algorithm based on support vector machine. The problem is illustrated by the dataset containing the expert assessment of the student interviews at the IT center.
 
-\noindent
-\textbf{Keywords}:
+\emph{Keywords}:
 	operational research education, business analytics, knowledge extraction, ratings,  expert estimates, clustering, mixed scales. 
 }
 
- 
-\begin{document}
-\English
 \maketitle
 \section{Introduction}
 The paper presents a solution for the panel matrix recovery problem, where the panel matrix is a multidimensional  object--feature--year~\cite{panel} matrix. The objects of the matrix are represented by vectors containing different object features for several years. We use this algebraic structure in order to recover the ranking model and estimate its stability: whenever the parameters of the model remain stable in different years we consider the model stable. The original dataset is represented by the design matrix namely the object--feature matrix, which contains all the object descriptions during all the timestamps.
@@ -770,155 +774,315 @@ In this paper we proposed the method of the panel matrix recovery. We proposed t
 Two metric functions were compared. The HEOM metric showed the best result.
 The experiment showed that the panel matrix is stable in the sense of ranking model stability. The best result of ranking model recovery was shown by the RankSVM algorithm.
 
-The author would like to thank Dr. Vadim Strijov for the formal problem statement, useful comments, suggestions and attention drawn to the present work
+The author would like to thank Dr. Vadim Strijov for the formal problem statement, useful comments, suggestions and the attention drawn to the present work.
 %\renewcommand\bibname{References}
 \def\BibAuthor#1{\emph{#1}}
 \def\BibTitle#1{{#1}}
 
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 \begin{thebibliography}{1}
 \bibitem{panel}
     \BibAuthor{Davies A., Lahiri K.}
-1995. A new framework for testing rationality and measuring aggregate shocks using panel data // Journal of Econometrics, 68(1): 205--227.  
+ A new framework for testing rationality and measuring aggregate shocks using panel data // Journal of Econometrics, 1995. 68(1): 205–227.  
 
 \bibitem{sensor}
     \BibAuthor{Capponi A., de Waard H.}
-2004. A polynomial time algorithm for the multidimensional
-assignment problem in multiple sensor environments // The 7th International Conference on Information Fusion, 1150-1157.
+A polynomial time algorithm for the multidimensional
+assignment problem in multiple sensor environments // The 7th International Conference on Information Fusion, 2004. 1150-1157.
 
 
 \bibitem{multiindex}
     \BibAuthor{Pardalos P., Pitsoulis L.}
-   2001. Nonlinear assignment problems: algorithms and applications (Combinatorial optimization) --- Springer, 303 p.
+   Nonlinear assignment problems: algorithms and applications (Combinatorial optimization) --- Springer, 2001. 303 p.
 
 \bibitem{journal4}
  \BibAuthor{Aronson J. E.}
-1986. The multiperiod assignment problem: A multicommodity network flow model and specialized branch and bound algorithm  // European Journal of Operational Research,
- 23(3): 367--381.
+ The multiperiod assignment problem: A multicommodity network flow model and specialized branch and bound algorithm  // European Journal of Operational Research, 1986.
+ 23(3): 367–381.
 
 \bibitem{journal5}
  \BibAuthor{Fr\'eville A.}
-2004. The multidimensional 0--1 knapsack problem: An overview  // European Journal of Operational Research,
-155(3): 1--21.
+ The multidimensional 0–1 knapsack problem: An overview  // European Journal of Operational Research, 2004.
+155(3): 1–21.
 
 \bibitem{journal6}
  \BibAuthor{Walteros J. L., Vogiatzis C., Pasiliao E. L., Pardalos P. M.}
-2004. Integer programming models for the multidimensional assignment problem with star costs  // European Journal of Operational Research,
-235(3): 553--568.
+ Integer programming models for the multidimensional assignment problem with star costs  // European Journal of Operational Research, 2004.
+235(3): 553–568.
+
+\bibitem{assignment}
+    \BibAuthor{Kuroki Y., Matsui T.}
+     An approximation algorithm
+for multidimensional assignment problem
+minimizing the sum of squared errors // Discrete Applied Mathematics, 2009. 157: 2124–2135.
+
+\bibitem{graph}
+    \BibAuthor{Pistorius J., Minoux.  M.}
+    An improved direct labeling method for the max-flow min-cut
+computation in large hypergraphs and applications // International Transactions in Operational Research, 2003. 10(1): 1-11.
+
+\bibitem{genetic}
+    \BibAuthor{Anshuman S., Rudrajit T.}
+ Solving the assignment problem using genetic algorithm and simulated annealing //
+   IIAENG International Journal of Applied Mathematics, 2007. 36(1). \\ Available at: http://www.iaeng.org/IJAM/issues\_v36/issue\_1/IJAM\_36\_1\_7.pdf.
+
+\bibitem{struct}
+    \BibAuthor{Cooke D. J., Bez  H. E.}
+    Computer Mathematics --- 1st ed. ---  Cambridge University Press, 1984. 408 p.
+
+
+\bibitem{ranking}
+	\BibAuthor{Johannes F., Eyke H.}
+ Preference Learning: An Introduction --- Springer, 2011.  454 p.
+
+\bibitem{journal1}
+ \BibAuthor{Albadvi A.}
+Formulating national information technology strategies: A preference ranking model using PROMETHEE method // European Journal of Operational Research, 2004.  153(2): 290–296.
+
+
+\bibitem{journal2}
+ \BibAuthor{Siskos Y., Matsatsinis N.F., Baourakis G.}
+Multicriteria analysis in agricultural marketing: The case of French olive oil market  // European Journal of Operational Research, 2001. 130(2): 315–331.
+
+\bibitem{journal3}
+ \BibAuthor{ Mladineo N., Margeta J.}
+Multicriteria ranking of alternative locations for small scale hydro plants // European Journal of Operational Research, 1987. 31: 215-222.
+
+
+\bibitem{pca}
+	\BibAuthor{Медведникова М. М.}
+ Использование метода главных компонент при построении интегральных индикаторов // Машинное обучение и анализ данных, 2012. 3: 292-304.
+
+\bibitem{pareto}
+	\BibAuthor{Медведникова М. М., Стрижов В. В., Кузнецов М. П. }
+ Алгоритм многоклассовой монотонной Парето-классификации с выбором признаков // Proceedings of the Tula State University, Natural science, 2012. 3: 132-141.
+
+\bibitem{rankscale}
+	\BibAuthor{Стрижов В. В.}
+Уточнение экспертных оценок, выставленных в ранговых шкалах, с помощью измеряемых данных // Заводская лаборатория. Диагностика материалов, 2011, 77(7): 72-78.  
+
+
+\bibitem{porder}
+    \BibAuthor{Kuznetsov M. P.,  Strijov  V. V.}
+ Methods of expert estimations concordance for integral quality estimation // Expert Systems with Applications, 2014. Vol. 41, Issue 4, Part 2, p. 1551-2110 (March 2014).
+
+
+\bibitem{RankSVM}
+	\BibAuthor{Joachims T.}
+ Optimizing Search Engines using Clickthrough Data // Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining, 2002. 133-142.
+
+\bibitem{dataset}
+URL: http://sourceforge.net/p/mlalgorithms/code/\\/HEAD/tree/Group074/Bakhteev014UniversityRanking/data/data.csv?format=raw.
+
+\bibitem{SVM}
+    \BibAuthor{Воронцов К. В.}
+Лекции по методу опорных векторов // URL: http://www.ccas.ru/voron/download/SVM.pdf. 
+
+
+\bibitem{bigbet}
+	\BibAuthor{Стрижов В. В. }
+	 Уточнение экспертных оценок с помощью измеряемых данных // Factory laboratory. Material diagnostics, 2006.  72(7): 59-64. 
+
+\bibitem{heom}
+    \BibAuthor{Wilson D. R., Martinez. T. R.}
+    Improved heterogeneous distance functions // J. Artif. Intell. Res. (JAIR), 1997.  6: 1-34.
+
+\bibitem{hmom}
+    \BibAuthor{Batista  G. E. A. P. A., Silva D. F.}
+     How k-Nearest Neighbor Parameters Affect its Performance // Proceedings of the Argentine Symposium on Artificial Intelligence,  2009, 1-12.
+
+\bibitem{dist}
+    \BibAuthor{Walesiak M.}
+   Distance measure for ordinal data // Argumenta Oeconomica, 1999,  2(8): 167-173.
+
+
+\bibitem{kendall}
+\BibAuthor{Prokhorov A. V. (originator)}
+Kendall coefficient of rank correlation., Encyclopedia of Mathematics \\// URL: http://www.encyclopediaofmath.org/index.php?title=Kendall\textunderscore coefficient\textunderscore of \textunderscore rank \textunderscore correlation\&oldid=13189.
+
+
+\bibitem{kmeans_orig}
+    \BibAuthor{Steinhaus H. }
+   1956. Sur la division des corps materiels en parties // Bull. Acad. Polon. Sci, 4: 801—804.
+
+
+\bibitem{kormen}
+    \BibAuthor{Cormen T. H., Leiserson C. E., Rivest R. L., Stein C.}
+   2009. Introduction to Algorithms. — 3rd. ed. — MIT Press, 1312 p.
+
+\bibitem{transform1}
+    \BibAuthor{Pu L., Faltings B.}
+    Hypergraph Learning with Hyperedge Expansion // ECML PKDD'12 Proceedings of the 2012 European conference on Machine Learning and Knowledge Discovery in Databases, 2012. 1: 410-425.
+
+\bibitem{tr2}
+    \BibAuthor{ Agarwal S., Branson K., Belongie S.}
+  Higher order learning with graphs // Proceeding
+ICML '06 Proceedings of the 23rd international conference on Machine learning,  2006.  17-24.
+
+\bibitem{latent}
+    \BibAuthor{ Winship C., Mare R.}
+   Regression models with ordinal variables // American Sociological Review,  Aug 1984, 1984. 49(4): 512-525.
+
+
+\bibitem{codecode}
+URL: http://sourceforge.net/p/mlalgorithms/code/\\/HEAD/tree/Group074/Bakhteev014UniversityRanking/code/.
+
+\bibitem{missing}
+\BibAuthor{Batista G. E. A. P. A., Monard C. M.}
+    An Analysis of Four Missing Data Treatment Methods for Supervised Learning // Applied Artificial Intelligence, 2003, p. 519-533.
+
+\bibitem{mds}
+    \BibAuthor{ Strickert M., Teichmann S., Sreenivasulu N., Seiffert U.}
+High-Throughput Multi-dimensional Scaling (HiT-MDS) for cDNA-Array Expression Data // ICANN'05 Proceedings of the 15th international conference on Artificial Neural Networks: biological Inspirations, 2005.  1: 625-633.
+
+
+\end{thebibliography}
+\renewcommand{\bibname}{References}
+%!!!!!!!!!!!!!!!!
+\begin{thebibliography}{1}
+\bibitem{panel}
+    \BibAuthor{Davies A., Lahiri K.}
+1995. A new framework for testing rationality and measuring aggregate shocks using panel data. \emph{Journal of Econometrics}, 68(1): 205–227.  
+
+\bibitem{sensor}
+    \BibAuthor{Capponi A., de Waard H.}
+2004. A polynomial time algorithm for the multidimensional
+assignment problem in multiple sensor environments. \emph{The 7th International Conference on Information Fusion}, 1150-1157.
+
+
+\bibitem{multiindex}
+    \BibAuthor{Pardalos P., Pitsoulis L.}
+   2001. \emph{Nonlinear assignment problems: algorithms and applications (Combinatorial optimization)} --- Springer, 303 p.
+
+\bibitem{journal4}
+ \BibAuthor{Aronson J. E.}
+1986. The multiperiod assignment problem: A multicommodity network flow model and specialized branch and bound algorithm. \emph{European Journal of Operational Research},
+ 23(3): 367–381.
+
+\bibitem{journal5}
+ \BibAuthor{Fr\'eville A.}
+2004. The multidimensional 0–1 knapsack problem: An overview. \emph{European Journal of Operational Research},
+155(3): 1–21.
+
+\bibitem{journal6}
+ \BibAuthor{Walteros J. L., Vogiatzis C., Pasiliao E. L., Pardalos P. M.}
+2004. Integer programming models for the multidimensional assignment problem with star costs. \emph{European Journal of Operational Research},
+235(3): 553–568.
 
 \bibitem{assignment}
     \BibAuthor{Kuroki Y., Matsui T.}
     2009. An approximation algorithm
 for multidimensional assignment problem
-minimizing the sum of squared errors // Discrete Applied Mathematics, 157: 2124--2135.
+minimizing the sum of squared errors. \emph{Discrete Applied Mathematics}, 157: 2124–2135.
 
 \bibitem{graph}
     \BibAuthor{Pistorius J., Minoux.  M.}
    2003. An improved direct labeling method for the max-flow min-cut
-computation in large hypergraphs and applications // International Transactions in Operational Research, 10(1): 1-11.
+computation in large hypergraphs and applications. \emph{International Transactions in Operational Research}, 10(1): 1-11.
 
 \bibitem{genetic}
     \BibAuthor{Anshuman S., Rudrajit T.}
 2007. Solving the assignment problem using genetic algorithm and simulated annealing //
-   IIAENG International Journal of Applied Mathematics, 36(1).\\ Available at: http://www.iaeng.org/IJAM/issues\_v36/issue\_1/IJAM\_36\_1\_7.pdf.
+   \emph{IIAENG International Journal of Applied Mathematics}, 36(1). Available at: http://www.iaeng.org/IJAM/issues\_v36/issue\_1/IJAM\_36\_1\_7.pdf.
 
 \bibitem{struct}
     \BibAuthor{Cooke D. J., Bez  H. E.}
-    1984. Computer Mathematics --- Cambridge University Press; 1 edition,  408 p.
+    1984. \emph{Computer Mathematics} --- Cambridge University Press; 1 edition,  408 p.
 
 
 \bibitem{ranking}
 	\BibAuthor{Johannes F., Eyke H.}
- 2011. Preference Learning: An Introduction --- Springer, 454 p.
+ 2011. \emph{Preference Learning: An Introduction} --- Springer, 454 p.
 
 \bibitem{journal1}
  \BibAuthor{Albadvi A.}
-2004. Formulating national information technology strategies: A preference ranking model using PROMETHEE method // European Journal of Operational Research, 153(2): 290--296.
+2004. Formulating national information technology strategies: A preference ranking model using PROMETHEE method. \emph{European Journal of Operational Research}, 153(2): 290–296.
 
 
 \bibitem{journal2}
  \BibAuthor{Siskos Y., Matsatsinis N.F., Baourakis G.}
-2001. Multicriteria analysis in agricultural marketing: The case of French olive oil market  // European Journal of Operational Research, 130(2): 315--331.
+2001. Multicriteria analysis in agricultural marketing: The case of French olive oil market. \emph{European Journal of Operational Research}, 130(2): 315–331.
 
 \bibitem{journal3}
  \BibAuthor{ Mladineo N., Margeta J.}
-1987. Multicriteria ranking of alternative locations for small scale hydro plants // European Journal of Operational Research, 31: 215-222.
+1987. Multicriteria ranking of alternative locations for small scale hydro plants. \emph{European Journal of Operational Research}, 31: 215-222.
 
 
 \bibitem{pca}
 	\BibAuthor{Medvednikova M. M.}
- 2012. Using principal component analysis in construction of integral indicators // Machine learning and data analysis. 1(3): 292-304.
+ 2012. Ispol'zovanie metoda glavnyx komponent pri postroenii integral'nyx indikatorov [Using principal component analysis in construction of integral indicators].  \emph{Machine learning and data analysis}. 1(3): 292-304. (In Russian)
 
 \bibitem{pareto}
 	\BibAuthor{Medvednikova M. M., Strijov V. V., Kuznetsov M. P. }
- 2012. An algorithm of multiclass monotonic Pareto-classification with feature selection // Proceedings of the Tula State University, Natural science, 3: 132-141.
+ 2012. Algoritm mnogoklassovoj monotonnoj Pareto-klassifikacii s vyborom priznakov [An algorithm of multiclass monotonic Pareto-classification with feature selection]. Proceedings of the Tula State University, Natural science, 3: 132-141. (In Russian)
 
 \bibitem{rankscale}
 	\BibAuthor{Strijov V. V.}
-2011. Clarification of expert estimations in rank scale using measured data // Factory laboratory. Material diagnostics. 77(7): 72-78. 
+2011. Utochnenie e'kspertnyx ocenok, vystavlennyx v rangovyx shkalax, s pomoshh'yu izmeryaemyx dannyx [Clarification of expert estimations in rank scale using measured data]. Zavodskaya laboratoriya. Diagnostika materialov. [Factory laboratory. Material diagnostics]. 77(7): 72-78.  (In Russian)
 
 
 \bibitem{porder}
     \BibAuthor{Kuznetsov M. P.,  Strijov  V. V.}
-2014. Methods of expert estimations concordance for integral quality estimation // Expert Systems with Applications, Vol. 41, Issue 4, Part 2, p. 1551-2110 (March 2014).
+2014. Methods of expert estimations concordance for integral quality estimation. \emph{Expert Systems with Applications}, Vol. 41, Issue 4, Part 2, p. 1551-2110 (March 2014).
 
 
 \bibitem{RankSVM}
 	\BibAuthor{Joachims T.}
-2002. Optimizing Search Engines using Clickthrough Data // Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining, 133-142.
+2002. Optimizing Search Engines using Clickthrough Data. \emph{Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining}, 133-142.
 
 \bibitem{dataset}
 The original dataset. Available at: http://sourceforge.net/p/mlalgorithms/code/\\/HEAD/tree/Group074/Bakhteev014UniversityRanking/data/data.csv?format=raw (accessed August 27, 2014)
 
 \bibitem{SVM}
     \BibAuthor{Vorontsov K. V.}
-Support Vector Machine lectures // Available at: http://www.ccas.ru/voron/download/SVM.pdf (accessed July 22, 2014). 
+Support Vector Machine lectures. Available at: http://www.ccas.ru/voron/download/SVM.pdf (accessed July 22, 2014). (In Russian)
 
 
 \bibitem{bigbet}
 	\BibAuthor{Strijov V. V. }
-	 2006. Clarification of expert estimations using measured data // Factory laboratory. Material diagnostics. 72(7): 59-64. 
+	 2006. Utochnenie e'kspertnyx ocenok s pomoshh'yu izmeryaemyx dannyx [Clarification of expert estimations using measured data]. Zavodskaya laboratoriya. Diagnostika materialov. [Factory laboratory. Material diagnostics]. 72(7): 59-64. (In Russian)
 
 \bibitem{heom}
     \BibAuthor{Wilson D. R., Martinez. T. R.}
-    1997. Improved heterogeneous distance functions // J. Artif. Intell. Res. (JAIR), 6: 1-34.
+    1997. Improved heterogeneous distance functions. \emph{J. Artif. Intell. Res. (JAIR)}, 6: 1-34.
 
 \bibitem{hmom}
     \BibAuthor{Batista  G. E. A. P. A., Silva D. F.}
-    2009. How k-Nearest Neighbor Parameters Affect its Performance // Proceedings of the Argentine Symposium on Artificial Intelligence,  2009, 1-12.
+    2009. How k-Nearest Neighbor Parameters Affect its Performance. \emph{Proceedings of the Argentine Symposium on Artificial Intelligence},  2009, 1-12.
 
 \bibitem{dist}
     \BibAuthor{Walesiak M.}
-  1999. Distance measure for ordinal data. Argumenta Oeconomica, 1999,  2(8): 167-173.
+  1999. Distance measure for ordinal data. \emph{Argumenta Oeconomica},  2(8): 167-173.
 
 
 \bibitem{kendall}
 \BibAuthor{Prokhorov A. V. (originator)}
-Kendall coefficient of rank correlation., Encyclopedia of Mathematics \\// Available at: http://www.encyclopediaofmath.org/index.php?title=Kendall\textunderscore coefficient\textunderscore of \textunderscore rank \textunderscore correlation\&oldid=13189 (accessed August 27, 2014)
+Kendall coefficient of rank correlation., Encyclopedia of Mathematics. \\ Available at: http://www.encyclopediaofmath.org/index.php?title=Kendall\textunderscore coefficient\textunderscore of \textunderscore rank \textunderscore correlation\&oldid=13189 (accessed August 27, 2014)
 
 
 
 \bibitem{kmeans_orig}
     \BibAuthor{Steinhaus H. }
-   1956. Sur la division des corps materiels en parties // Bull. Acad. Polon. Sci, 4: 801--804.
+   1956. Sur la division des corps materiels en parties. \emph{Bull. Acad. Polon. Sci}, 4: 801—804.
 
 
 \bibitem{kormen}
     \BibAuthor{Cormen T. H., Leiserson C. E., Rivest R. L., Stein C.}
-   2009. Introduction to Algorithms. -- 3rd. -- MIT Press, 1312 p.
+   2009. \emph{Introduction to Algorithms.} — 3rd. — MIT Press, 1312 p.
 
 \bibitem{transform1}
     \BibAuthor{Pu L., Faltings B.}
-   2012. Hypergraph Learning with Hyperedge Expansion // ECML PKDD'12 Proceedings of the 2012 European conference on Machine Learning and Knowledge Discovery in Databases, 1: 410-425.
+   2012. Hypergraph Learning with Hyperedge Expansion. \emph{ECML PKDD'12 Proceedings of the 2012 European conference on Machine Learning and Knowledge Discovery in Databases}, 1: 410-425.
 
 \bibitem{tr2}
     \BibAuthor{ Agarwal S., Branson K., Belongie S.}
-   2006. Higher order learning with graphs // Proceeding
-ICML '06 Proceedings of the 23rd international conference on Machine learning, 17-24.
+   2006. Higher order learning with graphs. \emph{Proceeding
+ICML '06 Proceedings of the 23rd international conference on Machine learning}, 17-24.
 
 \bibitem{latent}
     \BibAuthor{ Winship C., Mare R.}
-  1984. Regression models with ordinal variables // American Sociological Review,  Aug 1984, 49(4): 512-525.
+  1984. Regression models with ordinal variables. \emph{American Sociological Review},  Aug 1984, 49(4): 512-525.
 
 
 \bibitem{codecode}
@@ -927,11 +1091,11 @@ Available at: http://sourceforge.net/p/mlalgorithms/code/\\/HEAD/tree/Group074/B
 
 \bibitem{missing}
 \BibAuthor{Batista G. E. A. P. A., Monard C. M.}
-   2003. An Analysis of Four Missing Data Treatment Methods for Supervised Learning // Applied Artificial Intelligence, 2003, p. 519-533.
+   2003. An Analysis of Four Missing Data Treatment Methods for Supervised Learning. \emph{Applied Artificial Intelligence}, 2003, p. 519-533.
 
 \bibitem{mds}
     \BibAuthor{ Strickert M., Teichmann S., Sreenivasulu N., Seiffert U.}
-2005. High-Throughput Multi-dimensional Scaling (HiT-MDS) for cDNA-Array Expression Data // ICANN'05 Proceedings of the 15th international conference on Artificial Neural Networks: biological Inspirations, 1: 625-633.
+2005. High-Throughput Multi-dimensional Scaling (HiT-MDS) for cDNA-Array Expression Data. \emph{ICANN'05 Proceedings of the 15th international conference on Artificial Neural Networks: biological Inspirations}, 1: 625-633.
 
 
 \end{thebibliography}
