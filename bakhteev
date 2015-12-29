@@ -1,0 +1,939 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{jmlda}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usetikzlibrary{matrix,positioning}
+	\usepackage[]{tikz-3dplot}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+%\usepackage{lineno}
+%\linenumbers
+
+\newtheorem{Def_eng}{Definition}
+\newtheorem{Th_eng}{Theorem}
+\newenvironment{Pr_eng}%
+    {\par\noindent{\bf Proof.}}%
+    {\hfill$\scriptstyle\blacksquare$}
+
+%\DeclareMathOperator*{\argmin}{arg\,min}
+
+%\addto{\captionsenglish}{%
+%  \renewcommand{\figurename}{Fig.}
+%  \renewcommand{\tablename}{Tab.}
+%}
+
+ 
+\English
+\title[Panel matrix and ranking model recovery]{Panel matrix and ranking model recovery using mixed-scale measured data}
+\author
+    {O. \,Y. ~Bakhteev}
+    [O. \,Y. ~Bakhteev]
+\email
+    {bakhteev@phystech.edu}
+\organization
+    {Moscow Institute of Physics and Technology}
+\abstract{ 	
+We solve a decision-making problem in the field of operational research education. The paper presents a method for recovery of changes in ratings of student employees. These ratings are based on interviews at the IT training center. We consider a dataset consisting of expert estimates for assessments for different years and the overall rating for these students. The scales of the expert estimates vary from year to year, but the scale of the rating remains stable. One must recover the time-independent ranking model. The problem is stated as the object--feature--year panel matrix recovery. It is a map from student descriptions (or their generalized portraits) to  expected ratings for all years. We also research a stability of the ranking model produced by the panel matrix. We propose a new method of panel matrix recovery. It is based on a solution of multidimensional assignment problem. To construct a ranking model we use an ordinal classification algorithm with partially ordered feature sets and an algorithm based on support vector machine. The problem is illustrated by the dataset containing the expert assessment of the student interviews at the IT center.
+
+\noindent
+\textbf{Keywords}:
+	operational research education, business analytics, knowledge extraction, ratings,  expert estimates, clustering, mixed scales. 
+}
+
+ 
+\begin{document}
+\English
+\maketitle
+\section{Introduction}
+The paper presents a solution for the panel matrix recovery problem, where the panel matrix is a multidimensional  object--feature--year~\cite{panel} matrix. The objects of the matrix are represented by vectors containing different object features for several years. We use this algebraic structure in order to recover the ranking model and estimate its stability: whenever the parameters of the model remain stable in different years we consider the model stable. The original dataset is represented by the design matrix namely the object--feature matrix, which contains all the object descriptions during all the timestamps.
+
+The main goal of this paper is to develop an algorithm of panel matrix recovery and to recover the ranking model. Let the panel matrix $\mathbf{Z}$ be the matrix, where the entry  ${z}_{ijt}$ is the feature $j$ of the student $i$ in the year $t$. 
+
+The problem of the panel matrix recovery can be found in the pattern recognition, when it is required to recover the tracks of different targets received by sensors~\cite{sensor}. In this paper we consider another application problem, which can be met in business-analytics: an employee selection problem. We consider the dataset containing expert assessments, which were received during the interview at an educational IT-center in the years 2006-2009. We want to recover the ranking model and estimate the stability of this ranking model during all the years. We propose to construct some generalized ``portraits'' of these students and recover the panel matrix $\mathbf{Z}$  based on these portraits. Note that in this paper we consider a special case of the panel matrix recovery when the features (answers from assessment) of the portraits remain stable and the only elements that are changeable are classes of students. The scheme of the panel matrix recovery is shown in Fig.~\ref{fig:scheme}.
+
+The problem is stated as the multidimensional assignment problem. It requires to find a bijection between object descriptions in different years. The main difficulty in solving this problem is that the multidimensional assignment problem is NP-hard~\cite{multiindex}, therefore it requires to use heuristic algorithms to solve it. There are several solutions for this problem and related problems~\cite{journal4,journal5,journal6}. The papers~\cite{multiindex,assignment} propose to use linear programming and randomization algorithms. The methods we propose are based on a hypergraph construction. We can use a genetic algorithm~\cite{genetic}. As an alternative we state our problem as the common min-cost max flow problem~\cite{graph}. 
+\begin{figure}[tbh!]
+\caption{The panel matrix recovery. We find generalized student ``portraits'' that remain stable during all the time and consider them to be the panel matrix objects. }
+\label{fig:scheme}
+  \centering
+\includegraphics[width=110mm, height=40mm]{panel_eng.eps}
+ \end{figure}
+
+
+Define some terms that will be used for the dataset description.
+\begin{Def_eng}
+A scale $\mathbb{L}$ is an algebraic structure~\cite{struct} with a fixed set of operations, relations, and a fixed set of axioms.
+\end{Def_eng}
+\begin{Def_eng}
+A nominal scale $\mathbb{C}$ is a scale with a fixed binary relation:
+\begin{enumerate}[{1)}]
+\item $x=y \vee  x \not =  y$,
+\item $x,y: x=y \Rightarrow y=x $,
+\item $x,y,z: x=y \land y=z \Rightarrow x=z $,
+\end{enumerate}
+where $x,y,z$ are objects from the scale $\mathbb{C}$: $x,y,z\in \mathbb{C}$. 
+\end{Def_eng}
+\begin{Def_eng}
+An oridnal scale $\mathbb{O}$ is a nominal scale with a fixed relation:
+\begin{enumerate}[{1)}]
+\item $xRx$,
+\item $x R y \land y R x \Rightarrow x = y$,
+\item $x R y \land y R z \Rightarrow x R z $,
+\end{enumerate}
+where $x,y,z \in \mathbb{O}$. 
+\end{Def_eng}
+\begin{Def_eng}
+A linear scale $\mathbb{W}$ is an ordinal scale with total order and addition and subtraction operations defined on it.
+\end{Def_eng}
+
+\begin{Def_eng}
+A ranking function $f$ is a mapping from the object space $\mathbb{X}$ to the finite set of classes $\mathbb{Y}$ with a total order defined on it~\cite{ranking}. 
+\end{Def_eng}
+
+The ranking model recovery problem can be met not only in the employee selection but also in information technologies~\cite{journal1}, agriculture~\cite{journal2}, and energy management~\cite{journal3}. 
+The type of the  ranking model recovery algorithm can be chosen with respect to the dataset scale~\cite{pca,pareto,rankscale}. In this paper we consider a pairwise dominating matrix algorithm for the feature set with a partial order defined on each feature~\cite{porder}. Another algorithm we consider is an algorithm RankSVM, which is a generalization of a classification algorithm based on the support vector machine~\cite{SVM}. 
+
+The ranking model is recovered by the dataset~\cite{dataset} containing students that attempt to pass the interview at the educational center during the years 2006--2009. The data can contain missing values. The dataset feature descriptions is shown in Table~\ref{table:data_descr}. 
+\begin{table}[tbh!]
+\caption{Dataset feature descriptions.}\label{table:data_descr}
+\begin{center}
+\begin{tabular}{|p{3cm}|p{3cm}|p{3.5cm}|}
+\hline
+ Feature& Scale type& Scale cardinality \\
+\hline
+Average score during university education &  Linear, $\mathbb{W}$ & Rational number in [3;5] \\
+\hline
+Average score for the last term &  Linear, $\mathbb{W}$ & Rational number in [3;5] \\
+\hline
+Acceptance preference (expert estimation) & Ordinal, $\mathbb{O}$ & Rational number, the cardinality changes during some years \\
+\hline
+Student's interests --- programming, telecommunication development or both & Nominal, $\mathbb{C}$ & The experts used 3 discrete values \{programming, both, telecommunication \} in the year 2006, later the experts used rational number\\
+\hline
+Students' responsibility & Ordinal, $\mathbb{O}$ &  Rational number, the cardinality changes during some years \\
+\hline
+Level of knowledge & Ordinal, $\mathbb{O}$ &  Rational number, the cardinality changes during some years \\
+\hline
+Motivation & Ordinal, $\mathbb{O}$ &  Rational number, the cardinality changes during some years \\
+\hline
+Student's class --- the final rating in the assessment & Ordinal, $\mathbb{O}$ &  Rational number, the cardinality changes during some years \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The expert proposes that each feature should give a positive contribution into the rating. The higher score student gets the higher rating he receives  according to the  ``bigger  is better''~\cite{bigbet} principle. The nominal feature ``Student's interests'' is not used in the ranking model recovery, but it is used in the panel matrix recovery in order to cluster students. The expert also recommends to round the feature ``Student's interests'' in order to get three discrete values.
+
+One of the steps of the panel matrix recovery is a clustering, which requires a distance function. This function determines how close to each other  the students estimates are. We propose a generalized  Heterogeous Euclidean-Overlap Metric function~\cite{heom} and Heterogeous Manhattan-Overlap Metric function~\cite{hmom} for a mixed-scale dataset (a dataset containing linear, ordinal~\cite{dist}, and nominal scales). Extracting significant information from such datasets is a challenging high priority issue for many organizations in the business analytics.
+
+
+\section{The problem formulation}
+In this section we present a formal definition of the panel matrix $\mathbf{Z}$ and ranking model recovery problem.
+
+\begin{Def_eng}
+The panel matrix $\mathbf{Z}$ is a matrix, where the entry  ${z}_{ijt}$ is the feature $j$ (answers from assessment) of student $i$ in year $t$.
+\end{Def_eng}
+
+The dataset contains the set of pairs of mixed-scale data:
+\[
+ \mathfrak{D} =
+\{(\mathbf{x}_i,y_i) :  i\in{\mathcal{I}}\}, \quad \text{the object index } i\in{\mathcal{I}} = \{ 1,\dots , m \},
+ \]
+\[
+\mathbf{X}=[\mathbf{x}_1,\dots,\mathbf{x}_m]^T, \quad y_i \in \mathbf{y}
+\] with metric:
+\begin{equation}\label{eq:metric_def}
+d:\mathbb{X} \times \mathbb{X}\rightarrow \mathbb{R}_{+},
+\end{equation} 
+where $\mathbb{X} = \mathbb{L}_1 \times \dots \times \mathbb{L}_n$  is an object space, $\mathbf{X}$  is the  object--feature matrix for the dataset, $\mathbf{x}_i \subset \mathbb{X}$, and $\mathbf{y}$ is the vector of classes for each object in dataset such that its elements are in $\mathbb{Y}$.  In this paper we use the generalized HEOM distance and HMOM distance functions as the function $d$~\eqref{eq:heom2},\eqref{eq:hmom}.
+Define a total order on the set of classes:
+\begin{equation}\label{eq:Y_def}
+\mathbb{Y}=\text{\{``1'',``2'',``3'',``4'',``5''\}}, 
+\end{equation}
+where $\text{``1''} \prec \text{``2''} \prec \text{``3''} \prec \text{``4''} \prec \text{``5''}$. 
+
+Let $\mathcal{T}=\{t\}$ be the set of timestamps of the estimations. In this paper the set $\mathcal{T}$ contains 4 elements, corresponding to the years 2006--2009.
+Let $\mathbf{X}^t$ be the matrix of the objects $\mathbf{X}$ of the year $t$.
+Let $\mathbf{D}^t$ be the distance matrix for all pairs of objects per year $t$:
+\[
+d_{iq}^t = d(\mathbf{x}^t_i, \mathbf{x}^t_q), \quad \mathbf{x}^t_i, \mathbf{x}^t_q \in \mathbf{X}^t
+\]
+
+%TODO
+The panel matrix recovery procedure consists of the following parts:
+\begin{enumerate}[{1)}]
+\item a dendrogram constructing algorithm $\mathfrak{d}$,
+\item a clustering algorithm $\mathfrak{c}$,
+\item a class recovery algorithm $\mathfrak{r}$,
+\item a bijection recovery algorithm $\mathfrak{m}$ that finds a bijection between cluster centroids $\mathbf{M}^t$ of different years.
+\item an algorithm $\mathfrak{a}$ of averaging cluster centroids.
+\end{enumerate}
+biject
+\begin{equation}
+\centering{
+\label{fig:res_diagram}
+}
+\tikzset{node distance=3cm, auto}
+\begin{tikzpicture}
+  \node (up1) {$\mathfrak{D}$};
+  \node (up2) [right of=up1] {$\mathfrak{T}^t$};
+  \node (up3) [right of=up2] {$\mathbf{M}^t$};
+  \node (up4) [right of=up3] {$\hat{\mathbf{y}}^t$};
+  \node (down2) [below of=up2] {$\phi$};		
+  \node (down3) [right of=down2] {$\hat{\mathbf{M}}^t$};	
+  \node (down4) [right of=down3] {$\mathbf{Z}$};	
+  \draw[->] (up1) to node[below]  {$d_{ij}^t$}   node[sloped, anchor=center, above, text width=2. 0cm]  {$\mathfrak{d}$}(up2);
+  \draw[->] (up2) to node[below]  {$d^t_{ij},N$}   node[above]  {$\mathfrak{c}$}(up3);
+  \draw[->] (up3) to node[sloped, anchor=center, above, text width=2.0cm]  {$\mathfrak{r}$} (up4);
+  \draw[->] (up3) to node[right]  {$\rho$}  node[left]  {$\mathfrak{m}$} (down2);
+  \draw[->] (up4) to (down4);
+  \draw[->] (down2) to node[below] {$\mathbf{M}^t$} node[above] {$\mathfrak{a}$} (down3);
+  \draw[->] (down3) to (down4);
+\end{tikzpicture}
+\end{equation}
+%motiviation TODO
+The panel matrix recovery procedure is shown in diagram~\eqref{fig:res_diagram}: for each year $t$ the algorithm $\mathfrak{d}$ constructs the dendrogram $\mathfrak{T}^t$. Then calculate the optimal number of clusters $N$ and the algorithm $\mathfrak{c}$ proceeds clustering. For each cluster $\boldsymbol{\mu}$ from the set of cluster centroids $\mathbf{M}^t$  the algorithm $\mathfrak{r}$ recovers its class $\hat{y}^t \in \hat{\mathbf{y}}^t$. After that the algorithm $\mathfrak{m}$ finds a bijection $\phi$ that matches clusters from different years $\mathbb{Y}$. As a result get the panel matrix $\mathbf{Z}$ from the averaged centroids ${\hat{\mathbf{M}}}$, which correspond to the student portraits, and the vector of recovered classes~$\hat{\mathbf{y}}^t$.
+
+The algorithm $\mathfrak{c}$ clusters the objects of the dataset for each year $t$. Let $\mathbf{M}^t \subset \mathbb{X}$ be the set of $N$ cluster centroids for year $t$, $\mathbf{M}^t = [\boldsymbol{\mu}_1,\dots,\boldsymbol{\mu}_N]^T$. 
+
+For each cluster centroid $\boldsymbol{\mu}^t_{k}$ we recover its class $\hat{y_{k}}^t \in \mathbb{Y}$~\eqref{eq:Y_def}. In this paper we use median function for this purpose:
+\[
+\hat{y}_{k}^t = \text{median}\{y_i^t: \text{cluster}(\mathbf{x}_i^t) = k\},
+\]
+where  $\text{cluster}(\mathbf{x})$ is a function that returns the index of cluster that contains element $\mathbf{x}$.
+
+Let the distance function be given by
+\begin{equation} \label{eq:rho}
+\rho:\mathbb{X}\times\mathbb{X}\rightarrow \mathbb{R}_{+}.
+\end{equation}
+This function is used in algorithm $\mathfrak{m}$ to find the mapping that satisfies criteria~\eqref{eq:stab_criteria},~\eqref{eq:clust_criteria}. The distance function we use as the function $\rho$ is described below~\eqref{eq:rho_f}.
+
+
+The algorithm $\mathfrak{m}$ of the bijection recovery between clusters of different years finds the permutation of cluster indexes:
+\begin{equation}
+\label{eq:phi}
+ \phi: \{1,\dots,N\} \rightarrow \{1,\dots,N\}
+\end{equation}
+%TODO
+ such that for each year $t$ the mapping is a bijection. We use the distance function $\rho$~\eqref{eq:rho} to find this mapping. A set of cluster centroids is called $\mathbf{G}_k = [\boldsymbol{\mu}_1,\dots,\boldsymbol{\mu}_{|\mathcal{T}|}]$ if it contains all the centroids  that $\phi$ returns $k$ for them:
+\[
+\mathbf{G}_k = \{\boldsymbol{\mu} \in \mathbb{X}: \phi(\boldsymbol{\text{index}(\mu)}) = k \},
+\]
+where $\text{index}:\mathbf{M}^t\rightarrow\{1,\dots,N\}$ is the function, which returns the index for each cluster.
+
+Let us select $\phi$ that minimizes the following criteria:
+\begin{enumerate}
+\item The clustering criterion $C_\mathcal{C}$: $\phi$ should minimize the average value of $R$, where $R$ is the ratio from the average distance between objects $\boldsymbol{\mu}_{k_1}, \boldsymbol{\mu}_{k_2}$ from  cluster set $\mathbf{G}_k$ to  the average distance between cluster centroids $\mathbf{G}_{k_1}, \mathbf{G}_{k_2}$:
+\begin{equation}
+\label{eq:clust_criteria}
+	C_\mathcal{C} = \text{mean}_{k \in \{1,\dots,N\} } R(\mathbf{G}_k), \quad
+	R(\mathbf{G}_k)=\frac{\text{mean}_{\boldsymbol{\mu}_{k_1}, \boldsymbol{\mu}_{k_2} \in \mathbf{G}_k}d(\boldsymbol{\mu}_{k_1},\boldsymbol{\mu}_{k_2})}{\text{mean}_{\mathbf{G}_{k_1},\mathbf{G}_{k_2}}d(\mathbf{G}_{k_1},\mathbf{G}_{k_2})}.
+\end{equation}
+
+\item The stability criterion $C_\mathcal{S}$: $\phi$ should minimize the difference in classes $\hat{y}_{k_1}, \hat{y}_{k_2}$ of cluster set $\mathbf{G}_k$: 
+\begin{equation}
+\label{eq:stab_criteria}
+	C_\mathcal{S} = \sum_{k=1}^N\sum_{\boldsymbol{\mu}_{k_1},\boldsymbol{\mu}_{k_2} \in \mathbf{G}_k} | \hat{y}_{k_1} - \hat{y}_{k_2}|. 
+\end{equation}
+
+The resulting optimization problem is the following:
+\[
+\begin{cases}
+	\phi =  \arg\min_{\phi' \in \Phi}C_\mathcal{C},\\
+
+	\phi = \arg\min_{\phi' \in \Phi}C_\mathcal{S},
+\end{cases}
+\]
+where $\Phi$ is the set of mappings from the index set $\{1,\dots,N\}$ to itself such that for each year $t$ the mapping is bijective.
+
+\end{enumerate}
+
+As an averaging algorithm $\mathfrak{a}$  we get averaged cluster centroids using the following function:
+\begin{equation}
+\label{eq:avg}
+\text{avg}\{\hat{{\boldsymbol{\mu}}}_{kj} \}=
+\begin{cases}
+ \text{mean}\{{\mu}_{qj}: \boldsymbol{\mu}_{q} \in \boldsymbol{G}_{k} \}  &\mbox{whenever  $\mathbb{L}_j$ is linear scale,}\\  
+ \text{median}\{{\mu}_{qj}: \boldsymbol{\mu}_{q} \in \boldsymbol{G}_{k} \}  &\mbox{whenever  $\mathbb{L}_j$ is ordered scale,}\\  
+ \text{mode}\{{\mu}_{qj}: \boldsymbol{\mu}_{q} \in \boldsymbol{G}_{k} \}  &\mbox{whenever  $\mathbb{L}_j$ is nominal scale, }\end{cases}
+\end{equation}
+where $\hat{{\boldsymbol{\mu}}} \in \hat{\mathbf{M}}$ is an averaged cluster centroid from $G_k$, $\hat{\mathbf{M}}$ is a set of averaged cluster centoids. We use $\hat{\mathbf{M}}$ as an object set for the panel matrix $\mathbf{Z}$.
+
+As a result of the panel matrix recovery procedure obtain the matrix  $\mathbf{Z}$ that contains the set of the averaged centroids  $\hat{\mathbf{M}}$ and the vector of recovered classes $\hat{y_{i}^t} \in \mathbf{y}^t$.
+
+\paragraph{Ranking model recovery.}
+To solve of the ranking model recovery problem one must find a mapping:
+\begin{equation} \label{eq:rank_func}
+f:  \mathbb{X} \rightarrow \mathbb{Y},\end{equation}
+which minimizes error function $Q(\mathbf{X})$. In this paper we use Kendall correlation coefficient~\cite{kendall}:
+\[
+	Q(\mathbf{X})=1-\text{KendallTau}(\mathbf{y},\hat{\mathbf{y}}),
+\]
+where $\hat{\mathbf{y}}$ is the vector of classes, which is returned for objects $\mathbf{X}$ by the function $f$, the Kendall correlation coefficient is:
+\begin{equation}
+\label{eq:kendall}
+\text{KendallTau} = \frac{4|\{(i,q): y_i > y_q, \hat{y}_i  > \hat{y}_q\}|}{m(m-1)} - 1.
+\end{equation}
+
+\section{Calculating optimal number of clusters}
+In the previous section we considered the number of clusters $N$ fixed. We can select the value for $N$ using expert estimates. The other way is to optimize the number of clusters using heuristics. This section describes the optimization problem, which can be used as the the one way to find the optimal number of clusters $N$. Assume the number $N$ of clusters remains stable for each year from the set $\mathcal{T}$. The reason of this assumption is the fact that we want to recover the ranking model for each year of the panel matrix and estimate correlation between rankings of different years. If the number $N$ differs for different years, this problem is incorrect.
+
+Optimize the number of clusters $N$ using dendrogram constructing algorithm $\mathfrak{d}$. 
+\begin{Def_eng}
+The dendrogram $\mathfrak{T}^t$ is a tree that is built using the distance matrix $\mathbf{D}^t$, which shows the relationships between clusters.
+\end{Def_eng}
+Describe the dendrogram constructing method. Suppose we have a linkage algorithm:
+\begin{equation}
+\label {eq:linkage}
+A_\mathcal{L} : \mathbb{R}_+^m \times \mathbb{R}_+^n \rightarrow \mathbb{X} \times \mathbb{X}.
+\end{equation} It defines the pair of elements $\mathbf{x}_i, \mathbf{x}_q$ to merge into one cluster $\boldsymbol{\mu}_k$. We merge this pair and then recalculate the distance matrix $\mathbf{D}^t$ using information about the merged elements.
+
+At the end of dendrogram constructing algorithm we receive a tree $\mathfrak{T}^t$. Its root contains two last elements merged at the final step. 
+
+The example of dendrogram is shown in \eqref{fig:dendr}. The elements A,B,C are clustering until one cluster remains.
+\begin{equation}
+\centering{
+\label{fig:dendr}
+}
+\tikzset{node distance=1. 5cm, auto}
+\begin{tikzpicture}
+  \node (a) {$\{A\}$};
+  \node (b) [right of=a] {$\{B\}$};
+  \node (c) [right of=b] {$\{C\}$};
+  \node (a2)  [below of=a] {$\{A\}$};
+  \node (bc) [right of=a2] {$\{B,C\}$};
+  \node (abc) [below of=a2] {$\{A,B,C\}$};
+  \draw[->] (a) to node{} (a2);
+  \draw[->] (b) to node{} (bc);
+  \draw[->] (c) to node{} (bc);
+  \draw[->] (a2) to node{} (abc);
+  \draw[->] (bc) to node{} (abc);
+\end{tikzpicture}
+\end{equation}
+
+\begin{Th_eng} 
+For each  $N \in \{1,\dots,m\}$ a clustering with a set of $N$ clusters is constructible, where $m$ is the number of objects.
+\end{Th_eng}
+\begin{Pr_eng}
+Each step we reduce the number of clusters by one. Therefore after $m-N$ steps we get the set of clusters with cardinality equal to $N$.
+\end{Pr_eng}
+ 
+Let us construct the dendrogram $\mathfrak{T}^t$ for each year $t$ for optimal $N$ calculating. The number of clusters $N$ is optimal whenever it satisfies the following criteria:
+\begin{enumerate}
+\item The uniform class criterion $C_\mathcal{U}$: the number of cluster centroids $\mathbf{M}^t$ of different classes should be equal. $N$ should minimize the deviation of number of different classes of clusters:
+	\[
+	C_\mathcal{U}(\mathbf{M}^t) = \sigma\{|\mathbf{M}_y^t|, y \in \mathbb{Y}\},
+	\]
+where $|\mathbf{M}_i^t|$ is a cardinality of the set  $\mathbf{M}^t$ with class $y \in \mathbb{Y}$, $\sigma$ is the standard deviation.
+
+\item Mixing class criterion  $C_\mathcal{M}$: the number of clusters $N$ should decrease the difference of classes inside clusters:
+	\[
+	C_\mathcal{M}(\mathbf{M}^t)=\text{mean}_{\boldsymbol{\mu}_k \in \mathbf{M}^t} \sigma(\{y_i: \text{cluster}(\mathbf{x}_i)= k \}).
+	\]
+\end{enumerate}
+
+%TODO
+The number of clusters $N$ should be less than or equal to the minimum number of objects in the sets: $N\leq \min_{t \in \mathcal{T}}|\mathbf{X}^t|$. We also want to construct a clustering that contains a representative of each class, therefore $N$ should be greater than or equal to the cardinality of $\mathbb{Y}$. The final formula for the optimization problem is the following:
+\begin{equation}\label{eq:Nselect}
+\begin{cases}
+	N = \arg\min_N (\text{mean}_{t \in \mathcal{T}}(\delta_\mathcal{U}(\mathbf{M}^t))),\\
+	N = \arg\min_N (\text{mean}_{t \in \mathcal{T}}(\delta_\mathcal{M}(\mathbf{M}^t))),\\
+	N \geq 5, \quad N \leq \min_{t \in \mathcal{T}} |\mathbf{X}^t|. 
+\end{cases}
+\end{equation}
+
+We propose some heuristics to select $N$. Let us construct two dendrograms $\mathfrak{T}_\mathcal{U}^t$ for each year $t$. They use the linkage algorithms~\eqref{eq:linkage}  $A_\mathcal{LE}$, $A_\mathcal{LM}$ to estimate functionals $\delta_{Y}$ and $\delta_{E}$.
+
+In order to estimate $C_\mathcal{U}$ let us use the following linkage algorithm:
+\begin{equation}
+\label{eq:e_criteria}
+	A_\mathcal{LU}=\argmin_{\substack{\boldsymbol{\mu}_{k_1}, \boldsymbol{\mu}_{k_2} \in \mathbf{M}^t,\\ \hat{y}_{k_1} = \hat{y}_{k_2} = \max_{i=\{1,\dots,5\}} |\mathbf{M}_i^t| }} {D}_{{k_1}{k_2}}.
+\end{equation}
+We select a pair of the closest objects of the most common class (the class, which has the most number of representatives). Each step we reduce the cardinality of the largest set $\mathbf{M}_i^t$ of cluster centroids of the fixed class $y$. The difference in cardinality between  these sets decreases. Therefore the  dendrogram $\mathfrak{T}_E^t$ is quite close to be optimal with respect to  $\delta_{Y}$ for the fixed $N$.
+
+In order to estimate $C_\mathcal{M}$  we use the following linkage algorithm:
+\begin{equation}
+\label{eq:m_criteria}
+	A_\mathcal{LM}=\argmin_{\substack{\boldsymbol{\mu}_{k_1}, \boldsymbol{\mu}_{k_2} \in \mathbf{M}^t,\\ |\hat{y}_{k_1} - \hat{y}_{k_2}| = \text{max}}} ||\text{members}(\boldsymbol{\mu}_{k_1})| - |\text{members}(\boldsymbol{\mu}_{k_2})||_2,
+\end{equation}
+where 
+\[
+\text{members}:\mathbf{M}^t \rightarrow 2^{\mathbf{X}^t}
+\] is the function, which returns a set of objects that are assigned to the cluster. This linkage algorithm selects the pair $(\boldsymbol{\mu}_1,\boldsymbol{\mu}_2)$ of clusters with the largest difference in classes and with the smallest difference in cardinality. Each step we maximize the difference in classes inside some cluster, therefore the dendrogram is quite close to be the worst with respect to  $\delta_{M}$ for the fixed $N$.
+
+In order to find a compromise between two criteria $C_\mathcal{U}, C_\mathcal{M}$, we estimate and rank these criteria for each $N$. We consider the optimal number of cluster gets minimum of these ranks:
+\[
+	N=\argmin_{N} (\text{rank}(C_\mathcal{U}, N)+\text{rank}(C_\mathcal{M}, N)),
+\]
+where rank is a function that gives rank for each estimation for current $N$.	
+
+
+\section{Distance functions for mixed-scale data}
+In this section we describe distance functions for different scale types --- linear~\eqref{eq:lindist}, ordinal~\eqref{eq:pdist}, nominal~\eqref{eq:nomdist}, and mixed~\eqref{eq:heom2},\eqref{eq:hmom}. We propose the distance function for mixed-scale dataset below.
+
+\subsection{Distance function for linear-scale data}
+Consider the generalized distance function for a linear-scale dataset:
+\begin{equation}
+\label{eq:lindist}
+r(\mathbf{x}_i,\mathbf{x}_q)=\left(\left(|\mathbf{x}_i-\mathbf{x}_q|^p\right)^T \mathbf{S}^{-1} |\mathbf{x}_i-\mathbf{x}_q|^p\right)^{\frac{1}{2p}},
+\end{equation}
+where $p$ is a number, $\mathbf{S}$ is a symmetric nonnegative definite matrix (for example identity matrix $\mathbf{I}$), exponentiation is proceeded per component: $\mathbf{x}^p = [x_1^p,\dots,x_n^p]^T$. The Euclidean metric corresponds to this formula with $\mathbf{S}=\mathbf{I}$ and $p=1$:
+\[
+r(\mathbf{x}_i,\mathbf{x}_q)=\sum_{i=1}^{n}(\mathbf{x}_i-\mathbf{x}_q)^2)^{\frac{1}{2}}.
+\]
+The Manhattan distance corresponds to this formula with $\mathbf{S}=\mathbf{I}$ and $p=0.5$:
+\[
+r(\mathbf{x}_i,\mathbf{x}_q)=\sum_{i=1}^{n}|\mathbf{x}_i-\mathbf{x}_q|.
+\]
+\renewcommand{\arraystretch}{1}
+\subsection{Distance for ordinal-scaled data}
+Define matrix functions $\mathbf{H}^{j+}$ and $\mathbf{H}^{j-}$ for projection the object set $\mathbf{X}$ on feature $j$, where the scale $\mathbb{L}_j$ is ordinal. Each component of the vectors $\mathbf{H}^{j+}_{i}$ and  $\mathbf{H}^{j-}_{i}$ determine the order between feature $j$ of object $i$ and other objects:
+\[
+{{({\mathbf{H}_{i}}}^{j+})}_l=
+\begin{cases}
+ 1 &\mbox{whenever  $x_{ij} \succ x_{lj}$},\\  
+ 0 &\mbox{otherwise,}\end{cases}
+\]
+
+\[
+{{({\mathbf{H}_{i}}}^{j-})}_l=
+\begin{cases}
+ 1 &\mbox{whenever  $x_{lj} \succ x_{ij}$},\\  
+ 0 &\mbox{otherwise.}\end{cases} 
+\]
+
+Let the distance function pdist be given by:
+\begin{equation}\label{eq:pdist}
+\text{pdist}(x_{ij},x_{qj})=\frac{m-\left(\langle{\mathbf{H}_{i}}^{j+},{\mathbf{H}_{q}}^{j+}\rangle+\langle{\mathbf{H}_{i}}^{j-},{\mathbf{H}_{q}}^{j-}\rangle\right)}{m},
+\end{equation}
+where $m$ is the number of objects in the dataset. 
+
+\begin{Th_eng} 
+If $\mathbb{L}_j$ is a totally ordered set, then $\text{pdist}$ is a metric.
+\end{Th_eng}
+\begin{Pr_eng}
+At first let us prove that the range of the function is in $[0;1]$. 
+Let $x_{ij}$ be less than or equal to $x_{qj}$ : $x_{ij} \leq x_{qj}$. Then 
+ $\langle{\mathbf{H}_{i}}^{j+},{\mathbf{H}_{q}}^{j+}\rangle = ||\mathbf{H}_{i}^{j+}||_2^2$, $\langle{\mathbf{H}_{i}}^{j-},{\mathbf{H}_{q}}^{j-}\rangle = ||\mathbf{H}_{q}^{j-	}||_2^2$,
+\[
+\text{pdist}(x_{ij},x_{qj})=\frac{m - ||\mathbf{H}_{i}^{j+}||_2^2 - ||\mathbf{H}_{q}^{j-}||_2^2} {m}.
+\]
+The maximum of the function is not more than $1$. The function  $\text{pdist}$ gets minimum whenever $x_{ij}=x_{qj}$, $\text{pdist}(x_{ij},x_{ij})=0$. 
+The function is symmetric. Let us prove that the function satisfies the subadditivity condition for each ${\mathbf{x}_w} \in \mathbb{X}$:
+\[
+\text{pdist}(x_{ij},x_{qj}) \leq \text{pdist}(x_{ij},{x}_{wj}) + \text{pdist}({x}_{wj},x_{qj}).
+\]
+The proof contains 3 cases:
+\[
+x_{ij}\leq x_{qj} \leq {x}_{wj}; \quad  {x}_{wj}  \geq x_{ij} \geq x_{qj}; \quad x_{ij}\leq {x}_{wj} \leq x_{ij}.
+\]
+
+Consider the first case, other cases can be proved similarly:
+\[
+\text{pdist}(x_{ij},{x}_{wj})+\text{pdist}(x_{qj},{x}_{wj}) = \frac{2m - ||\mathbf{H}_{i}^{j+}||_2^2 - ||\mathbf{H}_{q}^{j+}||_2^2 - 2||\mathbf{H}_{w}^{j-}||_2^2}{m} \geq
+\]
+\[
+\geq \frac{2m - ||\mathbf{H}_{i}^{j+}||_2^2 - ||\mathbf{H}_{q}^{j+}||_2^2 - 2||\mathbf{H}_{q}^{j-}||_2^2}{m} = 
+\]
+\[
+=\frac{2m - ||\mathbf{H}_{i}^{j+}||_2^2 -m + ||\mathbf{H}_{q}^{j-}||_2^2 - 2||\mathbf{H}_{q}^{j-}||_2^2}{m} = \frac{m - ||\mathbf{H}_{i}^{j+}||_2^2 - ||\mathbf{H}_{q}^{j-}||_2^2}{m} = 
+\]
+\[
+=\text{pdist}(x_{ij},x_{qj}).
+\]
+\end{Pr_eng}
+
+\subsection {The generalization of HEOM and HMOM distance functions}
+Supplement the HEOM~\cite{heom} function for ordinal-scale datasets:
+\begin{equation}\label{eq:heom2}
+d_1(\mathbf{x}_i,\mathbf{x}_j)= {\left(\sum_{k=1}^n{
+r(x_{ij},x_{qj})^2}\right)}^{\frac{1}{2}},
+\end{equation}
+where
+\[
+r(x_{ij},x_{qj})=
+\begin{cases}
+
+ \text{overlap}(x_{ij},x_{qj})  &\mbox{whenever  $\mathbb{L}_j$ is a nominal scale,}\\  
+
+ \text{pdist}(x_{ij},x_{qj})  &\mbox{whenever  $\mathbb{L}_j$ is an  ordinal scale,}\\
+
+ \text{diff}(x_{ij},x_{qj}) &\mbox{otherwise,}\end{cases} 
+\]
+\begin{equation}
+\label{eq:nomdist}
+\text{overlap}(x_{ij},x_{qj})=
+\begin{cases}
+1 &\mbox{whenever  $x_{ij} \not = x_{qj}$,}\\  
+0  &\mbox{otherwise,}\end{cases} 
+\end{equation}
+\[
+\text{diff}(x_{ij},x_{qj})=\frac{|x_{ij}-x_{qj}|}{\max_{\mathbb{L}_j}-\min_{\mathbb{L}_j}}, 
+\]
+the function $\text{diff}(x_{ij},x_{qj})$ is determined by normalized difference between two values of feature $j$.
+
+The range of the resulting function $d$ is less than or equal to the square root of the feature number: $d(\mathbf{x}_i,\mathbf{x}_j) \leq \sqrt{n}$. 
+
+The difference between HEOM and HMOM modifications is only in lack of exponentiation:
+\begin{equation}\label{eq:hmom}
+d_2(\mathbf{x}_i,\mathbf{x}_j)= {\sum_{k=1}^n{
+r(x_{ij},x_{qj})}},
+\end{equation}
+
+\section{Panel matrix recovery procedure}
+\subsection{Clustering algorithm $\mathfrak{c}$}
+We use a modification of $k$-means~\cite{kmeans_orig} algorithm as the clustering algorithm $\mathfrak{c}$. This algorithm is iterative. At first select $N$ cluster centroids $\boldsymbol{\mu}_1,\dots,\boldsymbol{\mu}_N$ randomly. Each iteration we assign each object  $\mathbf{x}_i$
+from dataset $\mathbf{X}^t$ to the closest cluster in the sense of the distance function $d$:
+\[
+	\text{cluster}(\mathbf{x_i}) = \argmin_{k \in \{1,\dots,N\}}d(\mathbf{x}_i,\boldsymbol{\mu}_k),
+\]
+where $\text{cluster}(\mathbf{x})$ is the function that returns a cluster index for each object $\mathbf{x}$.
+  After that we recalculate cluster centroids:
+\[
+	\mu_{kj} = \text{avg}\{{x}_{ij}, \text{cluster}(\mathbf{x}_i) = k\},
+\]
+
+We use avg function~\eqref{eq:avg} such that corresponds to scale types instead of arithmetic mean recommended in the $k$-means algorithm:
+\[
+\text{avg}\{\mathbf{x}_{{i_1}j}, \dots, \mathbf{x}_{{i_p}j} \}=
+\begin{cases}
+ \text{mean}\{\mathbf{x}_{{i_1}j}, \dots, \mathbf{x}_{{i_p}j} \}  &\mbox{whenever  $\mathbb{L}_j$ is a linear scale,}\\  
+ \text{median}\{\mathbf{x}_{{i_1}j}, \dots, \mathbf{x}_{{i_p}j} \}  &\mbox{whenever  $\mathbb{L}_j$ is an ordinal scale,}\\  
+ \text{mode}\{\mathbf{x}_{{i_1}j}, \dots, \mathbf{x}_{{i_p}j} \}  &\mbox{whenever  $\mathbb{L}_j$ is a nominal scale. }\end{cases}
+\]
+
+
+\subsection{Bijection recovery algorithm $\mathfrak{m}$}
+In this section we consider 2 methods of the function $\phi$~\eqref{eq:phi} finding: the reducing the problem to the transport problem and the genetic algorithm.
+
+We state the problem of finding $\phi$ as multidimensional assignment problem~\cite{assignment}. Construct $|\mathcal{T}|$-partite hypergraph $\langle V,E \rangle$, $V = V^1\cup\dots\cup V^{|\mathcal{T}|}$, where $\mathcal{T}$ is the set of years. The vertices of each partite sets $V^t$ are correspond tothe set of cluster centroids $\mathbf{M}^t$ for year $t$. The hyperedges of the hypergraph correspond to the all subsets of cluster centroids that contain $|\mathcal{T}|$ cluster centroids and correspond to the condition that each hyperedge $e \in E$ contains only one cluster centroid for each year. Let the weight of each hyperedge be given by:
+\[
+	w_e = \sum_{\boldsymbol{\mu}_1, \boldsymbol{\mu}_2 \in e} \rho(\boldsymbol{\mu}_1, \boldsymbol{\mu}_2).
+\]
+It is required to find a maximal set of hyperedges, where each pair of this set does not intersect and where the sum of the hyperedge weights is minimal.
+
+\paragraph{Reducing the $\phi$ finding problem to the transport problem.}
+Consider a two-dimensional assignment problem, where it is required to find the bijection between 2 sets of objects. This problem can be stated as the min-cost max flow problem by constructing a transport directed graph~\cite{kormen}. The vertices of this graph correspond to the cluster centroids $\boldsymbol{M}^t$ with capacity equal to one and edge weights equal to the distance between cluster centroids: $\rho(\boldsymbol{\mu}_{i}^{t_1},\boldsymbol{\mu}_{j}^{t_2})$. After reducing the problem it is required to find the maximal flow with minimal edge weight sum, which is called the cost of the flow. In our case we can construct a hypergraph $\langle V,E \rangle$ instead of the directed graph, where the hyperedge configuration was described above.
+
+In order to find the maximal flow of minimal cost of the hypergraph $\langle V,E \rangle$ we propose to transform the hypergraph into a directed graph  $\langle V',E' \rangle$ and use common algorithms for directed graphs. There are some heuristic algorithms of hypergraph to directed graph transformation that can be used for this case~\cite{transform1,tr2}. 
+
+\paragraph{Genetic algorithm}
+As an alternative method of finding the function $\phi$ we use the genetic algorithm~\cite{genetic}. Each solution of the problem is represented by a hypergraph with $N$ hyperedges such that each pair of hyperedge does not intersect and each hyperedge contains only one cluster centroid for each year. Let $\mathbf{S}^{qk}$ be a matrix for the solution $k$ of the generation $q$. The entry ${S}_{ij}^{qk}$ is the index number of cluster of the year $j$ in the hyperedge $i$:
+\[
+	{S}_{ij}^{qk} =  \text{whenever } \boldsymbol{\mu}_{l}^j \in e_i,
+\]
+where $e_i \in E$. The starting population $\mathbf{S}^{1}$ is generated randomly, it is cardinality $s_1$ is a structural parameter. Each new generation is generated from the older one by application the special procedures: mutation, crossover and selection.
+
+As the crossover of the generation $q$ we use the following procedure. We select two solutions $\mathbf{S}^{qk_1}$ and $\mathbf{S}^{qk_2}$ from this generation randomly. Also we select a row $l_1$ from the first matrix and a row $l_2$ from the second matrix, the number of columns to modify $\text{col}$ and a set of column indexes $\{c_{\text{perm}_{(1)}},\dots,c_{\text{perm}_{(\text{col})}}\}$, where perm is a random permutation. For each column $c_i$ in $\{c_{\text{perm}_{(1)}},\dots,\\ c_{\text{perm}_{(\text{col})}}\}$ and for both matrices we proceed the permutation given by $\mathbf{S}^{qk_1}_{l_1c_i} \leftrightarrow \mathbf{S}^{qk_2}_{l_2c_i}$.
+
+After crossover procedure we proceed mutations. We select a solution $\mathbf{S}^{qk}$ and a column $c$ randomly. After that we proceed random permutation on all the elements of column $c$. Such procedure helps us to avoid stopping algorithm in local extrema. After mutations and crossovers we select the best solution generation $\mathbf{S}^{q+1}$ in the sense of the distance function $\rho$. The number of mutations per generation $f_\text{mutation}$, the number of crossovers per generation $f_\text{crossover}$, and the generation cardinalities $s_q$ are structural parameters of the algorithm. The algorithm stops whenever our generation satisfies the stopping criterion $C_\mathcal{F}$. In this paper we use stopping criterion given by:
+\[
+C_\mathcal{F}=(K_{\text{av}}>\hat{K}_{\text{av}}) \text{ or } (K_{\text{av}} \text{ doesn't change after few iterations}),
+\]
+where 
+\[
+K_{\text{av}}=\text{mean}_{t_1, t_2 \in \mathcal{T}, t_1 \not= t_2} (\text{KendallTau}(\mathbf{S}^{q(1)}_{1,\dots,N,t_1},\mathbf{S}^{q(1)}_{1,\dots,N,t_2})),
+\]
+$\mathbf{S}^{q(1)}$  is the best solution of the current generation in the sense of $\rho$, $\mathbf{S}^{qi}_{1,\dots,N,t}$ is the column $t$ of the matrix $\mathbf{S}^{qi}$. $\hat{K}_{\text{av}}$ is a structural parameter, which represents required average Kendall correlation coefficient in the  panel matrix $\mathbf{Z}$.
+
+\subsubsection{Defining hyperedge weight}
+We use the sum of the generalized distances~\eqref{eq:heom2},\eqref{eq:hmom} between cluster centroids as the hyperedge weights:
+\begin{equation}
+\label{eq:rho_f}
+\rho_1(\mathbf{x}_i,\mathbf{x}_j)=\Bigr(\frac {\sum_{k=1}^n{
+d(x_{ik},x_{jk})^2}}{n} + \text{pdist}^2(y_i,y_j) \cdot \text{coef} \Bigl)^{\frac{1}{2}},
+\end{equation}
+
+\begin{equation}
+\label{eq:rho_f_2}
+\rho_2(\mathbf{x}_i,\mathbf{x}_j)=\frac {\sum_{k=1}^n{
+d(x_{ik},x_{jk})}}{n} + \text{pdist}(y_i,y_j) \cdot \text{coef},
+\end{equation}
+
+%TODO links
+where $\text{coef}$ is the parameter, which regulates the balance between priority of the stability criterion~\eqref{eq:stab_criteria} and the clustering criterion\eqref{eq:clust_criteria}. Whenever $\text{coef}=1$, these criteria priorities are equal. We use~\eqref{eq:rho_f} in the experiment with the generalized HEOM metric and~\eqref{eq:rho_f_2} in the experiment with  the generalized HMOM metric.
+
+\subsection{Complexity analysis of the algorithm}
+The clustering algorithm complexity can be bounded to $O(Nnm \cdot\text{iter}),$ where iter is the number of iterations of the clustering algorithm. 
+
+The complexity of one crossover series can be bounded to $O(f_\text{crossover} \cdot |\mathcal{T}|)$. The complexity of a mutation series is $O(f_\text{mutation} \cdot N)$, so the naive estimation of the genetic algorithm iteration is $O(f_\text{crossover} \cdot |\mathcal{T}| + f_\text{mutation} \cdot N)$. 
+\section{The ranking model recovery}
+In this section we describe the methods of the ranking model recovery used in this paper. We consider 3 ranking algorithms: the ordinal classification algorithm using partially ordered feature sets~\cite{porder} and rankSVM~\cite{RankSVM}, the algorithm based on the support vector machine~\cite{SVM}, and an algorithm based on the method of least squares in order to compare the results of the ranking model recovery. 
+
+\subsection{The ordinal classification algorithm  using partially ordered feature sets}
+
+In this subsection we suppose that the class of the object is also a feature with number 0: $\mathbb{Y} = \mathbb{L}_0, {x}_{i0} = y_i, \mathbf{x}_i \in \mathbf{X}$.
+For each feature $\mathbb{L}_q$ construct a matrix $\mathbf{U}_q$, which determines the order of the feature $q$:
+\[
+	{U}_q(i,j)=
+\begin{cases}
+ 1 &\mbox{if  $x_{iq} \prec x_{jq}$},\\ 
+ 0 &\mbox{otherwise}. 
+\end{cases} 
+\]
+
+We estimate the matrix $\boldsymbol{\psi}$ using feature matrices $\mathbf{U}_q, q \in \{0,\dots,m\}.$ This matrix $\boldsymbol{\psi}$ is called a pairwise dominance matrix:
+\[
+	\hat{\psi_{ij}}=\sum_{k=1}^n w_k U_k(i,j),
+\]
+\[
+	\mathbf{w} = \arg\min\limits_{\mathbf{w}}\sum_{i=1}^m\sum_{k=1}^m\left(U_0(i,k) - \sum_{j=1}^n w_j U_j(i,k)\right)^2,
+\]
+where $\mathbf{w}$ is the weight vector for feature matrices.
+
+After that we estimate the class $\hat{y}$ of the object using the pairwise dominance matrix:
+\[
+	\hat{y}=f(\hat{\psi}, \mathbf{\lambda}),
+\]
+\[
+	\mathbf{\lambda} = \arg\min\limits_{\mathbf{\lambda}}||y-\hat{y}||_2. 
+\]
+
+In this paper we use a logistic regression for $\mathbf{w}$ and $\mathbf{\lambda}$ estimation. Also we propose that  $\lambda_i = \lambda_j$ whenever $y_i=y_j$. 
+
+\subsection{The RankSVM algorithm}
+
+This algorithm is a generalization of the classification algorithm based on support vector machine~\cite{SVM}. 
+The optimization problem for this algorithm is given by:
+\[ ||\mathbf{w}||_2 + C\sum_{i, j}\xi_{ij} \rightarrow \text{min},\]
+\[\text{for each } \mathbf{x}_i,\mathbf{x}_j \in \mathbf{X}, y_y > y_j : K(\mathbf{w},\mathbf{x}_i) \geq K(\mathbf{w},\mathbf{x}_j) + 1 - \xi_{ij} , \]
+where \begin{equation}\label{eq:SVMKernel} K:\mathbb{R}^n \times \mathbb{X} \rightarrow \mathbb{R} \end{equation} is the kernel function, commonly the dot product. $\xi_{ij}$ and $C$ are the parameters. This optimization problem can be reduced to the classification SVM optimization problem~\cite{RankSVM} and solved by standard methods~\cite{SVM}.  
+
+The most interesting feature of this algorithm is the use of different kernel functions $K$ instead of dot product. This modifies original object space and make it more similar to linearly separable space. In this paper we use the following kernel functions:
+\begin{equation}
+\label{eq:kernel0}
+K(\mathbf{x}_i,\mathbf{x}_j)=\mathbf{x}_i\cdot\mathbf{x}_j^T,
+\end{equation}
+\begin{equation}
+\label{eq:kernel1}
+K(\mathbf{x}_i,\mathbf{x}_j)=(\frac{1}{n}\mathbf{x}_i\cdot\mathbf{x}_j^T)^3,
+\end{equation}
+\begin{equation}
+\label{eq:kernel2}
+K(\mathbf{x}_i,\mathbf{x}_j)=\text{exp}(-\frac{1}{n}|\mathbf{x}_i-\mathbf{x}_j|^2),
+\end{equation}
+\begin{equation}
+\label{eq:kernel3}
+K(\mathbf{x}_i,\mathbf{x}_j)=\text{tanh}(\frac{1}{n}\mathbf{x}_i\cdot\mathbf{x}_j^T).
+\end{equation}
+
+\subsection{The algorithm based on least squares method}
+We use this algorithm as a basic ranking algorithm. The main idea of this algorithm is in finding coefficients  $\alpha_1,\dots,\alpha_n$, which solve the optimization task:
+\[
+	\Delta = \sum_{i=1}^m ||y_i - \sum_{j=1}^n \alpha_j x_{ij} ||_2 \rightarrow \min.
+\]
+The resulting function is given by:
+\[
+f(\mathbf{x})=
+\begin{cases}
+ \text{round}(\sum_{j=1}^n \alpha_j x_ij)  &\mbox{whenever  $\text{round}(\sum_{j=1}^n \alpha_j x_{ij}) \in \{1,2,3,4,5\}$,}\\  
+ 5  &\mbox{whenever  $\text{round}(\sum_{j=1}^n \alpha_j x_{ij})$ \text{\textgreater} 5,}\\  
+ 1  &\mbox{whenever  $\text{round}(\sum_{j=1}^n \alpha_j x_{ij})$  \text{\textless} 1.}\\  \end{cases}
+\]
+
+\subsection{Transforming ordinal features into linear features}
+In order to use the information gathered from ordinal features we used the following approach~\cite{latent}. We proposed that each ordinal feature with scale $\mathbb{L}_j$ matches with some latent linear feature with scale $\mathbb{L}_j^*$, which can be recovered by the following rule:
+\[
+	x_{ij}=l_{ju} \text{ whenever }  l_{j{u-1}}^* \leq x_{ij}^* \leq l_{j{u}},
+\]
+where $l_{ju}$ is the $u$ value of the set of values of $\mathbb{L}_j$, sorted ascendingly, $x_{ij}^*$  is the value of latent variable, $l_{ju}^*$ is the threshold:
+\[
+l_{ju}=\Psi^{-1}(F_{j}(l_{ju})), \quad F_{j}(l)=\sum_{\mathbf{x}_i \in \mathbf{X},x_{ij}\prec l}\frac{1}{m},
+\]
+\[
+ l_{j0} = -\infty, \quad l_{j|{\mathbb{L}_j}|}=\infty ,
+\]  
+$\Psi^{-1}$ is the inverse normal distribution. This transformation matches the ordinal feature with some real-valued intervals. We use the upper limit of the intervals as a representer of the latent linear feature, i.e. $x_{ij}^*=l_{ju} \text{ whenever } l_{j{u-1}}^* \leq x_{ij}^* \leq l_{j{u}}$. Let the value corresponding to the largest value of the ordinal feature be $x_{ij}^*=l_{j|{\mathbb{L}_j}|-1}+\text{mean}(\{l_{ju}-l_{j{u-1}}, u \in \{1,\dots,|\mathbb{L}_j|-1\})$.
+
+\section{Computational experiment}
+In this section we present the results of the experiment and draw conclusions on the applicability of the proposed algorithm to our problem.
+The main goal of our experiment is to confirm or deny the efficiency of our panel matrix recovery method and recover the ranking model in the most efficient way. The dataset~\cite{dataset} contains a table with 284 student assessment. Each assessment contains 7 features, the class of the student and the year of the interview. The source of the computational experiment is available at~\cite{codecode}.
+
+For the experiment the following software was used:
+\begin{itemize}
+\item GNU Octave v.3.8.1
+\item SVM$^\text{light}$ v.6.02.
+\item Batch high throughput multidimensional scaline for MATLAB/GNU Octave programming language
+\item Python v.2.7. with NumPy  and scikit-learn packages
+\end{itemize}
+\subsection{Panel matrix recovery}
+In order to handle with missing values we used $k$-nearest neighbours algorithm for missing values imputation~\cite{missing}. $k=3$ was chosen using cross-validation. We estimated the optimal number of clusters $N$ by solving the optimization problem~\eqref{eq:Nselect} and got the result $N = 20$.
+The results of clustering for year 2007 are shown in Fig.~\ref{fig:kmeans}. The coordinates of the objects were received by projection the data $\mathbf{X}^t$ onto two-dimensional space $\{\xi_1,\xi_2\}$ using High-Throughput Multidimensional Scaling~\cite{mds} method. The colours of the plot correspond to different cluster indexes.
+
+\begin{figure}[tbh!]
+\label{fig:kmeans}
+\noindent\centering{
+       \includegraphics[width=80mm, height=66mm]{clusterize_eng.eps}
+       \caption{The result of clustering for year 2007. }\label{fig:kmeans}
+       }
+\end{figure}
+
+In order to reduce the randomnicity in the experiment we proceeded 10 tests and averaged the results. The parameter $\text{coef}$~\eqref{eq:heom2} was set to 1. We set the cardinality of the starting population $s_1$ to $N \cdot |\mathcal{T}|$. For each generation $\mathbf{S}^{q}$ we proceeded $|\mathcal{T}|\cdot s^q$ mutations and ${s^q \choose 2} = \frac{s^q  \cdot (s^q-1)} {2}$ crossovers. Such parameter values gives an availability to crossover all the pairs of solutions and to mutate each column of each hypergraph matrix. The cardinality of all the generations remained stable: $s^{q+1} = s^q$. The required average Kendall coefficient  $\hat{K}_\text{av}$ was set to $0.85$. 
+
+We estimated the results of the panel matrix recovery by the Kendall correlation coefficient~\eqref{eq:kendall}. The results of the Kendall correlation for the experiments with HEOM and HMOM metrics are represented in Tables~\ref{table:result1_1},~\ref{table:result1_2}. The computational experiment shows that the proposed algorithm of the panel matrix recovery gives good results on the considered dataset. 
+
+\begin{table}[!tbph]
+\caption{Kendall coefficient for panel matrix $\mathbf{Z}$ recovery with HEOM metric. }\label{table:result1_1}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ & 2006 & 2007 & 2008 & 2009 \\
+\hline
+2006 & 1 &  0.85629 & 0.80154 & 0.85270 \\
+2007 &  0.85629  & 1 &  0.84301 &  0.85728 \\
+2008 & 0.80154 &  0.84301 & 1 & 0.84731 \\
+2009 & 0.85270 &   0.85728 & 0.84731 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[!tbph]
+\caption{Kendall coefficient for panel matrix $\mathbf{Z}$ recovery with HMOM metric. }\label{table:result1_2}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ & 2006 & 2007 & 2008 & 2009 \\
+\hline
+2006 & 1 &  0.87714 & 0.76905 & 0.77979 \\
+2007 &  0.87714  & 1 &  0.82962 &  0.80129 \\
+2008 & 0.76905 &  0.82962 & 1 & 0.82266 \\
+2009 & 0.77979 &   0.80129 & 0.82266 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The mean of pairwise Kendall Coefficients for the panel recovery with HMOM is 0.81326 while for HEOM this value is 0.84302. Therefore HEOM metric is quite more efficient for our purpose. As we can see the panel matrix recovery gives rather stable results for all the years.
+
+\subsection{The ranking model}
+
+We used the difference between the real class $y$  of an object $\mathbf{x}$ and the recovered class $\hat{y}$ as the error function $Q$. The algorithms were tested using ``Leave one out''  method. We used different kernel functions~\eqref{eq:SVMKernel} during the RankSVM algorithm testing.  The results of the experiment are shown in Table~\eqref{table:result_rank}. 
+
+\begin{table}[tbh!]
+\caption{Results of the ranking model recovery. }\label{table:result_rank}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|p{1cm}|}
+\hline
+Year& 2006 & 2007 & 2008 & 2009 & \bf{Mean value}  \\
+\hline
+LS-algrotihm &   0.7 &    0.57 &   0.68  &   0.62  &    0.64 \\
+Pairwise-dominating matrix &  1.2176 &   1.1412 &   1.2647 &   1.2235 & 1.2118\\
+RankSVM,~\eqref{eq:kernel0} & 0.55 &   0.52 &   0.62 &   0.60 &    \bf{0.58} \\
+RankSVM,~\eqref{eq:kernel1}   & 1,2741 &   0.98 &   1.3451 &   1.1667 &    1.1914 \\
+RankSVM,~\eqref{eq:kernel2} & 0.7511 &   0.5413 &   0.7285 &   0.7501 & 0.6927 \\
+RankSVM,~\eqref{eq:kernel3} & 1.2741 &  0.98 & 1.3451 &    1.1667 &    1.1914 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The RankSVM algorithm  showed the best result and was selected as the ranking model recovery algorithm. Another good result was received from the algorithm based on pairwise-dominating matrix.
+
+\subsection{Computation for the simulated data}
+Investigate the performance of the proposed algorithm. Conduct two series of the experiments - the series with adding noise into object features and adding noise into object classes. During the experiment with adding noise into features change each object feature value randomly with probability  from 10 to 50 percent. During the experiment with adding noise in classes replace the class of each object by constant for each year. In these experiments we use HEOM metric.
+
+The results of the experiments are shown in Fig.~\ref{fig:simK},~\ref{fig:simE}. Fig.~\ref{fig:simK} shows the mean of Kendall correlation coefficient values for each pairs of years. The genetic algorithm uses the combination of two criteria for selecting optimal solution. After adding noise into objects' features the algorithm tries to optimize the matching of classes for different years. The experiment with adding noise into object classes shows the opposite case --- the dataset lost the uniformity of classes per years and therefore the average error did not increase so dramatically as in the first experiment. 
+
+\begin{figure}[tbh!]
+\caption{Average Kendall coefficient}
+\label{fig:simK}
+\noindent\centering{
+       \includegraphics[width=80mm, height=66mm]{simK.eps}
+       
+       }
+\end{figure}
+
+\begin{figure}[tbh!]
+\caption{Average distance between cluster centroids that were mapped by the bijection}
+\label{fig:simE}
+\noindent\centering{
+       \includegraphics[width=80mm, height=66mm]{simE.eps}
+       
+       }
+\end{figure}
+
+
+In order to estimate the quality of the ranking model recovery in datasets with noise we tested  the ranking model recovery on the simulated datasets generated in the first experiment series. The result of the ranking model recovery is shown in Fig.~\ref{fig:rankPlot}. As we can see, the RankSVM algorithm and pairwise-dominating algorithm give the similar results. The error of the least squares-based algorithm increases dramatically, therefore it is better not to use it if the dataset contains significant amount of noise.
+
+\begin{figure}[tbh!]
+\caption{The results of rank model recovery on simulated data}
+\label{fig:rankPlot}
+\noindent\centering{
+       \includegraphics[width=80mm, height=66mm]{rankPlot.eps}    
+       }
+\end{figure}
+
+\section{Conclusion}
+In this paper we proposed the method of the panel matrix recovery. We proposed the heuristic method of calculating optimal number of clusters for clustering objects per year. We considered two algorithms to construct a bijection between clusters of different years based on reducing this problem to multidimensional assignment problem --- the genetic algorithm and the algorithm based on the reducing the problem to the transport problem. We proceeded the experiment for the panel matrix and ranking model recovery using genetic algorithm.
+Two metric functions were compared. The HEOM metric showed the best result.
+The experiment showed that the panel matrix is stable in the sense of ranking model stability. The best result of ranking model recovery was shown by the RankSVM algorithm.
+
+The author would like to thank Dr. Vadim Strijov for the formal problem statement, useful comments, suggestions and attention drawn to the present work
+%\renewcommand\bibname{References}
+\def\BibAuthor#1{\emph{#1}}
+\def\BibTitle#1{{#1}}
+
+%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\begin{thebibliography}{1}
+\bibitem{panel}
+    \BibAuthor{Davies A., Lahiri K.}
+1995. A new framework for testing rationality and measuring aggregate shocks using panel data // Journal of Econometrics, 68(1): 205--227.  
+
+\bibitem{sensor}
+    \BibAuthor{Capponi A., de Waard H.}
+2004. A polynomial time algorithm for the multidimensional
+assignment problem in multiple sensor environments // The 7th International Conference on Information Fusion, 1150-1157.
+
+
+\bibitem{multiindex}
+    \BibAuthor{Pardalos P., Pitsoulis L.}
+   2001. Nonlinear assignment problems: algorithms and applications (Combinatorial optimization) --- Springer, 303 p.
+
+\bibitem{journal4}
+ \BibAuthor{Aronson J. E.}
+1986. The multiperiod assignment problem: A multicommodity network flow model and specialized branch and bound algorithm  // European Journal of Operational Research,
+ 23(3): 367--381.
+
+\bibitem{journal5}
+ \BibAuthor{Fr\'eville A.}
+2004. The multidimensional 0--1 knapsack problem: An overview  // European Journal of Operational Research,
+155(3): 1--21.
+
+\bibitem{journal6}
+ \BibAuthor{Walteros J. L., Vogiatzis C., Pasiliao E. L., Pardalos P. M.}
+2004. Integer programming models for the multidimensional assignment problem with star costs  // European Journal of Operational Research,
+235(3): 553--568.
+
+\bibitem{assignment}
+    \BibAuthor{Kuroki Y., Matsui T.}
+    2009. An approximation algorithm
+for multidimensional assignment problem
+minimizing the sum of squared errors // Discrete Applied Mathematics, 157: 2124--2135.
+
+\bibitem{graph}
+    \BibAuthor{Pistorius J., Minoux.  M.}
+   2003. An improved direct labeling method for the max-flow min-cut
+computation in large hypergraphs and applications // International Transactions in Operational Research, 10(1): 1-11.
+
+\bibitem{genetic}
+    \BibAuthor{Anshuman S., Rudrajit T.}
+2007. Solving the assignment problem using genetic algorithm and simulated annealing //
+   IIAENG International Journal of Applied Mathematics, 36(1).\\ Available at: http://www.iaeng.org/IJAM/issues\_v36/issue\_1/IJAM\_36\_1\_7.pdf.
+
+\bibitem{struct}
+    \BibAuthor{Cooke D. J., Bez  H. E.}
+    1984. Computer Mathematics --- Cambridge University Press; 1 edition,  408 p.
+
+
+\bibitem{ranking}
+	\BibAuthor{Johannes F., Eyke H.}
+ 2011. Preference Learning: An Introduction --- Springer, 454 p.
+
+\bibitem{journal1}
+ \BibAuthor{Albadvi A.}
+2004. Formulating national information technology strategies: A preference ranking model using PROMETHEE method // European Journal of Operational Research, 153(2): 290--296.
+
+
+\bibitem{journal2}
+ \BibAuthor{Siskos Y., Matsatsinis N.F., Baourakis G.}
+2001. Multicriteria analysis in agricultural marketing: The case of French olive oil market  // European Journal of Operational Research, 130(2): 315--331.
+
+\bibitem{journal3}
+ \BibAuthor{ Mladineo N., Margeta J.}
+1987. Multicriteria ranking of alternative locations for small scale hydro plants // European Journal of Operational Research, 31: 215-222.
+
+
+\bibitem{pca}
+	\BibAuthor{Medvednikova M. M.}
+ 2012. Using principal component analysis in construction of integral indicators // Machine learning and data analysis. 1(3): 292-304.
+
+\bibitem{pareto}
+	\BibAuthor{Medvednikova M. M., Strijov V. V., Kuznetsov M. P. }
+ 2012. An algorithm of multiclass monotonic Pareto-classification with feature selection // Proceedings of the Tula State University, Natural science, 3: 132-141.
+
+\bibitem{rankscale}
+	\BibAuthor{Strijov V. V.}
+2011. Clarification of expert estimations in rank scale using measured data // Factory laboratory. Material diagnostics. 77(7): 72-78. 
+
+
+\bibitem{porder}
+    \BibAuthor{Kuznetsov M. P.,  Strijov  V. V.}
+2014. Methods of expert estimations concordance for integral quality estimation // Expert Systems with Applications, Vol. 41, Issue 4, Part 2, p. 1551-2110 (March 2014).
+
+
+\bibitem{RankSVM}
+	\BibAuthor{Joachims T.}
+2002. Optimizing Search Engines using Clickthrough Data // Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining, 133-142.
+
+\bibitem{dataset}
+The original dataset. Available at: http://sourceforge.net/p/mlalgorithms/code/\\/HEAD/tree/Group074/Bakhteev014UniversityRanking/data/data.csv?format=raw (accessed August 27, 2014)
+
+\bibitem{SVM}
+    \BibAuthor{Vorontsov K. V.}
+Support Vector Machine lectures // Available at: http://www.ccas.ru/voron/download/SVM.pdf (accessed July 22, 2014). 
+
+
+\bibitem{bigbet}
+	\BibAuthor{Strijov V. V. }
+	 2006. Clarification of expert estimations using measured data // Factory laboratory. Material diagnostics. 72(7): 59-64. 
+
+\bibitem{heom}
+    \BibAuthor{Wilson D. R., Martinez. T. R.}
+    1997. Improved heterogeneous distance functions // J. Artif. Intell. Res. (JAIR), 6: 1-34.
+
+\bibitem{hmom}
+    \BibAuthor{Batista  G. E. A. P. A., Silva D. F.}
+    2009. How k-Nearest Neighbor Parameters Affect its Performance // Proceedings of the Argentine Symposium on Artificial Intelligence,  2009, 1-12.
+
+\bibitem{dist}
+    \BibAuthor{Walesiak M.}
+  1999. Distance measure for ordinal data. Argumenta Oeconomica, 1999,  2(8): 167-173.
+
+
+\bibitem{kendall}
+\BibAuthor{Prokhorov A. V. (originator)}
+Kendall coefficient of rank correlation., Encyclopedia of Mathematics \\// Available at: http://www.encyclopediaofmath.org/index.php?title=Kendall\textunderscore coefficient\textunderscore of \textunderscore rank \textunderscore correlation\&oldid=13189 (accessed August 27, 2014)
+
+
+
+\bibitem{kmeans_orig}
+    \BibAuthor{Steinhaus H. }
+   1956. Sur la division des corps materiels en parties // Bull. Acad. Polon. Sci, 4: 801--804.
+
+
+\bibitem{kormen}
+    \BibAuthor{Cormen T. H., Leiserson C. E., Rivest R. L., Stein C.}
+   2009. Introduction to Algorithms. -- 3rd. -- MIT Press, 1312 p.
+
+\bibitem{transform1}
+    \BibAuthor{Pu L., Faltings B.}
+   2012. Hypergraph Learning with Hyperedge Expansion // ECML PKDD'12 Proceedings of the 2012 European conference on Machine Learning and Knowledge Discovery in Databases, 1: 410-425.
+
+\bibitem{tr2}
+    \BibAuthor{ Agarwal S., Branson K., Belongie S.}
+   2006. Higher order learning with graphs // Proceeding
+ICML '06 Proceedings of the 23rd international conference on Machine learning, 17-24.
+
+\bibitem{latent}
+    \BibAuthor{ Winship C., Mare R.}
+  1984. Regression models with ordinal variables // American Sociological Review,  Aug 1984, 49(4): 512-525.
+
+
+\bibitem{codecode}
+Available at: http://sourceforge.net/p/mlalgorithms/code/\\/HEAD/tree/Group074/Bakhteev014UniversityRanking/code/
+(accessed August 27, 2014)
+
+\bibitem{missing}
+\BibAuthor{Batista G. E. A. P. A., Monard C. M.}
+   2003. An Analysis of Four Missing Data Treatment Methods for Supervised Learning // Applied Artificial Intelligence, 2003, p. 519-533.
+
+\bibitem{mds}
+    \BibAuthor{ Strickert M., Teichmann S., Sreenivasulu N., Seiffert U.}
+2005. High-Throughput Multi-dimensional Scaling (HiT-MDS) for cDNA-Array Expression Data // ICANN'05 Proceedings of the 15th international conference on Artificial Neural Networks: biological Inspirations, 1: 625-633.
+
+
+\end{thebibliography}
+
+\end{document}
