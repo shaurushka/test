@@ -1,7 +1,6 @@
 \documentclass[12pt,twoside]{article}
 \newcommand{\hdir}{.}
 \usepackage{jmlda}
-\setcounter{page}{1877}
 % \NOREVIEWERNOTES
 \title
     {Relevance tagging machine}
@@ -40,7 +39,7 @@ variational lower bounds}}
     {Д.\,А. Молчанов, Д.\,А. Кондрашкин, Д.\,П. Ветров} % основной список авторов, выводимый в оглавление
     [Д.\,А. Молчанов$^1$, Д.\,А. Кондрашкин$^2$, Д.\,П. Ветров$^2$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
 \organizationRus
-    {$^1$Московский государственный университет им. М.\,В.~Ломоносова,
+    {$^1$Московский государтсвенный университет им. М.\,В.~Ломоносова,
 Москва, Россия\par
 $^{2}$Национальный исследовательский университет <<Высшая школа экономики>>,
 Москва, Россия}
@@ -69,7 +68,7 @@ There are different approaches to this task.
 One of them is to use predictive models that can automatically choose the most relevant features during the training procedure.
 For example, it can be done with LASSO (Least Absolute Shrinkage and
 Selection Operator) regression or other models that use L1"~regularization to ensure sparsity.
-Bayesian ARD \cite{ard}) is another approach to developing such models.
+Bayesian ARD \cite{ard} is another approach to developing such models.
 As an example, consider the Relevance Vector Machine (RVM), \cite{tipping}.
 In case of regression, the RVM is a linear model with an ARD prior;
 $\vec x$ is an object; $t$ is its target; $\vec w$ is a vector of model parameters or weights;
@@ -78,7 +77,7 @@ The model definition is shown below:
 \begin{equation*}
 %\label{rvmNotations}
 \vec w=(w_1, \dots, w_M)^{\mathrm{T}} \in \RR^M;\ \
-\vec \phi(\vec x)=(\phi_1(\vec x), \dots, \phi_M(\vec x))^T \in \RR^M,\ \
+\vec \phi(\vec x)=(\phi_1(\vec x), \dots, \phi_M(\vec x))^{\mathrm{T}} \in \RR^M,\ \
 t\in\RR;
 \end{equation*}
 \begin{equation}
@@ -450,6 +449,7 @@ SVM &0.9683\\
   \end{tabular}
 \end{table}
 
+\vspace{0.4em}
 The present method provides prediction accuracy that is comparable to
 classical methods.
 It also provides a way to sort features with respect to their importance:
@@ -485,11 +485,6 @@ and the words from the positive class does not look relevant at all.
 The RVM failed to solve the relevance determination problem on this dataset.
 
 The words chosen by RTM"~MAP"~EM and logistic regression are quite intuitive in case of this problem.
-%Although the words chosen by L1"~LR may seem better than the words picked by
-the present model, it isn't true.
-%For example, the words ``interesting'', ``loathe'' and ``crappy'' seem to be relevant, but there are only nine objects with the word ``interesting'', only $3$~objects with the word ``loathe'' and only six objects with the word ``crappy''.
-%It is much lower that the frequency of other relevant words (about $70$~entries and more), so these words can't be treated as a good choice for top ten relevant words.
-%Therefore our methods provided better relevance determination than L1 logistic regression.
 Most of them are very emotional.
 Top-20 words chosen by logistic regression are almost the
 same as top-20 words, chosen by the  present method.
