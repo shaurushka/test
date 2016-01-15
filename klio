@@ -1,62 +1,65 @@
-Estimation of radio impulse parameters using the maximum likelihood method
+Estimation of radio impulse parameters 
+using the maximum likelihood method
 
 K.V. Vlasova1, V.A. Pachotin2, D.M. Klionskiy3, D.I. Kaplun3
 
 p_ksenia@mail.ru, VPakhotin@kantiana.ru, klio2003@list.ru, dikaplun@etu.ru
 
-1Baltic Fishing Fleet State Academy, Russian Federation, Kaliningrad
-2Immanuel Kant Baltic Federal University, Russian Federation, Kaliningrad
-3Saint Petersburg Electrotechnical University "LETI", Russian Federation, Saint Petersburg
+1Department of Theoretical Fundamentals of Radio Engineering, Baltic Fishing Fleet State Academy, Russian Federation, Kaliningrad
+2Department of Radiophysics and Information Security, Immanuel Kant Baltic Federal University, Russian Federation, Kaliningrad
+3Faculty of Computer Science and Technologies, Saint Petersburg Electrotechnical University "LETI", Russian Federation, Saint Petersburg
 
-The paper is devoted to the development of an algorithm for resolution and parameter estimation of radio impulses with partially overlapping spectra in the area of their non-orthogonality (the correlation coefficient varies from 0 to 0.9). The implementation of the suggested algorithm makes it possible to design filters for resolving frequency-dependent signals and therefore to increase the capacity of a communication channel. We have used the maximum likelihood method to obtain analytical expressions and to perform model investigations for frequency resolution of non-orthogonal signals. The dynamic range of signal parameter estimates has been found as a function of signal-to-noise ratio and correlation coefficient. We show that that the likelihood functional value in its global minimum allows us to estimate noise variance and the number of radio impulses in a received signal.
+Abstract. The paper is devoted to the development of an algorithm for resolution and parameter estimation of radio impulses with partially overlapping spectra in the area of their non-orthogonality (correlation coefficient varies from 0 to 0.9). The suggested algorithm makes it possible to design filters for resolving frequency-dependent signals and therefore to increase the capacity of a communication channel. We have used the maximum likelihood method to obtain analytical expressions and to perform model studies for frequency resolution of non-orthogonal signals. The dynamic range of signal parameter estimates has been found as a function of signal-to-noise ratio and correlation coefficient. We show that that the likelihood functional value in its global minimum allows us to estimate noise variance and the number of radio impulses in a received signal.
 
+Keywords. maximum-likelihood method, radio impulse, resolution, frequency-dependent signal, communication channel, non-orthogonal signals, signal-to-noise ratio
+ 
 Introduction
-The paper discusses the problem of estimating parameters of a set of radio impulses with close frequencies. Their spectra partially overlap so that it is difficult to determine the precise number of radio impulses and estimate their parameters using the Rayleigh criterion. In this case radio impulses are non-orthogonal in the frequency domain so that we can consider several radio impulses orthogonal if their spectra satisfy the Rayleigh criterion. We need to determine amplitudes and frequencies of a set of non-orthogonal radio impulses when we know the reception moment and their duration.
-Modern radio systems function according to the analysis of orthogonal signals. Active pulse radar systems can be used for estimating the parameters of two or an even greater number of targets, if their correlation functions do not overlap, i.e. when they are orthogonal relative to the reception moment. It is possible in spectroscopy to separate two spectral lines, if the Rayleigh criterion is satisfied (i.e. orthogonality in the frequency domain is observed). At present if the orthogonality is not satisfied, this might result in gross errors in signal parameter estimation or a failure in signal detection.
-Nowadays there are several techniques applied in practice for improving the quality of signal parameter estimation due to a better resolution: Prony technique, MUSIC, etc. [1]. The most widely used techniques are based on the optimal reception theory [2,3]. However, the implementation of the aforementioned techniques is connected with a number of difficulties [8-10]. The problem of signal parameter estimation and resolution of such signals within the scope of the optimal reception theory can be handled only when the signals under study are orthogonal [4-6, 11-13]. However, when we work in the area of signal non-orthogonality, the logarithm of the likelihood function has a complex structure with a lot of local minima and its minimization is ambiguous. 
-We employ the results of the optimal reception theory, which were developed and extended for the area of signal non-orthogonality. We suggest the solution of this problem for non-orthogonal signals using the logarithm of the likelihood function transformed by the system of likelihood equations obtained for energetic signal parameters [7]. As a result of this transform minimization of the logarithm of the likelihood function proves to be ambiguous. The logarithm of the likelihood function (after transformation) presents a surface in a multidimensional space of non-energetic signal parameters. The minimum of this surface is the base for estimating both non-energetic and energetic signal parameters. The minimum of the surface of the logarithm of the likelihood function for a set of signals is the same and therefore the term "resolution of similar signals" is not used and we can solve the problem of signal parameter estimation in the area of their non-orthogonality. 
-The solution of the signal parameter estimation problem depends on the determinant of a correlation matrix when the Rao-Kramer variance estimate is obtained.
+The paper discusses parameter estimation of a set of radio impulses with close frequencies. Their spectra partially overlap so that it is difficult to determine the precise number of radio impulses and estimate their parameters using the Rayleigh criterion. In this case radio impulses are non-orthogonal in the frequency domain so that we can consider several radio impulses orthogonal if their spectra satisfy the Rayleigh criterion. We need to determine the amplitudes and frequencies of a set of non-orthogonal radio impulses when we know the reception moment and their duration.
+Modern radio systems function according to the analysis of orthogonal signals. Active pulse radar systems can be used for estimating parameters of two or an even greater number of targets, if their correlation functions do not overlap, i.e. when they are orthogonal. It is possible to separate two spectral lines in spectroscopy, if the Rayleigh criterion is satisfied (i.e. orthogonality in the frequency domain is observed). If the orthogonality is not satisfied, we might face gross errors in signal parameter estimation or a failure in signal detection.
+Nowadays there are several main techniques for improving the quality of signal parameter estimation due to a better resolution: Prony technique, MUSIC, etc. [1]. The most widely used techniques are based on the theory of optimal signal reception [2,3]. However, implementation of the aforementioned techniques is followed by a number of difficulties [8-10]. The problem of signal parameter estimation and signal resolution in the theory of optimal reception can be handled only when the signals are orthogonal [4-6, 11-13]. However, when we work in the area of signal non-orthogonality, the logarithm of the likelihood function has a complex structure with a lot of local minima and its minimization is ambiguous. 
+We employ the results of the theory of optimal reception, which were developed and extended for the area of signal non-orthogonality. We suggest the solution of this problem for non-orthogonal signals using the logarithm of the likelihood function transformed by the system of likelihood equations obtained for energetic signal parameters [7]. As a result of this transform minimization of the logarithm of the likelihood function proves to be ambiguous. The logarithm of the likelihood function (after transformation) presents a surface in a multidimensional space of non-energetic signal parameters. The minimum of this surface is the base for estimating both non-energetic and energetic signal parameters. The minimum of the surface of the logarithm of the likelihood function for a set of signals is the same and therefore the term "resolution of similar signals" is not used and we can solve the problem of signal parameter estimation in the area of their non-orthogonality. 
+The solution of the signal parameter estimation problem depends on the determinant of a correlation matrix.
 
 Theoretical background
-This section contains the main analytical expressions for an algorithm for processing a set of non-orthogonal (in the frequency domain) radio impulses based on the transformed likelihood functional. We used two radio impulses for obtaining certain expressions for calculating amplitude variances. These variances were used for estimating the application area of the algorithm depending on the correlation coefficient between the signals.
+This section contains the main description of an algorithm for processing a set of non-orthogonal (in the frequency domain) radio impulses based on the transformed likelihood functional. We have used two radio impulses for obtaining certain expressions for calculating amplitude variances. These variances were used for estimating the application area of the algorithm depending on the correlation coefficient between the signals.
 
-Consider a received signal consisting of N  radio impulses in the complex form:
+Consider a signal consisting of N  radio impulses in the complex form:
 y ̂(t)=∑_(n=1)^N▒〖U ̂_n e^(iω_n t) 〗+U_n (t),					(1)
 where U ̂_n is the complex amplitude of the n-th radio impulse;
 ω_n is the circular frequency of the n-th radio impulse;
 U_n (t) is the additive Gaussian noise with the mean value equal to zero, variance equal to σ^2 and the correlation interval equal to τ_к.
 Using (1) we can obtain the logarithm of the likelihood function:
 ln(L(λ ́  ⃗ ))=-1/(2σ^2 τ_к ) ∫_0^T▒〖|y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗|^2 dt〗=-1/(2σ^2 τ_к ) Δ(U ́  ̂_n,ω ́_n ),	(2)
-where λ ́  ⃗ is the vector of the estimated parameters of radio impulses; Δ(U ́  ̂_n,ω ́_n ) is the likelihood functional;  T is the duration of the received signal; the dashes on top of the variables in (2) correspond to the parameters that have to be estimated. The received message  y ̂(t) corresponds to the mathematical model of a signal with  N copies differing by  ω ́_1⋯ω ́_N. The energy of the message depends on complex amplitudes of radio impulses  U ́  ̂_n   and does not depend on other parameters  (ω ́_1⋯ω ́_N). Therefore, we will consider complex amplitudes to be energetic parameters and frequencies   non-energetic parameters.
-Minimization of (2) is ambiguous due to variability of amplitudes and frequencies of radio impulses, which leads to ambiguity in the solution of the system of likelihood equations in the area of non-orthogonality. The surface of functional (2) has many local minima, which makes it difficult to estimate the parameters of the received message. If we need to obtain one minimum of the likelihood surface, it is necessary to transform (2) in order to exclude energetic parameters from the minimization process.
-Amplitude exclusion requires us to differentiate (2) and then solve the corresponding equation. As a result we will have a system of likelihood equations:
+where λ ́  ⃗ is the vector of the estimated parameters of radio impulses; Δ(U ́  ̂_n,ω ́_n ) is the likelihood functional;  T is the duration of the received signal; the dashes on top of the variables in (2) correspond to the parameters that have to be estimated. The received signal y ̂(t) corresponds to the mathematical model of a signal with  N copies differing by ω ́_1⋯ω ́_N. The energy of the signal depends on complex amplitudes of radio impulses U ́  ̂_n   and does not depend on other parameters (ω ́_1⋯ω ́_N). Therefore, we will consider complex amplitudes to be energetic parameters and frequencies   non-energetic ones.
+Minimization of (2) is ambiguous due to variability of amplitudes and frequencies of radio impulses, which leads to the ambiguity in the solution of the system of likelihood equations in the area of non-orthogonality. The surface of functional (2) has many local minima, which makes it difficult to estimate the parameters of the received signal. If we need to obtain one minimum of the likelihood surface, it is necessary to transform (2) in order to exclude energetic parameters from the minimization process.
+Amplitude exclusion requires us to differentiate (2) and then to solve the corresponding equation. As a result we will have a system of likelihood equations:
 ∫_0^T▒〖(y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗) e^(-iω ́_1 t) dt〗=0,
 ⋯,
 ∫_0^T▒〖(y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗) e^(-iω ́_N t) dt〗=0.				(3)
 These equations can be used to find the amplitudes of N radio impulses, which depend on the estimated frequencies ω ́_1⋯ω ́_N. Now we will designate the amplitudes as 〖U ́  ̂1〗_n.
 The likelihood functional can also be written the following way:
-Δ(U ́  ̂_n,ω ́_n )=∫_0^T▒〖|y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗|^2 dt〗=∫_0^T▒(y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗)(y ̂^* (t)-U ́  ̂_1^* e^(-iω ́_1 t)-U ́  ̂_2^* e^(-iω ́_2 t)-⋯U ́  ̂_N^* e^(-iω ́_N t) )dt.		(4)
+Δ(U ́  ̂_n,ω ́_n )=∫_0^T▒〖|y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗|^2 dt〗=∫_0^T▒(y ̂(t)-∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗)(y ̂^* (t)-U ́  ̂_1^* e^(-iω ́_1 t)-U ́  ̂_2^* e^(-iω ́_2 t)-⋯U ́  ̂_N^* e^(-iω ́_N t) )dt.			(4)
 After certain transformations we arrive at
 Δ(U ́  ̂_n,ω ́_n )=∫_0^T▒〖|y ̂(t)|^2 dt〗-∫_0^T▒(y ̂^* (t) ∑_(n=1)^N▒〖U ́  ̂_n e^(iω ́_n t) 〗)dt,			(5)
-where the asterisk means complex conjugate. 
-However, expression (3) can be used for finding the amplitudes of radio impulses  U ́  ̂_n   depending on the frequency estimates  ω ́_1⋯ω ́_N. These amplitudes can be designated as  〖U ́  ̂1〗_n. Now we can write the transformed likelihood functional 
+where the asterisk means complex conjugate.
+However, expression (3) can be used for finding the amplitudes of radio impulses U ́  ̂_n   depending on the frequency estimates ω ́_1⋯ω ́_N. These amplitudes can be designated as 〖U ́  ̂1〗_n. Now we can write the transformed likelihood functional 
 Δ(ω ́_n )=∫_0^T▒〖|y ̂(t)|^2 dt〗-∫_0^T▒(y ̂^* (t) ∑_(n=1)^N▒〖〖U ́  ̂1〗_n e^(iω ́_n t) 〗)dt,			(6)
 depending on only non-energetic radio impulse parameters, i.e. the estimated frequencies ω ́_1⋯ω ́_N. Therefore the surface will have only one global minimum indicating the estimated frequency values  ω ́_1⋯ω ́_N. Substituting them in the likelihood equation (3) we can estimate the amplitude values U ́  ̂_n.
-If the number of radio impulses in the received signal and the signal model is the same, the likelihood functional (6) determines the noise variance in the received message. However, in practice we do not always the apriori information on the expected number of radio impulses. This fact can be illustrated using the following example. In communications applications we can receive two or a greater number of radio impulses with unknown frequencies. The number of radio impulses is also unknown and they have to be resolved. Another example is related to radio spectroscopy, where the number of spectral lines is unknown. The spectral lines can be orthogonal or non-orthogonal. These examples confirm the necessity of estimating the number of radio impulses in the received message.
+If the number of radio impulses in the received signal and the signal model is the same, the likelihood functional (6) determines the noise variance in the received signal. However, in practice we do not always have apriori information on the expected number of radio impulses, which can be illustrated by the following example. In communications applications we can receive two or more radio impulses with unknown frequencies. The number of radio impulses is also unknown and they have to be resolved. Another example is related to radio spectroscopy, where the number of spectral lines is unknown. The spectral lines can be orthogonal or non-orthogonal. These examples confirm the necessity of estimating the number of radio impulses in the received signal.
 We suggest an algorithm based on changing the number of signal copies N  in the mathematical model and finding the values of the likelihood functional (6) in its minimum.
-If the number of signal copies  N in the mathematical model is greater than the number of radio impulses in the received message, the amplitudes of extra components are close to zero since they are determined by separate noise maxima. The minimal value of likelihood (6) will be determined by the noise variance.
-If the number of signal copies  N is smaller than in the received message, the value of the likelihood functional rises dramatically since it determines the noise variance in the received message and the radio impulses, which are not included in the model.
-Thus, processing the received message requires us to increase the number of signal copies N till the minimum value of the likelihood functional stops decreasing.
-Evaluation of the quality of the solution in the optimal reception theory is based on estimating variances using Rao-Kramer estimates. Consider two radio impulses in a data set starting at the same time point. We can estimate the variance of radio impulse amplitudes in the minimal point of the likelihood functional for ω ́_1=ω_1,ω ́_2=ω_2. By computing the elements of the Fisher information matrix according to the expression
+If the number of signal copies  N in the mathematical model is greater than the number of radio impulses in the received signal, the amplitudes of extra components are close to zero since they are determined by separate noise maxima. The minimal value of likelihood (6) will be determined by the noise variance.
+If the number of signal copies  N is smaller than in the received signal, the value of the likelihood functional rises dramatically since it determines the noise variance in the received signal and the radio impulses, which are not included in the model.
+Thus, processing the received signal requires us to increase the number of signal copies N till the minimum value of the likelihood functional stops decreasing.
+Evaluation of the quality of the solution in the theory of optimal reception is based on estimating variances using Rao-Kramer estimates. Consider two radio impulses in a data set starting at the same time point. We can estimate the variance of radio impulse amplitudes in the minimal point of the likelihood functional for ω ́_1=ω_1,ω ́_2=ω_2. By computing the elements of the Fisher information matrix according to the expression
 J_ij=-M((d^2 ln(L(λ ́  ⃗ )))/(dλ_i dλ_j )),					(7)
 we can find a new matrix consisting of the elements
 J_ij=∫_0^T▒〖e^i(ω ́_i-ω ́_j )t dt〗.					(8)
-These are complex correlation coefficients between the radio impulses. The diagonal elements of a matrix, which is inverse to the Fisher information matrix, define the variances of radio impulse amplitudes. The inverse matrix has the following form:
+These are complex correlation coefficients between the radio impulses. The diagonal elements of the matrix, which is inverse to the Fisher information matrix, define the variances of radio impulse amplitudes. The inverse matrix has the following form:
 D ̂_U=A_ij/det⁡(J ̂ ) ,							(9)
 where A_ij is the algebraic adjunct for the element of the Fisher matrix with the indices i,j; det⁡(J ̂ ) is the determinant of the Fisher information matrix.
 Thus, the variance of radio impulse amplitudes is determined by det⁡(J ̂ )   of the Fisher information matrix. In the case of two radio impulses the amplitude variance will have the following form:
 D_(U_1 )=D_(U_2 )=σ^2/K(1-|r ̂ |^2 ) ,,					(10)
-where K is the number of non-correlated noise samples on the processing interval T; r ̂ is the normalized correlation coefficient between radio impulses.
+where K is the number of non-correlated noise samples on the processing interval T; r ̂ is the normalized correlation coefficient between the radio impulses.
 If |r ̂ |=0, the amplitude variance will have the following form
 D_(U_0 )=σ^2/K.						(11)
 Now we will introduce the normalized variance:
@@ -66,9 +69,9 @@ This expression is characterized by the fact that for |r ̂ |=0÷0,9 the changes
  
 Fig. 1 - Relative variance versus normalized correlation coefficient. Relative variance increases by ~7 dB in the range |r ̂ |=0÷0,9; when |r ̂ |>0,9  the relative variance rises dramatically.
 Model investigations
-The section is devoted to studying the problem of estimating the parameters of two radio impulses in the area of their non-orthogonality using the maximum likelihood technique and spectral analysis. We show that the maximum likelihood technique can be used for solving this problem in the area of non-orthogonality. The results of our experiments are provided to estimate the quality of the solution depending on the signal-to-noise ratio and correlation coefficient between two radio impulses. We illustrate the estimation of the noise variance in the received message using the dataset (the functional value in its minimum).
+The section is devoted to studying parameter estimation of two radio impulses in the area of their non-orthogonality using the maximum likelihood technique and spectral analysis. We show that the maximum likelihood technique can be used for solving this problem in the area of non-orthogonality. The results are provided to estimate the quality of the solution depending on the signal-to-noise ratio and correlation coefficient between two radio impulses. We illustrate the estimation of the noise variance in the received signal using the dataset (the functional value in its minimum).
 
-Model investigations have been carried out for a realization containing two radio impulses combined in the time domain. The radio impulses have the following parameters: amplitudes U_1=2,U_2=1; initial phases φ_1=〖10〗^0,φ_2=〖170〗^0; frequencies f_1=2 kHz,f_2=2,08 kHz; signal-to-noise ratio is 20 dB; radio impulse duration is 25 ms. The Rayleigh restriction for radio impulse resolution arises when the frequencies become close by ∆f=40 Hz. 
+Model investigations have been carried out for a signal containing two radio impulses combined in the time domain. The radio impulses have the following parameters: amplitudes U_1=2,U_2=1; initial phases φ_1=〖10〗^0,φ_2=〖170〗^0; frequencies f_1=2 kHz,f_2=2,08 kHz; signal-to-noise ratio is 20 dB; radio impulse duration is 25 ms. The Rayleigh restriction for radio impulse resolution arises when the frequencies become close by ∆f=40 Hz. 
 Fig. 2 shows the normalized correlation coefficient versus the frequency difference ∆f  between two signals. When ∆f=40 Hz and ∆f=80 Hz, the correlation coefficient is equal to zero and the signals are orthogonal. The values ∆f<40 Hz correspond to the signal non-orthogonality area. The correlation coefficient values different from zero for ∆f>40 Hz are caused by side lobes of the signal spectrum.
  
 Fig. 2 - Correlation coefficient between radio impulses. Radio impulse duration is 25 ms. The radio impulses are orthogonal for 40, 80, and 120 Hz. When the radio impulse frequency difference is10 Hz and the correlation coefficient is equal to 0.9 we can confirm the theoretical estimate of the working area.
@@ -78,29 +81,30 @@ Fig. 3 - Received signal containing two orthogonal
 radio impulses combined in the time domain.
 The spectra of these two radio impulses is shown in Fig. 4. The side lobes of the first radio impulse (U_1=2) distort the amplitude of the second radio impulse (U_2=1).
  
-Fig. 4 - spectrum of two orthogonal radio impulses combined in the time domain. The maxima of spectral lines determine amplitude and frequency estimates of the radio impulses.
+Fig. 4 - Spectrum of two orthogonal radio impulses combined in the time domain. The maxima of spectral lines determine amplitude and frequency estimates of the radio impulses.
 
 Fig. 5 shows the surface of the transformed inverse likelihood functional:
 ∆1=1/∆(ω ́_1,ω ́_2 ) .							(13)
  
-Fig. 5 - surface of the inverse likelihood functional. The single maximum determines the parameter estimates of two radio impulses and the term "resolution" is not required. The base width of the maximum of the likelihood functional depends on a signal-to-noise ratio, and its maximal value (95.45) determines the estimate of the noise variance in a received signal (-19.79 dB relative to 1).
+Fig. 5 - Surface of the inverse likelihood functional. The single maximum determines the parameter estimates of two radio impulses and the term "resolution" is not required. The base width of the maximum of the likelihood functional depends on a signal-to-noise ratio, and its maximal value (95.45) determines the estimate of the noise variance in a received signal (-19.79 dB relative to 1).
 
-The maximum of the functional surface is the only one, which determines the unambiguity of the problem solution. The location of the maximum makes it possible to find the values of estimation frequencies ω ́_1 и ω ́_2. Their substitution into likelihood equations makes it possible to find the estimates of complex amplitudes of radio impulses. The value of maximum of the likelihood functional allows us to find the noise variance in a received realization. Fig. 3-5 illustrate the possibility of obtaining the solution in the area of radio impulse orthogonality.
+The maximum of the functional surface is the only one, which determines the unambiguity of the problem solution. The location of the maximum makes it possible to find the values of estimation frequencies ω ́_1 и ω ́_2. Their substitution into likelihood equations makes it possible to find the estimates of complex amplitudes of radio impulses. The maximum value of the likelihood functional allows us to find the noise variance in the received signal. Fig. 3-5 illustrate the possibility of obtaining the solution in the area of radio impulse orthogonality.
 Fig. 6-8 show the possibility of obtaining the solution in the area of radio impulse non-orthogonality. In this case the radio impulse frequencies are f_1=2 kHz,f_2=2,02 kHz. The difference is 20 Hz. Fig. 6 shows the received signal.
 
  
-Fig. 6 - Received signal containing two non-orthogonal impulses combined in the time domain.
-Fig. 7 shows the spectrum of two radio impulses, which makes it difficult to obtain the information on radio impulse parameters.
+Fig. 6 - Received signal containing two non-orthogonal impulses 
+combined in the time domain.
+Fig. 7 shows the spectrum of two radio impulses, which makes it difficult to find radio impulse parameters.
 
  
 Fig. 7 - Spectrum of two non-orthogonal radio impulses combined in the time domain.
 Fig. 8 shows the transformed likelihood functional, which allows us to estimate the radio impulse parameters.
  
-Fig. 8 - surface of the inverse likelihood functional obtained in the area of radio impulse non-orthogonality.
+Fig. 8 - Surface of the inverse likelihood functional obtained in the area of radio impulse non-orthogonality.
 Fig. 9 shows the variations of radio impulse magnitude estimates depending on the changes in radio impulse frequencies. The best amplitude estimates can be found when ∆f=10 Hz. This corresponds to the correlation coefficient between radio impulses r ̂~0,9, which fully confirms the theoretical estimate of the working area (r ̂=0÷0,9) for parameter estimation of two radio impulses.
 
  
-Fig. 9 - variation of the amplitude estimates of radio impulses depending on the changes of the frequency differences. The non-orthogonality area of the radio impulses for   The best amplitude estimates for radio impulse frequency differences of 10 Hz. Radio impulse resolution has increased 4 times in comparison with the Rayleigh resolution.
+Fig. 9 - Variation of the amplitude estimates of radio impulses depending on the changes of the frequency differences. The non-orthogonality area of the radio impulses for   The best amplitude estimates for radio impulse frequency differences of 10 Hz. Radio impulse resolution has increased 4 times in comparison with the Rayleigh resolution.
 Fig. 10 shows radio impulse frequency estimates versus their frequency differences. When the signal-to-noise ratio is ~20 dB and radio impulse duration is 25 ms, the best estimates are obtained for ∆f=10 Hz. Thus, we can point out that the suggested technology of radio impulse parameter estimation is characterized by high resolution. When the signal-to-noise ratio is 20 dB, the resolution of two radio impulses has increased 4 times in comparison with the Rayleigh resolution.
 
  
@@ -115,19 +119,19 @@ Fig. 12 shows the statistics of radio impulse frequencies depending on the signa
  
 Fig. 12 - statistics of radio impulse frequency estimates. The difference of radio impulse frequencies is 20 Hz (non-orthogonality area). The estimates are satisfactory for signal-to-noise ratios exceeding - 5 dB.
 
-Fig. 13 illustrates the changes of maxima of the inverse transformed likelihood functional depending on the signal-to-noise ratio in dB. The linear dependence confirms the theoretical suggestion that the noise variance can be estimated on the basis of the maximum of the inverse transformed likelihood functional.
+Fig. 13 illustrates the changes of maxima of the inverse transformed likelihood functional depending on the signal-to-noise ratio in dB. The linear dependence confirms the theoretical suggestion that the noise variance can be estimated by the maximum of the inverse transformed likelihood functional.
 
  
-Fig. 13 - maximum of the likelihood functional versus signal-to-noise ratio. The linearity of the dependence allows us to estimate the noise variance in the received message using the maximum of the inverse likelihood functional.
+Fig. 13 - maximum of the likelihood functional versus signal-to-noise ratio. The linearity of the dependence allows us to estimate the noise variance in the received signal using the maximum of the inverse likelihood functional.
 
 Conclusions
-We have introduced an algorithm for solving the problem of parameter estimation of a set of non-orthogonal radio impulses using the maximum likelihood method on the basis of the transformed likelihood functional. Theoretical and practical investigations lead to the following conclusions:
+We have introduced an algorithm for parameter estimation of a set of non-orthogonal radio impulses using the maximum likelihood method based on the transformed likelihood functional. Theoretical and practical studies lead to the following conclusions:
 	the transformed likelihood functional allows us to solve the problem of resolving and parameter estimation of two or several radio impulses in the area of their non-orthogonality. Application of this technique is efficient for different radio engineering problems and can be used for improving the capacity of communication channels using frequency division multiplexing;
 	the working area for parameter estimation of a set of radio impulses is determined by determinant variations of a correlation matrix of a set of signals. Conditionality of the correlation matrix influences the possibility of resolving a set of signals. In the case of two radio impulses the working area depends on the normalized correlation coefficient in the range 0÷0.9;
 	the value of the transformed likelihood functional in its global minimum allows us to estimate the noise variance in a dataset and can be used as a criterion for estimating the number of radio impulses.
 
 Acknowledgement
-The paper is supported by the grant of the Russian Foundation for Basic Research No. 15-37-50902 and Contract No. 02.G25.31.0058 dated 12.02.2013 (Ministry of Education and Science of the Russian Federation).
+The paper is supported by Contract No. 02.G25.31.0149 (Ministry of Education and Science of the Russian Federation) and grant of the Russian Foundation for Basic Research No. 15-37-50902.
 
 
 References
@@ -143,4 +147,4 @@ References
 	V.Y. Volkov Extraction of straight edges in denoised images (in Russian): Information and management systems, 2011, Vol. 4(53), p. 13-17.
 	E. E. Zelniker, I. Vaughan, L. Clarkson Maximum-Likelihood Estimation of Circle Parameters via Convolution // Proc. VIIth Digital Image Computing: Techniques and Applications, Sun C., Talbot H., Ourselin S. and Adriaansen T. (Eds.), 10-12 Dec. 2003, Sydney.
 	Prabhu Babu Spectral Analysis of Nonuniformly Sampled Data and Applications // UPPSALA Universitet, Sweden, Dissertation presented at Uppsala University, 2012.
-	P. Stoica, B. Ottersten, M. Viberg, R.L. Moses Maximum likelihood array processing for stochastic coherent processes // IEEE Transactions on Signal Processing // Vol. 44, No. 1, 1996
+	P. Stoica, B. Ottersten, M. Viberg, R.L. Moses Maximum likelihood array processing for stochastic coherent processes // IEEE Transactions on Signal Processing // Vol. 44, No. 1, 1996.
