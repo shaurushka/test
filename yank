@@ -1,0 +1,577 @@
+\documentclass[12pt, twoside]{article}
+\usepackage{jmlda}
+\newcommand{\hdir}{.}
+
+%\NOREVIEWERNOTES
+\title
+    [2-симплекс призма~--- когнитивное средство принятия и обоснования решений] % Краткое название; не нужно, если полное название влезает в~колонтитул
+    {2-симплекс призма~--- когнитивное средство принятия и обоснования решений в интеллектуальных динамических системах}
+\author
+    %[А.\,Е.~Янковская, А.\,В.~Ямшанов, Н.\,М.~Кривдюк] % список авторов для колонтитула; не нужен, если основной список влезает в колонтитул
+    {А.\,Е.~Янковская, А.\,В.~Ямшанов, Н.\,М.~Кривдюк} % основной список авторов, выводимый в оглавление
+    [А.\,Е.~Янковская$^{1,2,3,4}$, А.\,В.~Ямшанов$^4$, Н.\,М.~Кривдюк$^4$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
+\thanks
+    {Работа поддержана грантами РФФИ (проекты \No\No\,13-07-00373, 13-07-98037
+и~14-07-00673) и частично РГНФ (проект \No\,13-06-00709).}
+\email
+    {ayyankov@gmail.com, yav@keva.tusur.ru, skratnat@gmail.com}
+\organization
+    {$^1$Томский государственный архитектурно-строительный университет,
+г. Томск, пл. Соляная 2\par
+ $^2$Томский государственный университет, г. Томск, пр. Ленина, 36\par
+$^3$Сибирский государственный медицинский университет, г. Томск, Московский
+тракт, 2\par
+$^4$Томский государственный университет систем управления и радиоэлектроники, г.~Томск,~пр.~Ленина,~40}
+\abstract
+{
+  Для ряда проблемных и междисциплинарных областей, таких как медицина, биомедицина, экогеология, образование, дорожное строительство, впервые в интеллектуальных динамических системах предлагается для принятия и обоснования решений применять оригинальное когнитивное средство~---
+2-симплекс призму.
+  Идея применения $n$-симплексов, теорема для принятия и обоснования решений
+на основе $n$-симплексов и использование ее в интеллектуальных системах (ИС)
+впервые предложены А.\,Е.~Янковской в 1990 г.
+  Описывается применение 2-симплекс призмы для принятия и обоснования решений в интеллектуальных динамических системах, основанных на тестовых методах распознавания образов, нечеткой и пороговой логиках.
+
+  \bigskip
+  \noindent
+  \textbf{Ключевые слова}: \emph {2-симплекс призма; n-симплекс; когнитивное средство; принятие решений; обоснование решений; интеллектуальные системы; интеллектуальные динамические системы; тестовые методы распознавания образов; нечеткая логика; пороговая логика; области применения 2-симплекс призмы}
+}
+\titleEng
+    {2-simplex prism~--- a cognitive tool for decision-making and~its~justifications in intelligent dynamic systems}
+\authorEng
+    {A.\,E.~Yankovskaya$^{1,2,3,4}$, A.\,V.~Yamshanov$^4$, N.\,M.~Krivdyuk$^4$}
+\organizationEng
+    {$^1$Tomsk State University of Architecture and Building, 2 Solyanaya Sq., Tomsk, Russia\par
+$^2$Tomsk State University, 36~Pr. Lenina, Tomsk, Russia\par
+$^3$Siberian State Medical University, 2~Moskovskiy trakt, Tomsk, Russia\par
+ $^4$Tomsk State University of Control Systems and Radioelectronics,
+40~Pr. Lenina, Tomsk, Russia}
+\abstractEng
+{
+  \noindent
+  The cognitive tool 2-simplex prism is first proposed for application at decision-making and its justification in intelligent dynamic systems for different problem areas: medicine, biomedicine, ecogeology, education, road building etc.
+  The idea of n-simplex application, the theorem for decision-making and its justification for intelligent systems proposed by A. Yankovskaya in 1990 year.
+  Usage of 2-simplex prism for application at decision-making and its justification in intelligent dynamic systems based on test methods of pattern recognition and methods of fuzzy and threshold logics is described.
+
+  \bigskip
+  \noindent
+  \textbf{Keywords}: \emph{2-simplex prism; n-simplex; cognitive tool; decision-making; justification; intelligent systems; intelligent dynamic systems; test methods of pattern recognition; fuzzy logic; threshold logic; areas of 2-simplex prism application}}
+
+\begin{document}
+ \maketitle
+%\linenumbers
+
+\section{Введение}
+Когнитивная графика как научное направление, связанное с принятием
+и обоснованием решений в ИС, начала развиваться с~1970-х~гг.
+Значительный вклад в развитие когнитивных средств внесли R.~Axelrod~\cite{axelrod1976structure},
+R.\,G.~Basaker и~T.\,L.~Saati~\cite{basaker1965graph}, Д.\,А.~Поспелов
+с~соавт.~\cite{pospelov1992cognitive,pospelov1996hotspot,pospelov1996combine},
+А.\,А.~Зенкин~\cite{zenkin1991cognitive,zenkin1996cognitive},
+В.\,А.~Албу и~В.\,Ф.~Хорошевский~\cite{albu1990cogr},
+Б.\,А.~Кобринский~\cite{kobr1996imaginary}, А.\,Е.~Янковская
+с~соавт.~\cite{yank1997decision,yank2009networks,yank2010vizualization}.
+
+Растущий интерес к разработке и использованию прикладных ИС стимулирует спрос на создание графических, включая когнитивные, средств визуализации различных информационных структур, выявленных закономерностей, а также принятия и обоснования решений.
+Графические изображения на экране компьютера упрощают восприятие и понимание закономерностей в данных и знаниях.
+
+В настоящее время средства когнитивной графики широко используются в
+различных ИС для решения разнообразных задач для проблемных и междисциплинарных
+областей: медицина, образование, геология, проектирование, радиоэлектроника,
+социология, психология, психиатрия, экобиомедицина, экогеология и др.
+Средства когнитивной графики широко применяются в разнообразных ИС:
+для анализа информационных структур, выявления различного рода закономерностей
+в~данных и~знаниях, принятия и~обоснования принятия результатов решения;
+в~интеллектуальных обучающе-тестирующих системах: для визуализации
+и~прогнозирования результатов процесса обучения, для оптимизации учебного
+процесса и~др.
+
+Весьма актуальным является применение когнитивных средств для анализа
+и~визуализации динамических процессов при принятии и обосновании решений.
+Например, преподавателю необходимо учитывать полученные респондентами
+в~ходе обучения результаты, для постановки итоговой оценки или врачу
+для отслеживания осуществленных мероприятий
+в~ходе лечения пациентов в целях успешного лечения.
+Применение когнитивной графики при принятии решений существенно упрощает анализ информации и способствует принятию оптимального решения.
+
+Предлагаемая статья является продолжением исследования применения когнитивных
+средств, основанных на $n$-симплексе \cite{yank2000mirror,yank2004optimization}.
+Несомненным преимуществом когнитивных средств, основанных на $n$-симплексе,
+является инвариантность к проблемным областям.
+Отметим, что целесообразно создание средств когнитивной графики
+с использованием современных технологий и с учетом всех доступных платформ:
+desktop-приложения (приложения для настольного персонального
+компьютера), приложения для смартфонов и~планшетов, WEB-при\-ло\-жения.
+
+Ниже описываются математические основы представления исследуемого объекта
+в~\mbox{2-симп}\-лек\-се и основы представления исследуемого объекта (процесса)
+на базе \mbox{2-симп}\-лекс призмы; приводятся примеры применения 2-симплекс призмы
+в~разработанных, а~также разрабатываемых ИС; предлагаются дальнейшие направления исследований.
+
+\section{Математические основы представления исследуемого объекта в 2-симплекс призме}
+В основе принятия и обоснования решений, а также графической визуализации
+правильного $n$-симплекса лежит следующая теорема, сформулированная
+в~\cite{yank1991transformation,kondr1992triang}.
+
+\textbf{Теорема}.
+Для любого набора одновременно не равных нулю чисел \(a_1, a_2, …, a_{n+1}\),
+где \(n\)~--- размерность правильного $n$-симплекса,
+можно найти одну и только одну такую точку, что
+\(h_1:h_2:\cdots:h_{n+1} = a_1:a_2:\cdots: a_{n+1}\), где $h_i,
+(i = 1, \dots, n + 1)$~--- расстояние этой точки до \(i\)-й
+грани~\cite{yank1991transformation,kondr1992triang}.
+Коэффициент $a_i, (i = 1, \dots, n + 1)$ представляет собой степень условной близости исследуемого объекта к \(i\)-му образу.
+
+Эта теорема использовалась при построении более чем тридцати прикладных
+интеллектуальных системах и трех инструментальных средств, предназначенных
+для выявления различного рода закономерностей и принятия диагностических,
+организационно-управ\-лен\-че\-ских и классификационных решений, для принятия решения и их обоснования.
+
+Далее приведем соотношения между коэффициентами и высотами для 2-симплекса.
+Поскольку 2-симплекс обладает свойством постоянства суммы расстояний (\(h\)) из любой точки до его граней и свойством сохранения отношений между этими расстояниями \(h_1:a_1=h_2:a_2=h_3:a_3\), то расстояния \(h_1, h_2, h_3\) от точки до сторон треугольника вычисляются на основе коэффициентов \(a_i (i \in {1, 2, 3})\) и операции нормализации исходя из следующих соотношений:
+
+\begin{equation*}
+\begin{array}{l}H = \sum\limits_{i=1}^{3} h_i; \\
+H = A \sum\limits_{i=1}^{3} a_i; \\
+\displaystyle\frac{h_1}{a_1} = \displaystyle\frac{h_2}{a_2} = \displaystyle\frac{h_3}{a_3}\end{array}
+\end{equation*}
+по формуле:
+\begin{equation*}
+h_i = A  a_i,\quad i \in \{1, 2, 3\}.
+\end{equation*}
+
+Когнитивное средство «2-симплекс призма» представляет собой правильную
+треугольную призму, содержащую в основаниях и срезах 2-симплексы,
+зафиксированные в конкретные моменты времени.
+В целях вычисления расстояния от основания призмы до \mbox{2-симп}\-лек\-са
+\(h_2\) введем следующие параметры: $H_2$~--- высота 2-симплекс призмы,
+ задаваемая пользователем и сопоставленная продолжительности исследования;
+\(t\)~--- момент фиксации параметров исследуемого объекта;
+$T_{\min}$~--- момент первой фиксации параметров исследуемого объекта;
+$T_{\max}$~--- момент последней фиксации параметров исследуемого объекта.
+Расстояние $h_2$ вычисляется по следующей формуле:
+                \begin{equation*}
+h_2 = H_2  \frac{t - T_{\min}}{T_{\max} - T_{\min}}.
+\end{equation*}
+
+\section{Применение 2-симплекс призмы в различных проблемных областях}
+Когнитивное средство 2-симплекс призма предназначено для применения в различных проблемных и междисциплинарных областях.
+Рассмотрим примеры применения \mbox{2-симп}\-лекс призмы в различных областях:
+(1)~диагностики и интервенции организационного стресса (ОС);
+(2)~экспресс-диагностики и профилактики депрессии; (3)~образовании.
+
+Рассмотрим пример диагностики и интервенции ОС с использованием 2-симплекс
+призмы в ИС экспресс-диагностики и интервенции ОС (ДИОС) \cite{yank2012dios},
+основанной на идее трехступенчатой диагностики и выбора интервенции на базе
+сконструированного авторами опросника \cite{yank2012dios, kornetov2011dios}
+по каждой из трех стадий ОС (1~--- напряжения; 2~--- адаптации; 3~---
+истощения) и базируемой на пороговой и нечеткой
+логиках~\cite{beck1961depression, zadeh1994fuzzy}.
+Идея трехступенчатой диагностики ОС позволяет в более короткие сроки оказывать дифференцированную помощь при наличии ОС у обследуемых.
+
+Для экспресс-диагностики ОС используется опросник, включающий вопросы по трем
+стадиям ОС: 1~--– напряжения (возбуждения); 2~--– адаптации
+(сохранения энергии); 3~--– истощения.
+В основе опросника лежит концепция Г.~Селье~\cite{selye1936diverse}.
+В 1-й и~2-й стадиях используется 7 признаков (симптомов) для выявления ОС;
+в 3-й стадии~--- 8 признаков, причем количество значений каждого признака
+равно 5 (никогда~--- 0; редко~--- 0,25; иногда~--- 0,5; часто~--- 0,75;
+постоянно~---~1).
+
+После проведения тестирования система обрабатывает анкету исследуемого и выдает результаты диагностики ОС по каждой из стадий.
+Полученные результаты передаются в модуль когнитивной графики.
+В случае если не предусмотрено исследование динамики развития ОС,
+то для принятия и обоснования используется когнитивное средство \mbox{2-симп}\-лекс.
+Если необходимо наблюдение в динамике за обследуемым, то используется
+\mbox{2-симп}\-лекс призма.
+Отображаемая динамика результатов по диагностике ОС с применением 2-симплекс призмы позволяет определить степень близости к тому или иному диагнозу на каждом этапе лечения.
+
+2-симплекс призма одновременно отображает только три образа, однако ИС ДИОС выявляет как 3 стадии ОС (возбуждения, адаптация, истощение), так и отсутствие стресса.
+В связи с этим предлагается для отображения динамики использовать две 2-симплекс призмы: первая предназначена для отображения динамики для трех стадий ОС (рис. 1), вторая~--- для отображения двух первых стадий и факта отсутствия стресса (рис. 2).
+Отметим, что если у обследуемого история развития болезни укладывается в рамки диагнозов, сопоставленных сторонам одной из двух 2-симплекс призм, то целесообразно использовать только одну призму.
+Также заметим, что в 2-симплекс призме используются когнитивные свойства, представленные цветовой палитрой для отображения опасности диагнозов и сопоставляемых им образов,
+например красным цветом отображается самая тяжелая стадия ОС~--- истощение.
+Кроме того, поскольку рис. 1 и 2 используют перспективную проекцию, может создаться ощущение, что линии, соединяющие точки и грани, не перпендикулярны граням.
+\begin{figure}[b]
+\centering
+\includegraphics{\hdir/prism_dios}
+\caption{Отображение результатов четырех тестов диагностики ОС в 2-симплекс призме}\end{figure}
+
+Представим иллюстративный пример, когда история развития болезни не укладывается в рамки диагнозов, сопоставленных сторонам одной 2-симплекс призмы, а необходимо использовать две 2-симплекс призмы.
+При этом проведено 5 тестов по определению стадии ОС.
+В первой 2-симплекс призме отображены результаты 1-, 2-, 3- и~4-го тестов, во
+второй 2-симплекс призме отображены результаты 3-, 4- и~5-го тестов.
+На рис. 1 представлена 2-симплекс призма, отображающая первую часть лечения обследуемого со стадии истощения (3) до стадии возбуждения (1).
+
+
+Первый тест (\(T_1\)) выявил у обследуемого стадии адаптации (2) и истощения (3), причем стадия истощения преобладает над стадией адаптации и существенно преобладает над стадией возбуждения (1).
+Второй тест (\(T_2\)) выявил, что болезнь развивается от стадии истощения (3) к стадии адаптации (2).
+Третий тест (\(T_3\)) выявил, что болезнь развилась до уровня, находящегося между стадией адаптации (2) и возбуждения (1).
+Четвертый тест (\(T_4\)) выявил преобладание стадии возбуждения (1).
+
+Вторая 2-симплекс призма (см.\ рис. 2) отображает процесс перехода от
+стадии адаптации~(2) к отсутствию стресса (0).
+\begin{figure}[t]
+\centering
+\includegraphics{\hdir/prism_dios2}
+\caption{Отображение результатов пяти диагностик ОС в 2-симплекс призме}\end{figure}
+
+Пятый тест (\(T_5\)) выявил отсутствие ОС.
+
+Рассмотрим отображение результатов тестирования качества знаний респондентов
+в~модуле интерпретации результатов обучающе-тестирующей системы с~использованием
+оценочных коэффициентов, определяющих, насколько хорошо респондент справляется
+с~различными заданиями на основе способностей (навыков) \cite{yank2015detect}.
+В разрабатываемой авторами обуча\-юще-тес\-ти\-ру\-ющей системе респондент
+после изучения выбранной дис\-цип\-ли\-ны проходит смешанный диагностический тест,
+представляющий собой оптимальное сочетание условной и безусловной
+составляющей~\cite{yank2011logic}.
+Во время прохождения смешанного диагностического теста (СДТ) формируется карта
+действий респондента (КДР).
+После прохождения респондентом СДТ КДР проецируется в набор оценочных коэффициентов на основе следующих способностей (навыков):
+(1) запоминание и воспроизведение учебного материала в неизмененном виде;
+(2) воспроизведение учебного материала в измененном виде;
+(3) извлечение новых знаний на основе изученного учебного материала;
+(4) решение новых задач и т.\,д.
+
+При разработке клиент-серверной программной системы с мультимедийными возможностями целесообразен перевод набора оценочных коэффициентов в следующие показатели:
+(1) решение задач, требующих большой сосредоточенности;
+(2) решение нетривиальных задач;
+(3) быстрая обучаемость и знание большого количества технологий.
+
+Отметим, что при оценке способностей респондентов на основе оценочных коэффициентов возможна ситуация, когда респондент одинаково владеет или не владеет знаниями по оцениваемым способностям.
+Это отображается кругом в центре 2-симплекса, что затрудняет визуально определить значение показателей.
+С целью разделения этих двух состояний используется цветовая индикация --– насыщенность цвета для круга, отображающего прохождение теста, сопоставлена набранному количеству баллов по тесту (рис.~3).
+
+\begin{figure}[t]
+\centering
+\includegraphics{\hdir/prism_using}
+\caption{Пример использования 2-симплекс призмы для обучающе-тестирующих систем}\end{figure}
+
+На основе 2-симплекс призмы предлагается осуществлять анализ динамики развития способностей как респондента, так и группы респондентов.
+Используя 2-симплекс призму, как и любое графическое средство, необходимо учитывать, что отображение результатов большой группы респондентов резко увеличивает сложность анализа.
+
+Применение 2-симплекс призмы не ограничивается вышеописанными примерами.
+
+\section{Заключение}
+Одним из важных свойств отображения информации в 2-симплекс призме является
+возможность анализировать динамику положения исследуемого объекта на заданном
+временн\'{о}м интервале, что позволяет пользователям принимать и обосновывать принимаемые решения, анализируя изменение параметров исследуемого объекта.
+
+Применение когнитивных средств целесообразно для любой проблемной
+и меж\-дис\-цип\-ли\-нар\-ной области, в которой необходимо проводить
+принятие и обоснование решения об отношении исследуемого объекта к тому
+или иному образу (классу) в фиксированный момент времени или на заданном
+промежутке времени.
+В отличие от ранее разработанных когнитивных средств, основанных на
+$n$-симплексе \cite{yank2014cogtools, yank2013simplex}, 2-симплекс призма
+позволяет исследовать объект динамически на заданном пользователем
+временн\'{о}м интервале.
+
+
+\renewcommand{\bibname}{Литература}
+\begin{thebibliography}{99}
+\bibitem{axelrod1976structure}
+  \BibAuthor{Axelrod R.}
+  The structure of decision: Cognitive maps of political elites.~---
+{Princeton University Press, 1976.}        395~p.
+
+\bibitem{basaker1965graph}
+  \BibAuthor{Basaker R.\,G., Saati T.\,L.}
+  Finite graphs and networks: An introduction with applications.~---
+New York, NY\,--\,London\,--\,Toronto: Research Analysis Corp., Mc Graw Hill
+Co., 1965.
+294~p.
+
+\bibitem{pospelov1992cognitive}
+  \BibAuthor{Поспелов Д.\,А.}
+  Когнитивная графика~--- окно в новый мир~//
+Программные продукты и~сис\-те\-мы, 1992. Т.~2. С.~4--6.
+
+\bibitem{pospelov1996hotspot}
+  \BibAuthor{Поспелов Д.\,А.}
+  Десять <<горячих точек>> в исследованиях по искусственному интеллекту~//
+{Интеллектуальные системы (МГУ), 1996. Т.~1. Вып.~1-4. С.~47--56.}
+
+\bibitem{pospelov1996combine}
+  \BibAuthor{Поспелов Д.\,А., Литвинцева Л.\,В.}
+  Как совместить левое и правое?~//
+{Новости искусственного интеллекта. 1996. №\,2. С.~66--71.}
+
+\bibitem{zenkin1991cognitive}
+  \BibAuthor{Зенкин А.\,А.}
+  Когнитивная компьютерная графика. ---
+{М.: Наука, 1991.} 192~с.
+
+\bibitem{zenkin1996cognitive}
+  \BibAuthor{Зенкин А.\,А.}
+  Знание-порождающие технологии когнитивной реальности~//
+{Новости искусственного интеллекта. 1996. №\,2. С.~72--78.}
+
+\bibitem{albu1990cogr}
+  \BibAuthor{Албу В.\,А., Хорошевский В.\,Ф.}
+  КОГР система когнитивной графики: разработка, реализация и применения //
+{Изв. АН СССР. Техническая кибернетика, 1990. №\,5.} С.~105--118.
+
+\bibitem{kobr1996imaginary}
+  \BibAuthor{Кобринский Б.\,А.}
+  К вопросу учета образного  мышления и интуиции в экспертных медицинских системах~//
+{V Национальная конф. с междунар. участием «Искусственный интеллект-96»:
+Сб. науч. тр.}, 1996. Т.~2. С.~110--117.
+
+\bibitem{yank1997decision}
+  \BibAuthor{Янковская А.\,Е.}
+  Принятие и обоснование решений с использованием методов когнитивной графики на основе знаний экспертов различной квалификации~//
+{Известия РАН. Теория и~система управления, 1997. №\,5. С.~125--126.}
+
+\bibitem{yank2009networks}
+  \BibAuthor{Yankovskaya A., Galkin D.}
+  Cognitive computer based on $n$-$m$ multiterminal networks for pattern
+recognition in applied intelligent systems~//
+{Conference GraphiCon'2009 Proceedings}.~--– Moscow: Maks Press, 2009.
+P.~299--300.
+
+\bibitem{yank2010vizualization}
+  \BibAuthor{Yankovskaya A.\,E., Galkin D.\,V., Chernogoryuk G.\,E.}
+  Computer visualization and cognitive graphics tools for applied intelligent
+systems~//
+{IASTED  Conference (International) on Automation, Control and
+Information Technology Proceedings, 2010. Vol.~1. P.~249--253.}
+
+\bibitem{yank2000mirror}
+  \BibAuthor{Янковская А.\,Е., Тетенев Ф.\,Ф., Черногорюк Г.\,Э.}
+  Отражение образного мышления специалиста в интеллектуальной
+распознающей системе патогенеза заболевания //
+{Компьютерная хроника, 2000. №\,6. С.~77--92.}
+
+\bibitem{yank2004optimization}
+  \BibAuthor{Yankovskaya A.\,E., Mozheiko V.\,I.}
+  Optimization of a set of tests selection satisfying the criteria prescribed~//
+7th  Conference (International) on Pattern Recognition and Image Analysis: New
+Information Technologies Proceedings.~--- St. Petersburg: SPbETU,
+2004. Vol.~I.  С.~145--148.
+
+\bibitem{yank1991transformation}
+  \BibAuthor{Янковская А.\,Е.}
+  Преобразование пространства признаков в пространство образов на  базе ло\-ги\-ко-комбинаторных методов и свойств некоторых геометрических фигур~//
+{Распознавание образов и анализ изображений: новые информационные технологии:
+Тез. докл. I Всесоюзной конф.~--- Минск, 1991. Ч.~II. С.~178--181.}
+
+\bibitem{kondr1992triang}
+  \BibAuthor{Кондратенко С.\,В., Янковская А.\,Е.}
+  Система визуализации TRIANG для обоснования принятия решений с использованием когнитивной графики~//
+{Тез. докл. III Конф. по искусственному интеллекту.~---
+Тверь, 1992. Т.~I. С.~152--155}.
+
+\bibitem{yank2012dios}
+  \BibAuthor{Янковская А.\,Е., Китлер С.\,В., Силаева А.\,В.}
+  Интеллектуальная система диагностики и~интервенции организационного стресса: ее развитие и апробация //
+{Открытое образование, 2012. №\,2(91). С.~61--69.}
+
+\bibitem{kornetov2011dios}
+  \BibAuthor{Корнетов Н.\,А., Янковская А.\,Е., Китлер С.\,В.,
+Силаева А.\,В., Шагалова Л.\,В.}
+  К вопросу динамики развития представлений об организационном стрессе и подходов к его оценке~//
+{Фундаментальные исследования. 2011. №\,10.} Ч.~3. С.~598--603.
+
+
+
+\bibitem{beck1961depression}  %19
+  \BibAuthor{Beck A.\,T., Ward C., Mendelson M.}
+  Beck Depression Inventory (BDI)~//
+{Arch. Gen. Psychiat., 1961. Vol.~4. No.\,6. P.~561--571.}
+
+\bibitem{zadeh1994fuzzy} %20
+  \BibAuthor{Zadeh, L.\,A.}
+  Fuzzy logic, neural networks, and soft computing~//
+{Commun. ACM, 1994. Vol.~37. No.\,3. P.~77--84.}
+
+\bibitem{selye1936diverse} %21
+  \BibAuthor{Selye H.}
+  A syndrome produced by diverse nocuous agents~//
+{Nature, 1936. Vol.~138. Р.~32}.
+
+\bibitem{yank2015detect}
+  \BibAuthor{Янковская А.\,Е., Шурыгин Ю.\,А., Ямшанов А.\,В., Кривдюк Н.\,М.}
+  Определение уровня усвоенных знаний по обучающему курсу, представленному семантической сетью~//
+{Открытые семантические технологии проектирования интеллектуальных систем:
+Мат-лы V~Междунар. науч.-техн. конф.~--- Минск: БГУИР, 2015. С.~331--339.}
+
+\bibitem{yank2011logic}
+  \BibAuthor{Янковская А.\,Е.}
+  Логические тесты и средства когнитивной графики.~---
+{LAP LAMBERT Academic Publishing, 2011. 92~с. }
+
+
+
+\bibitem{yank2013simplex} %24
+  \BibAuthor{Yankovskaya A., Krivdyuk N.}
+  Cognitive graphics tool based on 3-simplex for decision-making and
+substantiation of decisions in intelligent system~//
+{IASTED  Conference (International) on Technology for Education and Learning
+Proceedings, 2013. P.~463--469}.
+
+\bibitem{yank2014cogtools} %25
+  \BibAuthor{Янковская А.\,Е. Ямшанов А.\,В. Кривдюк Н.\,М.}
+  Средства когнитивной графики в интеллектуальных обучающе-тестирующих системах~//
+{Открытые семантические технологии проектирования интеллектуальных систем:
+Мат-лы IV Междунар. науч.-техн. конф.~--- Минск: БГУИР, 2014. С.~303--308.}
+
+\end{thebibliography}
+
+%\section{References}
+\renewcommand{\bibname}{References}
+\begin{thebibliography}{99}
+\bibitem{axelrod1976structure}
+{Axelrod, R.}     1976.
+\BibTitle{The structure of decision: Cognitive maps of political elites}.
+Princeton University Press. 395~p.
+
+\bibitem{basaker1965graph}
+{Basaker, R.\,G., and T.\,L.~Saati}. 1965.
+\BibTitle{Finite graphs and networks: An introduction with applications}.
+New York, NY\,--\,London\,--\,Toronto: Research Analysis Corp., Mc Graw Hill Co.
+294~p.
+
+\bibitem{pospelov1992cognitive}
+{Pospelov, D.\,A.} 1992.
+  Cognitive graphics~--- a~window into the new world.
+  \BibJournal{Software Products Systems} 2:4--6. (In Russian.)
+
+\bibitem{pospelov1996hotspot}
+{Pospelov, D.\,A.} 1996.
+  Ten ``hot spots''\ in research on artificial intelligence
+  \BibJournal{Intelligent Systems (MSU)} 1(1-4):47--56. (In Russian.)
+
+\bibitem{pospelov1996combine}
+{Pospelov, D.\,A., and L.\,V.~Litvintseva}. 1996.
+  How to combine left and right?
+  \BibJournal{News Artificial Intelligence} 2:66--71. (In Russian.)
+
+\bibitem{zenkin1991cognitive}
+{Zenkin, A.\,A.} 1991.
+\BibTitle{Cognitive computer graphics}.
+Мoscow: Nauka. 192~p. (In Russian.)
+
+\bibitem{zenkin1996cognitive}
+{Zenkin, A.\,A.} 1996.
+  Knowledge-generating technologies of cognitive reality.
+  \BibJournal{News Artificial Intelligence} 2:72--78. (In Russian.)
+
+\bibitem{albu1990cogr}
+{Albu, V.\,А., and V.\,F. Khoroshevskiy}. 1990.
+  COGR~--- Cognitive graphics system, design, development, application.
+  \BibJournal{Russ. Acad. Sci. Bull. Technical Cybernetics}  5:105--118. (In Russian.)
+
+\bibitem{kobr1996imaginary}
+{Kobrinskiy, B.\,A.} 1996.
+  Why should we take into account imaginary thinking and intuition in medical expert systems.
+  \BibJournal{5th National Conference with
+International Participation ``Artificial Intelligence-96'' Proceedings}. Kazan.
+2:110--117. (In Russian.)
+
+\bibitem{yank1997decision}
+ {Yankovskaya, A.\,E.} 1997.
+  Decision-making and decision-justification using cognitive graphics methods
+based on the experts of different qualification.
+  \BibJournal{Russ. Acad. Sci. Bull., Theory and Control Systems} 5:125--126.
+(In Russian.)
+
+\bibitem{yank2009networks}
+{Yankovskaya, A., and D. Galkin}. 2009.
+  Cognitive computer based on $n$-$m$ multiterminal networks for pattern
+recognition in applied intelligent systems.
+  \BibJournal{Conference GraphiCon'2009 Proceedings}. Moscow: Maks Press.
+299--300.
+
+\bibitem{yank2010vizualization}
+{Yankovskaya, A.\,E., D.\,V. Galkin, and G.\,E.~Chernogoryuk}. 2010.
+  Computer visualization and cognitive graphics tools for applied intelligent
+systems.
+   \BibJournal{IASTED  Conference (International) on Automation, Control and
+Information Technology Proceedings}. 1:249--253.
+
+\bibitem{yank2000mirror}
+{Yankovskaya, A.\,E., F.\,F. Tetenev, and G.\,E.~Chernogoryuk}. 2000.
+  Reflection of creative thinking expert in intellectual pattern recognition system disease pathogenesis.
+  \BibJournal{Computer Chronicle} 6:77--92. (In Russian.)
+
+\bibitem{yank2004optimization}
+ {Yankovskaya, A.\,E., and V.\,I. Mozheiko}. 2004.
+  Optimization of a set of tests selection satisfying the criteria prescribed.
+  \BibJournal{7th  Conference (International)
+on Pattern Recognition and Image Analysis: New Information Technologies
+Proceedings}. St. Petersburg: SPbETU. I:145--148.
+
+\bibitem{yank1991transformation}
+{Yankovskaya, A.\,E.} 1991.
+  Transformation of features space in patterns space on the base of the logical-combinatorial methods and properties of some geometric figures.
+  \BibJournal{Conference (International) on Pattern
+Recognition and Image Analysis: New Information: Abstracts.} Minsk.  II:178--181. (In Russian.)
+
+\bibitem{kondr1992triang}
+  {Kondratenko, S.\,V., and A.\,E. Yankovskaya}. 1992.
+  System of visualization TRIANG for decision-making substantiation with use
+of cognitive graphics.
+  \BibJournal{3rd Conference on Artificial Intelligence Proceedings}.
+ Tver. I:152--155. (In Russian.)
+
+\bibitem{yank2012dios}
+{Yankovskaya, A.\,E., S.\,V. Kitler, and A.\,V. Silaeva}. 2012.
+  Intelligent system of diagnostics and intervention of organizational stress:
+Its development and testing.
+\BibJournal{Open Education}  2(91):61--69. (In Russian.)
+
+\bibitem{kornetov2011dios}
+{Kornetov, N.\,A., A.\,E. Yankovskaya, S.\,V. Kitler, A.\,V.~Silaeva,
+and L.\,V.~Shagalova}. 2011.
+  About development dynamics of representations about organizational
+stress and approaches to its evaluation.
+  \BibJournal{Fundamental Research} 10(3):598--603. (In Russian.)
+
+\bibitem{beck1961depression}  %19
+{Beck, A.\,T., C.~Ward, and M.~Mendelson.} 1961.
+  Beck Depression Inventory (BDI).
+  \BibJournal{Arch. Gen. Psychiat.} 4(6):561--571.
+
+\bibitem{zadeh1994fuzzy} %20
+{Zadeh, L.\,A.} 1994.
+  Fuzzy logic, neural networks, and soft computing.
+  \BibJournal{Commun. ACM}  37(3):77--84.
+
+\bibitem{selye1936diverse}  %21
+{Selye, H.} 1936.
+  A~syndrome produced by diverse nocuous agents.
+  \BibJournal{Nature} 138:32.
+
+
+
+\bibitem{yank2015detect} %22
+{Yankovskaya, A.\,E., Y.\,A. Shurigin, A.\,V. Yamshanov, and N.\,M. Krivdyuk}. 2015.
+  Determination of the student knowledge level on the base of a training course which is presented by a semantic network.
+  \BibJournal{Open Semantic Technologies for Intelligent Systems (OSTIS-2015)
+Proceedings}. Minsk: BSUIR. 331--339. (In Russian.)
+
+\bibitem{yank2011logic}
+{Yankovskaya, A.\,E.} 2011.
+  \BibTitle{Logic tests and cognitive graphic tools}.
+{LAP LAMBERT Academic Publishing}. 92~p.
+%ISBN: 978-3-8454-3409-4.
+
+
+\bibitem{yank2013simplex} %24
+{Yankovskaya, A.\,E., and N.\,M. Krivdyuk}. 2013.
+  Cognitive graphics tool based on 3-simplex for decision-making and
+substantiation of decisions in intelligent system.
+  \BibJournal{IASTED  Conference (International) Technology for Education and
+Learning Proceedings}.  463--469.
+
+\bibitem{yank2014cogtools}
+{Yankovskaya, A.\,E., A.\,V. Yamshanov, and N.\,M. Krivdyuk}.  2014.
+  Cognitive graphic tools in intelligent training-testing systems.
+  \BibJournal{Open Semantic Technologies for Intelligent Systems (OSTIS-2014)
+Proceedings}. Minsk: BSUIR. 303--308. (In Russian.)
+
+\end{thebibliography}
+
+\end{document}
+
