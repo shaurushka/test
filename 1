@@ -1,16 +1,12 @@
 \documentclass[12pt,twoside]{article}
 
 \usepackage{jmlda}
-
-\usepackage{etex}
-%\usepackage[printwatermark]{xwatermark}
+\setcounter{page}{1977}
 
 \newcommand{\hdir}{.}
+\renewcommand{\hdir}{Vlasova2015MLE}
 
 \begin{document}
-
-%\newwatermark[oddpages,fontfamily=ccr,color=gray!25,angle=45,scale=3, xpos=0,ypos=0]{Proofreading\\ stage}
-
 
 \English
 
@@ -21,11 +17,9 @@
 \author
     %[И.\,О.~Автор] % список авторов для колонтитула; не нужен, если основной список влезает в колонтитул
     {K.\,V. Vlasova, V.\,A. Pachotin, D.\,M. Klionskiy, and~D.\,I.~Kaplun} % основной список авторов, выводимый в оглавление
-    [K.\,V.~Vlasova$^1$, V.\,A.~Pachotin$^2$, D.\,M.~Klionskiy$^3$,
-and~D.\,I.~Kaplun$^3$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
+    [K.\,V.~Vlasova$^1$, V.\,A.~Pachotin$^2$, D.\,M.~Klionskiy$^3$, and~D.\,I.~Kaplun$^3$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
 \thanks
-    {The work is supported by the grant of the Russian Foundation for
-Basic Research No.\,15-37-50902 and Contract No.\,02.G25.31.0058 dated 12.02.2013 (Ministry of Education and Science of Russian Federation).}
+    {The work is supported by Contract No.\ 02.G25.31.0149 dated 01.12.2015 (Ministry of Education and Science of Russian Federation).}
 \email
     {p\_ksenia@mail.ru, VPakhotin@kantiana.ru, klio2003@list.ru, dikaplun@etu.ru}
 \organization
@@ -46,7 +40,7 @@ one to estimate noise variance and the number of radio impulses in a received si
 	
 
 \noindent
-\textbf{Keywords}: \emph{maximum-likelihood method; radio impulse, resolution;
+\textbf{Keywords}: \emph{maximum-likelihood method; radio impulse; resolution;
 frequency-dependent signal; communication channel; nonorthogonal signals;
 signal-to-noise ratio}
 }
@@ -70,7 +64,7 @@ signal-to-noise ratio}
 глобального минимума позволяют оценить дисперсию шума и количество радиоимпульсов в принятом сигнале.
 		
 		\bigskip
-\noindent
+		\noindent
 		\textbf{Ключевые слова}: \emph {метод максимального правдоподобия; радиоимпульс; разрешение; частотно-зависимый сигнал; канал связи, неортогональные сигналы; отношение сигнал/шум}
 }
 
@@ -80,11 +74,10 @@ signal-to-noise ratio}
 
 \section{Introduction}
 \noindent
-The paper discusses the problem of estimating parameters of a set of radio impulses with close frequencies. Their spectra partially overlap so that it is difficult to determine the precise number of radio impulses and estimate their parameters using the Rayleigh criterion. In this case,
- radio impulses are nonorthogonal in the frequency domain so that
+The paper discusses the problem of estimating parameters of a set of radio impulses with close frequencies. Their spectra partially overlap so that it is difficult to determine the precise number of radio impulses and estimate their parameters using the Rayleigh criterion. In this case, radio impulses are nonorthogonal in the frequency domain so that
 one can consider several radio impulses orthogonal if their spectra satisfy the Rayleigh criterion.
 It is necessary to determine amplitudes and frequencies of a set of
-nonorthogonal radio impulses when the reception moment is known
+nonorthogonal radio impulses (when the reception time is known)
 and their duration.
 
 Modern radio systems function according to the analysis of orthogonal signals.
@@ -93,7 +86,7 @@ even greater number of targets, if their correlation functions do not overlap,
 i.\,e., when they are orthogonal relative to the reception moment. It is possible
 in spectroscopy to separate two spectral lines, if the Rayleigh criterion is
 satisfied (i.\,e., orthogonality in the frequency domain is observed). At
-present, if the orthogonality is not satisfied, this might result in gross errors in signal parameter estimation or a failure in signal detection.
+present, if the orthogonality is not satisfied, this might result in gross errors in signal parameter estimation or a total failure in signal detection.
 
 Nowadays, there are several techniques applied in practice for improving the
 quality of signal parameter estimation due to a better resolution: Prony
@@ -101,14 +94,14 @@ technique, MUSIC, etc.~\cite{1}. The most widely used techniques are based
 on the optimal reception theory \cite{2,3}. However, the implementation of
 the aforementioned techniques is connected with a number of
 difficulties~\cite{8, 9, 10}. The problem of signal parameter
-estimation and resolution of such signals within the scope of the
+estimation and resolution within the scope of the
 optimal reception theory can be handled only when the signals under
 study are orthogonal~\cite{4, 5, 6, 11, 12, 13}. However, when one
 works in the area of signal nonorthogonality, the logarithm of the likelihood function has a complex structure with a lot of local minima and its minimization is ambiguous.
 
 Let us employ the results of the optimal reception theory, which were
 developed and extended for the area of signal nonorthogonality.
-The present authors suggest the solution of this problem for nonorthogonal
+The authors suggest the solution of this problem for nonorthogonal
 signals using the logarithm of the likelihood function transformed by the
 system of likelihood equations obtained for energetic signal parameters~\cite{7}.
 As a result of this transform, minimization of the logarithm of the likelihood function proves to be ambiguous. The logarithm of the likelihood function (after transformation) presents a surface in a multidimensional space of
@@ -121,7 +114,7 @@ The solution of the signal parameter estimation problem depends on the determina
 a~correlation matrix when the Rao--Kramer variance estimate is obtained.
 
 
-\section{Theoretical Background}
+\section{Theoretical background}
 
 \noindent
 This section contains the main analytical expressions for an algorithm for processing a set of
@@ -217,7 +210,7 @@ the apriori information on the expected number of radio impulses
 is not always available. This fact can be illustrated using the
 following example. In communications applications, one can receive two or a greater number of radio impulses with unknown frequencies. The number of radio impulses is also unknown and they have to be resolved. Another example is related to radio spectroscopy, where the number of spectral lines is unknown. The spectral lines can be orthogonal or
 nonorthogonal. These examples confirm the necessity of estimating the number of radio impulses in the received message.
-The present authors suggest an algorithm based on changing the number of signal copies $N$  in the mathematical model and finding the values of the likelihood functional \eqref{eq:eq6} in its minimum.
+The authors suggest an algorithm based on changing the number of signal copies $N$  in the mathematical model and finding the values of the likelihood functional \eqref{eq:eq6} in its minimum.
 
 If the number of signal copies  $N$ in the mathematical model is greater than the number of radio impulses in the received message, the amplitudes of extra components are close to zero since they are determined by separate noise maxima. The minimal value of likelihood \eqref{eq:eq6} will be determined by the noise variance.
 
@@ -226,7 +219,7 @@ If the number of signal copies  $N$ is smaller than in the received message, the
 Thus, processing the received message requires one to increase the number of
 signal copies~$N$ till the minimum value of the likelihood functional stops decreasing.
 
-Evaluation of the quality of the solution in the optimal reception theory is
+Evaluation of the solution quality in the optimal reception theory is
 based on estimating variances using Rao--Kramer estimates. Consider two radio
 impulses in a data set starting at the same time point. One
 can estimate the variance of radio impulse amplitudes in the
@@ -281,14 +274,13 @@ Relative variance increases by~\mbox{$\sim 7$}~dB in the range $|\hat{r}| = 0$--
  when $|\hat{r}| >0.9$, the relative variance rises dramatically}
 \label{fg:fig1}
 \end{figure}
-This expression is characterized by the fact that for $|\hat{r}| = 0$--0.9,
- the changes of the relative variance are approximately $7$ dB.
+This expression shows that for $|\hat{r}| = 0$--0.9 the changes of the relative variance are approximately $7$ dB.
 In the area where $|\hat{r}| > 0.9$, the relative variance grows
 abruptly as shown in Fig.~\ref{fg:fig1}.
 Thus, if a signal contains two radio impulses, the problem of radio impulse parameter estimation will be solved for the following range of the normalized correlation coefficient: $| \hat{r} | = 0$--0.9.
 
 
-\section{Model Investigations}
+\section{Model studies}
 
 \noindent
 This section is devoted to studying the problem of estimating the parameters of two radio impulses in the area of their
@@ -300,7 +292,7 @@ correlation coefficient between two radio impulses.
 The estimation of the noise variance in the received message
 is illustrated using the dataset (the functional value in its minimum).
 
-Model investigations have been carried out for a realization containing two radio impulses combined in the time domain.
+Model studies have been carried out for a signal containing two radio impulses combined in the time domain.
 The radio impulses have the following parameters: amplitudes $U_1=2$ and
 $U_2=1$; initial phases $\varphi_1 = 10^\circ$ and $\varphi_2= 170^\circ$;
 frequencies $f_1=2$~kHz and $f_2$\linebreak $ = 2.08$~kHz; signal-to-noise ratio is $20$~dB;
@@ -312,7 +304,7 @@ Figure~\ref{fg:fig2} shows the normalized correlation coefficient vs.\ the frequ
 When $\Delta f = 40$ and  80~Hz, the correlation coefficient is equal to zero and the signals are orthogonal.
 The values $\Delta f < 40$~Hz correspond to the signal nonorthogonality area. The correlation coefficient values different from zero for $\Delta f > 40$~Hz are caused by side lobes of the signal spectrum.
 \begin{figure}[h]
-\centering{\includegraphics[height = 8cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig2_ed.eps}}
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 240 0 10]{\hdir/fig2.eps}}
 \caption{Correlation coefficient between radio impulses. Radio impulse duration
 is $25$~ms. The radio impulses are orthogonal for $40$, $80$, and $120$~Hz.
 When the radio impulse frequency difference is $10$~Hz and the correlation
@@ -326,12 +318,18 @@ Figure~\ref{fg:fig3} shows the received signal containing two radio impulses
 with the frequencies $f_1$\linebreak $ = 2$~kHz and $f_2 = 2.08$~kHz.
 According to Fig.~\ref{fg:fig2}, these signals are orthogonal since the frequency difference $\Delta f = 80$~Hz leads to the correlation coefficient $\hat{r} = 0$.
 \begin{figure}
-\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 20 20 0 30]{\hdir/fig3_ed.eps}}
+\centering{\includegraphics[width = 0.78\linewidth, trim = 0 230 0 20]{\hdir/fig3.eps}}
 \caption{Received signal containing two orthogonal radio impulses combined in the time domain}
 \label{fg:fig3}
+\vspace*{12pt}
 \end{figure}
 
-
+\begin{figure}%[ht]
+\vspace*{12pt}
+\centering{\includegraphics[width = 0.78\linewidth, trim = 0 200 0 35]{\hdir/fig4.eps}}
+\caption{Spectrum of two orthogonal radio impulses combined in the time domain. The maxima of spectral lines determine amplitude and frequency estimates of the radio impulses}
+\label{fg:fig4}
+\end{figure}
 
 The spectra of these two radio impulses is shown in Fig.~\ref{fg:fig4}. The side lobes of the first radio impulse ($U_1=2$) distort the amplitude of the second radio impulse ($U_2=1$).
 
@@ -341,21 +339,16 @@ Figure \ref{fg:fig5} shows the surface of the transformed inverse likelihood fun
 %\label{eq:eq13}
 \end{align*}
 
+The maximum of the functional surface is the only one
+which determines the unambiguity of the problem solution. The location of the maximum makes it possible to find the values of estimation frequencies $\acute{\omega}_1$ and $\acute{\omega}_2$. Their substitution into likelihood equations makes it possible to find the estimates of complex amplitudes of radio impulses. The value of maximum of the likelihood functional allows
+one to find the noise variance in a received signal. Figures \ref{fg:fig3}--\ref{fg:fig5} illustrate the possibility of obtaining the solution in the area of radio impulse orthogonality.
 \begin{figure} %[t]
-\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 20 20 20 20]{\hdir/fig4_ed.eps}}
-\caption{Spectrum of two orthogonal radio impulses combined in the time domain. The maxima of spectral lines determine amplitude and frequency estimates of the radio impulses}
-\label{fg:fig4}
-\end{figure}
-\begin{figure} %[t]
-\centering{\includegraphics[width = 0.6\linewidth, trim = 20 45 20 20]{\hdir/fig5_ed.eps}}
+\vspace*{36pt}
+\centering{\includegraphics[width = 0.78\linewidth, trim = 0 0 0 100]{\hdir/fig5_ed.eps}}
 \caption{Surface of the inverse likelihood functional. The single maximum determines the parameter estimates of two radio impulses and the term ``resolution'' is not required. The base width of the maximum of the likelihood functional depends on a signal-to-noise ratio
 and its maximal value ($95.45$) determines the estimate of the noise variance in a received signal ($-19.79$~dB relative to $1$)}
 \label{fg:fig5}
 \end{figure}
-
-The maximum of the functional surface is the only one
-which determines the unambiguity of the problem solution. The location of the maximum makes it possible to find the values of estimation frequencies $\acute{\omega}_1$ and $\acute{\omega}_2$. Their substitution into likelihood equations makes it possible to find the estimates of complex amplitudes of radio impulses. The value of maximum of the likelihood functional allows
-one to find the noise variance in a received realization. Figures \ref{fg:fig3}--\ref{fg:fig5} illustrate the possibility of obtaining the solution in the area of radio impulse orthogonality.
 
 Figures \ref{fg:fig6}--\ref{fg:fig8} show the possibility of obtaining the solution in the area of radio impulse
 nonorthogonality. In this case, the radio impulse frequencies are $f_1=2$~kHz
@@ -364,24 +357,24 @@ The difference is $20$~Hz.
 Figure~\ref{fg:fig6} shows the received signal.
 
 \begin{figure}[t]
-\centering{\includegraphics[width = 0.6\linewidth, trim = 0 40 0 40]{\hdir/fig6_ed.eps}}
+\centering{\includegraphics[width = 0.61\linewidth, trim = 0 40 0 0]{\hdir/fig6.eps}}
 \caption{Received signal containing two nonorthogonal impulses combined in the time domain}
 \label{fg:fig6}
-\end{figure}
-
-Figure \ref{fg:fig7} shows the spectrum of two radio impulses, which makes it difficult to obtain the information on radio impulse parameters.
-
-\begin{figure}[t]
-\centering{\includegraphics[width = 0.6\linewidth, trim = 0 30 0 20]{\hdir/fig7_ed.eps}}
+%\end{figure}
+\vspace*{36pt}
+%\begin{figure}[t]
+\centering{\includegraphics[width = 0.61\linewidth, trim = 0 30 0 20]{\hdir/fig7.eps}}
 \caption{Spectrum of two nonorthogonal radio impulses combined in the time domain}
 \label{fg:fig7}
 \end{figure}
+
+Figure \ref{fg:fig7} shows the spectrum of two radio impulses, which makes it difficult to obtain the information on radio impulse parameters.
 
 Figure~\ref{fg:fig8} shows the transformed likelihood functional, which allows
 one to estimate the radio impulse parameters.
 
 \begin{figure}[t]
-\centering{\includegraphics[width = 0.6\linewidth, trim = 40 70 40 30]{\hdir/fig8_ed.eps}}
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 70 0 0]{\hdir/fig8_ed.eps}}
 \caption{Surface of the inverse likelihood functional obtained in the area of radio impulse
 nonorthogonality}
 \label{fg:fig8}
@@ -392,7 +385,8 @@ $\Delta f$\linebreak $ = 10$~Hz.
 This corresponds to the correlation coefficient between radio impulses $\hat{r} \sim 0.9$, which fully confirms the theoretical estimate of the working area ($\hat{r} = 0$--0.9) for parameter estimation of two radio impulses.
 
 \begin{figure}[t]
-\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 20]{\hdir/fig9_ed.eps}}
+\vspace*{12pt}
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 250 0 20]{\hdir/fig9.eps}}
 \caption{Variation of the amplitude estimates of radio impulses depending on the changes of the frequency differences.
 The nonorthogonality area of the radio impulses for $\Delta f \leqslant 40$~Hz.
 The best amplitude estimates for radio impulse frequency differences of $10$~Hz. Radio impulse resolution has increased $4$~times in comparison with the Rayleigh resolution}
@@ -404,15 +398,17 @@ their frequency differences. When the signal-to-noise ratio is $\sim 20$~dB and 
 one can point out that the suggested technology of radio impulse parameter estimation is characterized by high resolution. When the signal-to-noise ratio is $20$~dB, the resolution of two radio impulses has increased $4$~times in comparison with the Rayleigh resolution.
 
 \begin{figure}[t]
-\centering{\includegraphics[height = 9cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig10_ed.eps}}
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 250 0 0]{\hdir/fig10.eps}}
 \caption{Frequency estimates vs.\ frequency differences.
 The area of radio impulse nonorthogonality for $\Delta f \leqslant 40$~Hz.
 The best frequency estimates for radio impulse frequency difference of~$10$~Hz.
 Radio impulse resolution has increased $4$~times in comparison with the Rayleigh resolution}
 \label{fg:fig10}
+%\vspace*{12pt}
 \end{figure}
-\begin{figure}[H]
-\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig11_ed.eps}}
+\begin{figure}[h]
+\vspace*{6pt}
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 230 0 20]{\hdir/fig11.eps}}
 \caption{Statistics of radio impulse amplitude estimates.
 The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area).
 The estimates are satisfactory for signal-to-noise ratios exceeding~$0$~dB}
@@ -424,50 +420,50 @@ As can be seen from the figure, the amplitude estimates are quite satisfactory w
 
 
 
-Figure 12 shows the statistics of radio impulse frequencies depending on the signal-to-noise ratio for $\Delta f = 20$~Hz. As can be seen from the figure, radio impulse frequency estimates are quite satisfactory for signal-to-noise ratios exceeding
+Figure~\ref{fg:fig12} shows the statistics of radio impulse frequencies depending on the signal-to-noise ratio for $\Delta f = 20$~Hz. As can be seen from the figure, radio impulse frequency estimates are quite satisfactory for signal-to-noise ratios exceeding
 $-5$~dB.
 
 
 
 Figure~\ref{fg:fig13} illustrates the changes of maxima of the inverse transformed likelihood functional depending on the signal-to-noise ratio in dB. The linear dependence confirms the theoretical suggestion that the noise variance can be estimated on the basis of the maximum of the inverse transformed likelihood functional.
 
-\section{Concluding Remarks}
+\section{Concluding remarks}
 
 \noindent
 An algorithm for solving the problem of parameter estimation of a~set of
 nonorthogonal radio impulses has been introduced
-using the maximum likelihood method on the basis of the transformed likelihood functional. Theoretical and practical investigations lead to the following conclusions:
+using the maximum likelihood method on the basis of the transformed likelihood functional. Theoretical and practical studies lead to the following conclusions:
 
-
-
+\begin{figure} %[t]
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 220 0 20]{\hdir/fig12.eps}}
+\caption{Statistics of radio impulse frequency estimates. The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area). The estimates are satisfactory for signal-to-noise ratios exceeding~\mbox{$-5$~dB}}
+\label{fg:fig12}
+%\end{figure}
+\vspace*{18pt}
+%\begin{figure}[t]
+\centering{\includegraphics[width = 0.8\linewidth, trim = 0 220 0 20]{\hdir/fig13.eps}}
+\caption{Maximum of the likelihood functional vs.\ signal-to-noise ratio. The linearity of the dependence allows us to estimate the noise variance in the received message using the maximum of the inverse likelihood functional}
+\label{fg:fig13}
+\end{figure}
 
 
 \begin{itemize}
 \item the transformed likelihood functional allows one to solve the problem of resolving and parameter estimation of two or several radio impulses in the area of their
 nonorthogonality. Application of this technique is efficient for different radio engineering problems and can be used for improving the capacity of communication channels using frequency division multiplexing;
 
-\begin{figure} %[t]
-\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig12_ed.eps}}
-\caption{Statistics of radio impulse frequency estimates. The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area). The estimates are satisfactory for signal-to-noise ratios exceeding~\mbox{$-5$~dB}}
-\label{fg:fig12}
-\end{figure}
 
-\item the working area for parameter estimation of a set of radio impulses is determined by determinant variations of a correlation matrix of a set of signals. Conditionality of the correlation matrix influences the possibility of resolving a set of signals. In the case of two radio impulses the working area depends on the normalized correlation coefficient in the range~0--0.9; and
+\item the working area for parameter estimation of a set of radio impulses is determined by determinant variations of a correlation matrix of a set of signals. Conditionality of the correlation matrix influences the possibility of resolving a set of signals. In the case of two radio impulses the working area depends on the normalized correlation coefficient in the range~0--0.9;
 \item the value of the transformed likelihood functional in its global minimum allows one to estimate the noise variance in a dataset and can be used as a criterion for estimating the number of radio impulses.
 \end{itemize}
 
-\begin{figure} %[t]
-\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig13_ed.eps}}
-\caption{Maximum of the likelihood functional vs.\ signal-to-noise ratio. The linearity of the dependence allows us to estimate the noise variance in the received message using the maximum of the inverse likelihood functional}
-\label{fg:fig13}
-\end{figure}
+
 
 \renewcommand{\bibname}{References}
 \begin{thebibliography}{11}
 \bibitem{1}
 {Marple, S.\,L., J.} 1986.
 \BibTitle{Digital spectral analysis: With applications}.
-Upper Saddle River, NJ: Prentice-Hall, Inc.
+Upper Saddle River, NJ: Prentice-Hall, Inc. 492~p.
 
 \bibitem{2}
 {Helstrom, C.\,W.}  1960.
@@ -478,7 +474,7 @@ Macmillan. Vol.~9. 364~p.
 
 \bibitem{3}
 {Tikhonov,~V.\,I.}  1983.
-\BibTitle{Optimal signal reception}. Moscow: Radio and Communications.
+\BibTitle{Optimal signal reception}. Moscow: Radio and Communications. 320~p.
 
 \bibitem{8} %4
 {Chigov, A.\,A.} 2010.
@@ -489,7 +485,7 @@ Moscow: Krasand.   104~p.  (In Russian.)
 {Volkov, V.\,Y., L.\,S.~Turnetskyi, and A.\,V.~Oneshko.}   2011.
 Straight  line edge extraction in noisy images.
 \BibJournal{Informatsionno-upravliaiushchie sistemy~---
-Information and Control Systems} 4(53):13--17.  
+Information and Control Systems} 4(53):13--17.
 
 \bibitem{9} %6
 {Volkov, V.\,Y.} 2013.
@@ -500,7 +496,7 @@ University of Telecommunications.   144~p. (In Russian.)
 \bibitem{6} %7
 {Trifonov, A.\,P., and Yu.\,S. Shinakov.} 1986.
 \BibTitle{Joint signal distinction and their parameter estimation in the presence
-of noise}. Moscow: Radio and Communication.  (In Russian.)
+of noise}. Moscow: Radio and Communication.  246~p. (In Russian.)
 
 \bibitem{13} %8
 {Stoica, P., B.~Ottersten, M.~Viberg, and R.\,L.~Moses.} 1996.
@@ -510,7 +506,7 @@ Maximum likelihood array processing for stochastic coherent sources.
 \bibitem{4} %9
 {Troyan, V.\,N., and  Yu.\,V. Kiselev.} 2000.
 \BibTitle{Statistical techniques of processing and interpretation of geophysical
-data}. St.\ Petersburg: St.\ Petersburg Polytechnical University.  (In Russian.)
+data}. St.\ Petersburg: St.\ Petersburg Polytechnical University. 578~p. (In Russian.)
 
 \bibitem{5} %10
 {Perov, A.\,I.} 2003.
@@ -536,7 +532,7 @@ Kaliningrad.  186~p.
 \end{thebibliography}
 
 \Russian
-\renewcommand{\bibname}{Список литературы}
+\renewcommand{\bibname}{Литература}
 \begin{thebibliography}{11}
 \bibitem{1}
 \BibAuthor{Марпл-мл. С.\,Л.}
@@ -544,7 +540,7 @@ Kaliningrad.  186~p.
 Пер. с англ.~--- М.: Мир, 1990.  584~с.
 (\BibAuthor{Marple~S.\,L.}
 {Digital spectral analysis: With applications}.~---
-Upper Saddle River, NJ, USA: Prentice-Hall, Inc., 1986.)
+Upper Saddle River, NJ, USA: Prentice-Hall, Inc., 1986. 492~p.)
 \bibitem{2}
 \BibAuthor{Хелстром К.}
 Статистическая теория обнаружения сигналов / Пер. с англ.~--- М.: ИЛ, 1963.  432~с.
@@ -555,7 +551,7 @@ electronics and instrumentation.~---
 Macmillan, 1960. Vol.~9. 364~p.)
 \bibitem{3}
 \BibAuthor{Тихонов В.\,И.} Оптимальный прием сигналов.~---
-М.: Радио и связь, 1983.
+М.: Радио и связь, 1983. 320~с.
 
 \bibitem{8} %4
 \BibAuthor{Чижов А.\,А.} Сверхрэлеевское разрешение. Т.~1:
@@ -576,7 +572,7 @@ Macmillan, 1960. Vol.~9. 364~p.)
 \bibitem{6} %7
 \BibAuthor{Трифонов А.\,П., Шинаков Ю.\,С.}
 Совместное различение сигналов и оценка их параметров на фоне помех.~---
-М.: Радио и связь, 1986.
+М.: Радио и связь, 1986. 246~с.
 
 \bibitem{13} %8
 \BibAuthor{Stoica P.,  Ottersten B., Viberg M., Moses~R.\,L.}
@@ -586,7 +582,8 @@ IEEE Trans. Signal Proces., 1996.  Vol.~44. No.\,1. P.~96--105.
 \bibitem{4} %9
 \BibAuthor{Троян В.\,Н., Киселев Ю.\,В.}
 Статистические методы обработки и интерпретации геофизических данных.~---
-СПб.: Изд-во С.-Петерб. ун-та, 2000.
+СПб.: Изд-во С.-Петерб. ун-та, 2000. 578~с.
+
 \bibitem{5} %10
 \BibAuthor{Перов А.\,И.}
 Статистическая теория радиотехнических систем: Учебное пособие для вузов.~---
