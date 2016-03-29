@@ -1,610 +1,676 @@
 \documentclass[12pt,twoside]{article}
-
 \usepackage{jmlda}
-\setcounter{page}{1977}
+\usepackage{cite}
+\usepackage{graphicx, epsfig}
+\usepackage{subfig}
+%\usepackage{multicol}
+\usepackage{tikz}
 
-\newcommand{\hdir}{.}
-\renewcommand{\hdir}{Vlasova2015MLE}
+\newcommand{\hdir}{./eps/}
 
-\begin{document}
-
-\English
-
+\newcommand*{\vect}[1]{\overrightarrow{#1}}
+\newcommand*{\egref}[1]{(\ref{#1})}
+%\graphicspath{ {eps/} }
+\def\bblsep{sep}
+\def\bbloct{oct}
 %\NOREVIEWERNOTES
 \title
-    %[Шаблон статьи для публикации] % Краткое название; не нужно, если полное название влезает в~колонтитул
-    {Estimation of radio impulse parameters using~the~maximum~likelihood method}
+%    [Определение области затенения радужки классификатором локальных текстурных признаков % Краткое название; не нужно, если полное название влезает в~колонтитул
+    {Определение видимой области радужки классификатором локальных текстурных признаков}
 \author
-    %[И.\,О.~Автор] % список авторов для колонтитула; не нужен, если основной список влезает в колонтитул
-    {K.\,V. Vlasova, V.\,A. Pachotin, D.\,M. Klionskiy, and~D.\,I.~Kaplun} % основной список авторов, выводимый в оглавление
-    [K.\,V.~Vlasova$^1$, V.\,A.~Pachotin$^2$, D.\,M.~Klionskiy$^3$, and~D.\,I.~Kaplun$^3$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
-\thanks
-    {The work is supported by Contract No.\ 02.G25.31.0149 dated 01.12.2015 (Ministry of Education and Science of Russian Federation).}
-\email
-    {p\_ksenia@mail.ru, VPakhotin@kantiana.ru, klio2003@list.ru, dikaplun@etu.ru}
+   % [Автор~И.\,О.] % список  авторов для колонтитула; не нужен, если основной список влезает в колонтитул
+    {И.\,А. Соломатин, И.\,А. Матвеев} % основной список авторов, выводимый в оглавление
+   % [Автор~И.\,О.$^1$, Соавтор~И.\,О.$^2$, Фамилия~И.\,О.$^2$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
 \organization
-    {$^1$Baltic Fishing Fleet State Academy, Russian Federation, Kaliningrad\par
-	$^2$Immanuel Kant Baltic Federal University, Russian Federation, Kaliningrad\par
-	$^3$Saint Petersburg Electrotechnical University ``LETI,'' Russian Federation, Saint Petersburg
+    {МФТИ; ВЦ РАН, Москва, Россия}
+\thanks
+    {Работа выполнена при финансовой поддержке РФФИ, проект \No\,15-01-05552.
+%   Научный руководитель:  Стрижов~В.\,В.
+%   Задачу поставил:  Матвеев~И.\,А.
+%   Консультант:  Матвеев~И.\,А.
 }
+\email
+    {ivan.solomatin@phystech.edu}
+%\organization
+%    {$^1$Организация; $^2$Организация}
 \abstract
+    {Распознавание человека по изображению радужной оболочки ~--- актуальная
+задача в~биометрических системах. Помимо выделения радужки как кольцевой
+области для повышения точности распознавания определяют области затенения
+(блики, веки, ресницы и~т.\,д.). Задача выделения затенений радужки может
+быть поставлена как классификация пикселей кольцевой области на два класса:
+<<радужка>> и <<затенение>>. В кольцевой об\-ласти определяется сектор
+с~минимальной дисперсией яркости, который, как правило, не содержит
+затенений (в данной работе этот сектор не вычисляется, а рассматривается
+как часть входных данных алгоритма). Далее строится классификатор на основе
+многомерного гауссиана, который обучается на выборке,  задаваемой
+ по пикселям этого сектора. Параметры классификатора были оптимизированы с помощью генетического алгоритма. Проблема шума и ошибок с классификацией некоторых участков изображения решается с помощью применения морфологической постобработки. Был проведен вычислительный эксперимент,
+и~получено распределение функционала качества алгоритма.
+%    Это задача классификации по 2-м классам. Использования ручной разметки для обучения классификатора можно избежать, если помимо изображения радужки и окружностей, аппроксимирующих границы радужки, алгоритму подается на вход некоторый сектор радужки S, не содержащий областей затенения. Данная статья посвящена задаче выделения областей затенения без тренировки на размеченных вручную изображениях, но с учетом сектора S.
+\newline
+
+\bigskip
+\noindent
+\textbf{Ключевые слова}: \emph {обработка изображений; распознавание образов;
+биометрическая идентификация по радужке}}
+\titleEng
+    {Detecting visible areas of iris by qualifier of~local~textural~features}
+\authorEng
+    {I.\,A. Solomatin, I.\,A. Matveev}
+\organizationEng
+    {MIPT; CC RAS, Moscow, Russia}
+\abstractEng
     {\noindent
-The paper is devoted to the development of an algorithm for resolution and parameter estimation of radio impulses with partially overlapping spectra in the area of their
-nonorthogonality (the correlation coefficient varies from 0 to 0.9). The implementation of the suggested algorithm makes it possible to design filters for resolving frequency-dependent signals and,
- therefore, to increase the capacity of a communication channel.
-The maximum likelihood method has been used
-to obtain analytical expressions and to perform model investigations for frequency resolution of
-nonorthogonal signals. The dynamic range of signal parameter estimates has been found as a function of signal-to-noise ratio and correlation coefficient.
-It has been shown that the likelihood functional value in its global minimum allows
-one to estimate noise variance and the number of radio impulses in a received signal.
-	
+A person recognition by the image of the iris is an actual problem.
+To increase the accuracy of recognition, usually areas of occlusion are
+detected in addition to locating of the iris as an annular region. The
+problem of occlusion detection can be set as the classification of pixels
+from annular region into two classes: ``iris'' and ``occlusion.''
+ In the annular region, the segment with minimum dispersion of brightness
+is selected, which usually contains no occlusion (in this article,
+ this segment is not calculated and supposed to be a part of the input data).
+ Then, a~classifier based on multivariate Gaussian is built and
+after that, it is trained on the training set, which is
+ set by local textural features of the pixels from this sector. The parameters of the classifier were optimized using genetic algorithm. The problems with noise and errors of classification in particular areas of the image are solved by applying morphological
+postprocessing. A~computational experiment was carried out and it allowed to obtain the distribution of the functional of quality of the algorithm.
 
+    \bigskip
 \noindent
-\textbf{Keywords}: \emph{maximum-likelihood method; radio impulse; resolution;
-frequency-dependent signal; communication channel; nonorthogonal signals;
-signal-to-noise ratio}
-}
-
-
-\titleRus
-    {Оценивание параметров радиоимпульса с~использованием метода максимального правдоподобия}
-\authorRus
-    {К.\,В.~Власова$^1$, В.\,А.~Пахотин$^2$, Д.\,М.~Клионский$^3$, Д.\,И.~Каплун$^3$}
-\organizationRus
-    {$^1$Балтийская государственная академия рыбопромыслового флота, г. Калиниград, Россия\par
- $^2$Балтийский федеральный университет имени Иммануила Канта,  г. Калиниград, Россия\par
-    $^3$Санкт-Петербургский государственный электротехнический университет <<ЛЭТИ>>,
-г.~Санкт-Петербург, Россия}
-\abstractRus
-    {
-		Статья посвящена разработке алгоритма для разрешения и оценивания параметров радиоимпульсов с частично перекрывающимися спектрами в области их неортогональности (коэффициент корреляции изменяется в пределах от 0 до 0,9).
-Предложенный алгоритм позволяет проектировать фильтры для разрешения частотно-зависимых сигналов и, как следствие, появляется возможность повышения пропускной способности канала связи. В~статье использован метод максимального правдоподобия
-для получения аналитических выражений и проведения модельных исследований для частотного разрешения неортогональных сигналов. Динамический диапазон оценок параметров сигналов был определен как функция отношения сигнал/шум и коэффициента
-корреляции. Показано, что значения функционала правдоподобия в точке
-глобального минимума позволяют оценить дисперсию шума и количество радиоимпульсов в принятом сигнале.
-		
-		\bigskip
-		\noindent
-		\textbf{Ключевые слова}: \emph {метод максимального правдоподобия; радиоимпульс; разрешение; частотно-зависимый сигнал; канал связи, неортогональные сигналы; отношение сигнал/шум}
-}
-
+    \textbf{Keywords}: \emph{image processing; pattern recognition;
+biometric identification by iris}}
+\begin{document}
 \maketitle
-
 %\linenumbers
+\newpage
+\section{Введение}
+\renewcommand{\labelitemi}{$\bullet$}
+Необходимый этап биометрической идентификации по радужной оболочке ~---
+сегментация радужки, т.\,е.\ выделение области изображения, содержащей
+только радужку. В сегментацию помимо выделения окружностей, аппроксимирующих
+внешнюю и внутреннюю границы радужной оболочки, входит выделение областей
+затенения. Последняя задача достаточно важна для распознавания человека по
+радужке, так как ее решение задает конечную эффективную область для
+распознавания. В англоязычной литературе эта задача называется
+EES  (Eyelids, Eyelashes, Shadows) localization.
+Существуют различные подходы к~ее решению.
+В \cite{conf/icip/Daugman02} осуществляется выделение области век
+с использованием ин\-теграль\-но-диф\-фе\-рен\-циальных операторов, граница века аппроксимируется некоторой кривой. В \cite{bb95018} для локализации век используется преобразование Хафа. В \cite{bb94769} граница века аппроксимируется параболой. В \cite{bb94887} для обнаружения затенений используется мера качества радужки, вводится вероятностная мера качества радужки, основанная на смеси многомерных гауссианов, которая сравнивается с мерой, основанной на преобразовании Фурье. Для распознавания ресниц в \cite{bb95039} применяется статистическая оценка. В \cite{bb94767} описан метод распознавания век, использующий горизонтальный медианный фильтр и распознавание границ. В \cite{bb94813} для распознавания ресниц используется оператор Собеля, затем ресницы удаляются с изображения с помощью медианного фильтра.
+Существуют решения, выделяющие все затенения сразу (без разделения на веки, ресницы, блики
+и~т.\,п.). Одно из таких решений описано в \cite{conf/icassp/LiS09}, в нем применяется классификатор, основанный на смесях гауссианов, разделяющий точки на два класса: <<радужка>> и <<затенение>>. Для обучения классификатора используются изображения, размеченные вручную.
 
-\section{Introduction}
-\noindent
-The paper discusses the problem of estimating parameters of a set of radio impulses with close frequencies. Their spectra partially overlap so that it is difficult to determine the precise number of radio impulses and estimate their parameters using the Rayleigh criterion. In this case, radio impulses are nonorthogonal in the frequency domain so that
-one can consider several radio impulses orthogonal if their spectra satisfy the Rayleigh criterion.
-It is necessary to determine amplitudes and frequencies of a set of
-nonorthogonal radio impulses (when the reception time is known)
-and their duration.
+Недостатками метода \cite{conf/icassp/LiS09} являются необходимость в ручной разметке и использование одного и того же классификатора для всех изображений. Единый классификатор для всех изображений является сомнительным решением вследствие того, что изображения разных радужных оболочек могут иметь значительные вариации текстурных признаков (разная структура, разное освещение
+и~т.\,д.), что при обучении на большой выборке порождает очень широкий класс <<радужка>>, обладающий малой разделяющей способностью, а при обучении на малой выборке ~--- узкий класс, не пригодный для многих изображений.
 
-Modern radio systems function according to the analysis of orthogonal signals.
-Active pulse radar systems can be used for estimating the parameters of two or
-even greater number of targets, if their correlation functions do not overlap,
-i.\,e., when they are orthogonal relative to the reception moment. It is possible
-in spectroscopy to separate two spectral lines, if the Rayleigh criterion is
-satisfied (i.\,e., orthogonality in the frequency domain is observed). At
-present, if the orthogonality is not satisfied, this might result in gross errors in signal parameter estimation or a total failure in signal detection.
+В данной работе предлагается использовать классификатор на основе многомерного гауссиана, обучающийся на незатененном секторе $S$. Использование сектора $S$ для обучения позволяет избежать использования обучающей выборки, размеченной вручную,
+т.\,е. построить полностью автоматический метод.
+Таким образом, содержание работы~--- реализация алгоритма поиска областей
+затенения с использованием сектора $S$ вместо ручной разметки. В качестве сектора $S$ используется сектор с минимальной дисперсией яркости с фиксированным углом раствора. Важно заметить, что в данной работе прежде всего ставился вопрос о принципиальной работоспособности метода распознавания затенений на основе классификатора, обучающегося на элементе того же изображения. Вопрос максимальной оптимизации пока не ставился. В дальнейшем, в частности, будет подробнее изучен вопрос нахождения сектора~$S$
+и~вопрос выбора признаков, по которым строится классификатор.
 
-Nowadays, there are several techniques applied in practice for improving the
-quality of signal parameter estimation due to a better resolution: Prony
-technique, MUSIC, etc.~\cite{1}. The most widely used techniques are based
-on the optimal reception theory \cite{2,3}. However, the implementation of
-the aforementioned techniques is connected with a number of
-difficulties~\cite{8, 9, 10}. The problem of signal parameter
-estimation and resolution within the scope of the
-optimal reception theory can be handled only when the signals under
-study are orthogonal~\cite{4, 5, 6, 11, 12, 13}. However, when one
-works in the area of signal nonorthogonality, the logarithm of the likelihood function has a complex structure with a lot of local minima and its minimization is ambiguous.
+\section{Постановка задачи}
+На вход подается черно-белое изображение $I$, которое является прямоугольной
+матрицей $W{\times}H$ из целых беззнаковых однобайтовых чисел $I(i, j) \in
+[0; 255]$,  задающих яркость каждого пикселя изображения. Также на вход подаются координаты центров и радиусы двух окружностей, аппроксимирующих внешнюю и внутреннюю границу радужки (вычисленные, например, методами \cite{IrisSeg}), и незатененный сектор $S$, задаваемый серединным углом $\alpha$ и раствором \nolinebreak $\Delta\alpha$.
+%Последнее число задает сектор следующим образом: углы измеряются в \textit{отсчетах}. Один отсчет = $\frac1{512}$ полной окружности, т.е. $\frac{\pi}{256}$ (отсчет ведется от оси абсцисс по часовой стрелке). Считается, что задаваемый сектор всегда имеет один и тот же раствор ~--- $40$ \textit{отсчетов}. Число, подаваемое на вход ~--- это полярный угол серединного луча задаваемого сектора, выраженный в \textit{отсчетах}.
 
-Let us employ the results of the optimal reception theory, which were
-developed and extended for the area of signal nonorthogonality.
-The authors suggest the solution of this problem for nonorthogonal
-signals using the logarithm of the likelihood function transformed by the
-system of likelihood equations obtained for energetic signal parameters~\cite{7}.
-As a result of this transform, minimization of the logarithm of the likelihood function proves to be ambiguous. The logarithm of the likelihood function (after transformation) presents a surface in a multidimensional space of
-nonenergetic signal parameters. The minimum of this surface is the base for estimating both
-nonenergetic and energetic signal parameters. The minimum of the surface of the logarithm of the likelihood function for a set of signals is the same and,
- therefore, the term ``resolution of similar signals'' is not used and one
- can solve the problem of signal parameter estimation in the area of their nonorthogonality.
-
-The solution of the signal parameter estimation problem depends on the determinant of
-a~correlation matrix when the Rao--Kramer variance estimate is obtained.
-
-
-\section{Theoretical background}
-
-\noindent
-This section contains the main analytical expressions for an algorithm for processing a set of
-nonorthogonal (in the frequency domain) radio impulses based on the transformed likelihood functional.
-Two radio impulses are used to obtain certain expressions for calculating amplitude variances. These variances were used for estimating the application area of the algorithm depending on the correlation coefficient between the signals.
-
-Consider a received signal consisting of $N$  radio impulses in the complex form:
-\begin{align}
-\hat{y}(t) = \sum_{n = 1}^{N} \hat{U}_n e^{i \omega_n t} + U_n(t)
-\label{eq:eq1}
-\end{align}
-where
-$\hat{U}_n$ is the complex amplitude of the $n$th radio impulse;
-$\omega_n$ is the circular frequency of the $n$th radio impulse;
-and $U_n (t)$ is the additive Gaussian noise with the mean value equal to zero, variance equal to $\sigma^2$ and the correlation interval equal to $\tau_k$.
-
-Using \eqref{eq:eq1}, one can obtain the logarithm of the likelihood function:
-\begin{align}
-\ln L(\vec{\acute{\lambda}})
-= - \frac{1}{2 \sigma^2 \tau_k} \int\limits_0^T \left| \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right|^2 dt
-= - \frac{1}{2 \sigma^2 \tau_k} \Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n)
-\label{eq:eq2}
-\end{align}
-where
-$\vec{\acute{\lambda}}$ is the vector of the estimated parameters of radio
-impulses;
-$\Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n)$ is the likelihood functional;
-$T$ is the duration of the received signal; and
-the dashes on top of the variables correspond to the parameters that have to be estimated.
-The received message $\hat{y}(t)$ corresponds to the mathematical model of a signal with $N$ copies differing by $\acute{\omega}_1, \dots, \acute{\omega}_N$.
-The energy of the message depends on complex amplitudes of radio impulses $\widehat{\acute{U}}_n$ and does not depend on other parameters  $(\acute{\omega}_1, \dots, \acute{\omega}_N)$.
-Therefore, one can consider complex amplitudes to be energetic parameters
-and frequencies~--- nonenergetic parameters.
-
-Minimization of \eqref{eq:eq2} is ambiguous due to variability of amplitudes and frequencies of radio impulses, which leads to ambiguity in the solution of the system of likelihood equations in the area of
-nonorthogonality. The surface of functional \eqref{eq:eq2} has many local minima, which makes it difficult to estimate the parameters of the received message.
-If it is necessary to obtain one minimum of the likelihood surface,
-Eq.~\eqref{eq:eq2} should be transformed
-in order to exclude energetic parameters from the minimization process.
-
-Amplitude exclusion requires one to differentiate \eqref{eq:eq2} and then
-solve the corresponding equation. As a result, one will have a system of likelihood equations:
+Требуется выделить области затенения, т.\,е.\ области изображения, на которых
+изображена не радужка, а веко, ресница, блик и т.\,п.
+Строго говоря, нужно классифицировать все точки изображения,
+лежащие внутри кольца, аппроксимирующего радужку по двум классам~---
+<<радужка>> и <<затенение>>, т.\,е.\ получить бинарное изображение $J$:
 \begin{equation}
-\left.
-\begin{array}{c}
-\int\limits_0^T \left( \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right) e^{-i \acute{\omega}_1 t}\, dt = 0\,; \\[3pt]
-\dots\dots\dots\dots\dots\dots\dots\dots\dots\dots\,; \\[3pt]
-\int\limits_0^T \left( \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right) e^{-i \acute{\omega}_N t}\, dt = 0\,.
-\end{array}
-\right\}
-\label{eq:eq3}
+\label{output}
+J(i, j) \in \{0, 1\};\quad i \in [1; H];\enskip j \in [1, W],
 \end{equation}
-These equations can be used to find the amplitudes of $N$ radio impulses,
-which depend on the estimated frequencies $\acute{\omega}_1, \dots,
-\acute{\omega}_N$. Now, designate the amplitudes as $\widehat{\acute{U}}1_n$.
-
-The likelihood functional can also be written in the following form:
-\begin{align*}
-\Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n)
-&= \int\limits_0^T \left| \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right|^2 dt = \nonumber \\
-&= \int\limits_0^T \left( \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right)
-\left( \hat{y}^*(t) - \widehat{\acute{U}}^*_n e^{i \acute{\omega}_1 t} - \dots - \widehat{\acute{U}}^*_n e^{i \acute{\omega}_N t}\right) dt\,.
-%\label{eq:eq4}
-\end{align*}
-
-After certain transformations, one arrives at
-\begin{align*}
-\Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n) =
-\int\limits_0^T | \hat{y}(t) |^2 -
-\int\limits_0^T \left( \hat{y}^*(t) \sum_{n = 1}^N  \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right) dt
-%\label{eq:eq5}
-\end{align*}
-where the asterisk means complex conjugate.
-
-However, system \eqref{eq:eq3} can be used for finding the amplitudes of radio impulses $\widehat{\acute{U}}_n$ depending on the frequency estimates  $\acute{\omega}_1, \dots, \acute{\omega}_N$.
-These amplitudes can be designated as  $\widehat{\acute{U}}1_n$.
-Now, one can write the transformed likelihood functional
-\begin{align}
-\Delta({\acute{\omega}}_n) = \int\limits_0^T | \hat{y}(t) |^2 -
-\int\limits_0^T \left( \hat{y}^*(t) \sum_{n = 1}^N  \widehat{\acute{U}}1_n e^{i \acute{\omega}_n t} \right) dt\,,
-\label{eq:eq6}
-\end{align}
-depending on only nonenergetic radio impulse parameters, i.\,e.,
- the estimated frequencies~$\acute{\omega}_1, \dots, \acute{\omega}_N$.
-Therefore, the surface will have only one global minimum indicating the
-estimated frequency values  $\acute{\omega}_1, \dots, \acute{\omega}_N$.
-Substituting them in the likelihood system~\eqref{eq:eq3}, one can estimate the amplitude values $\widehat{\acute{U}}_n$.
-
-If the number of radio impulses in the received signal and
-in the signal model is the same, the likelihood functional~\eqref{eq:eq6}
-determines the noise variance in the received message. However, in practice,
-the apriori information on the expected number of radio impulses
-is not always available. This fact can be illustrated using the
-following example. In communications applications, one can receive two or a greater number of radio impulses with unknown frequencies. The number of radio impulses is also unknown and they have to be resolved. Another example is related to radio spectroscopy, where the number of spectral lines is unknown. The spectral lines can be orthogonal or
-nonorthogonal. These examples confirm the necessity of estimating the number of radio impulses in the received message.
-The authors suggest an algorithm based on changing the number of signal copies $N$  in the mathematical model and finding the values of the likelihood functional \eqref{eq:eq6} in its minimum.
-
-If the number of signal copies  $N$ in the mathematical model is greater than the number of radio impulses in the received message, the amplitudes of extra components are close to zero since they are determined by separate noise maxima. The minimal value of likelihood \eqref{eq:eq6} will be determined by the noise variance.
-
-If the number of signal copies  $N$ is smaller than in the received message, the value of the likelihood functional rises dramatically since it determines the noise variance in the received message and the radio impulses which are not included in the model.
-
-Thus, processing the received message requires one to increase the number of
-signal copies~$N$ till the minimum value of the likelihood functional stops decreasing.
-
-Evaluation of the solution quality in the optimal reception theory is
-based on estimating variances using Rao--Kramer estimates. Consider two radio
-impulses in a data set starting at the same time point. One
-can estimate the variance of radio impulse amplitudes in the
-minimal point of the likelihood functional for $\acute{\omega}_1 = \omega_1$ and
-$\acute{\omega}_2 = \omega_2$.
-By computing the elements of the Fisher information matrix
-according to the expression
-\begin{align*}
-J_{ij} = - M \left( \frac{d^2 \ln L(\vec{\acute{\lambda}})}{d \lambda_i \lambda_j} \right),
-%\label{eq:eq7}
-\end{align*}
-one can find a new matrix consisting of the elements
-\begin{align*}
-J_{ij} = \int\limits_0^T e^{i(\acute{\omega}_i - \acute{\omega}_j)t} \,dt\,.
-%\label{eq:eq8}
-\end{align*}
-These are complex correlation coefficients between the radio impulses. The diagonal elements of a matrix, which is inverse to the Fisher information matrix, define the variances of radio impulse amplitudes. The inverse matrix has the following form:
-
-\begin{align*}
-\hat{D}_U = \frac{A_{ij}}{\det \hat{J}}
-%\label{eq:eq9}
-\end{align*}
-where $A_{ij}$ is the algebraic adjunct for the element of the Fisher matrix
-with the indices $i,\,j$ and $\det \hat{J}$ is the determinant of the Fisher information matrix.
-
-Thus, the variance of radio impulse amplitudes is determined by $\det \hat{J}$ of the Fisher information matrix.
-In the case of two radio impulses, the amplitude variance will have the following form:
-\begin{align*}
-D_{U_1} = D_{U_2} = \frac{\sigma^2}{K (1 - |\hat{r}|^2)}
-%\label{eq:eq10}
-\end{align*}
-where $K$ is the number of noncorrelated noise samples on the processing
-interval $T$ and~$\hat{r}$ is the normalized correlation coefficient between radio impulses.
-
-
-If $|\hat{r}| = 0$, the amplitude variance will have the following form:
-\begin{align*}
-D_{U_0} = \frac{\sigma^2}{K}\,.
-%\label{eq:eq11}
-\end{align*}
-
-
-Now, let us introduce the normalized variance:
-\begin{align*}
-D = \frac{D_U}{D_{U_0}} = \frac{1}{1 - |\hat{r}|^2}\,.
-%\label{eq:eq12}
-\end{align*}
-\begin{figure}[H] %fig1
-\centering{\includegraphics[height = 7cm, width = 0.6\linewidth, trim = 0 40 0 20]{\hdir/fig1_ed.eps}}
-\caption{Relative variance vs.\ normalized correlation coefficient.
-Relative variance increases by~\mbox{$\sim 7$}~dB in the range $|\hat{r}| = 0$--0.9;
- when $|\hat{r}| >0.9$, the relative variance rises dramatically}
-\label{fg:fig1}
-\end{figure}
-This expression shows that for $|\hat{r}| = 0$--0.9 the changes of the relative variance are approximately $7$ dB.
-In the area where $|\hat{r}| > 0.9$, the relative variance grows
-abruptly as shown in Fig.~\ref{fg:fig1}.
-Thus, if a signal contains two radio impulses, the problem of radio impulse parameter estimation will be solved for the following range of the normalized correlation coefficient: $| \hat{r} | = 0$--0.9.
-
-
-\section{Model studies}
-
-\noindent
-This section is devoted to studying the problem of estimating the parameters of two radio impulses in the area of their
-nonorthogonality using the maximum likelihood technique and spectral analysis.
-It will be shown that the maximum likelihood technique can be used for solving this problem in the area of
-nonorthogonality. The results of the experiments are provided to estimate
-the quality of the solution depending on the signal-to-noise ratio and
-correlation coefficient between two radio impulses.
-The estimation of the noise variance in the received message
-is illustrated using the dataset (the functional value in its minimum).
-
-Model studies have been carried out for a signal containing two radio impulses combined in the time domain.
-The radio impulses have the following parameters: amplitudes $U_1=2$ and
-$U_2=1$; initial phases $\varphi_1 = 10^\circ$ and $\varphi_2= 170^\circ$;
-frequencies $f_1=2$~kHz and $f_2$\linebreak $ = 2.08$~kHz; signal-to-noise ratio is $20$~dB;
-and radio impulse duration is $25$~ms. The Rayleigh restriction for radio impulse resolution arises when the frequencies become close by $\Delta f = 40$~Hz.
-
-
-
-Figure~\ref{fg:fig2} shows the normalized correlation coefficient vs.\ the frequency difference $\Delta f$ between two signals.
-When $\Delta f = 40$ and  80~Hz, the correlation coefficient is equal to zero and the signals are orthogonal.
-The values $\Delta f < 40$~Hz correspond to the signal nonorthogonality area. The correlation coefficient values different from zero for $\Delta f > 40$~Hz are caused by side lobes of the signal spectrum.
+где $J(i,j) = 1 \Leftrightarrow $ точка $(i, j)^\mathrm{T}$ классифицирована как затенение.\\
+\vspace{-0.3cm}
+\section{Метод решения}
+Рассмотрим точки, находящиеся внутри сектора $S = \{\vec{x_n}\}_{n=1}^{N}$,
+где $N$ --- число точек, принадлежащих $S$. Локальные текстурные признаки
+этих точек будут являться обуча\-ющей выборкой для классификатора.
+На рис.~\ref{fig:Sectors} приведены примеры сектора $S$ для различных изображений радужки.\\
+\begin{center}
 \begin{figure}[h]
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 240 0 10]{\hdir/fig2.eps}}
-\caption{Correlation coefficient between radio impulses. Radio impulse duration
-is $25$~ms. The radio impulses are orthogonal for $40$, $80$, and $120$~Hz.
-When the radio impulse frequency difference is $10$~Hz and the correlation
-coefficient is equal to $0.9$, the theoretical estimate of the working area is confirmed}
-\label{fg:fig2}
+\centering
+\subfloat[$S$ не содержит затенений]{\includegraphics[width=0.3\textwidth]{\hdir/gamma_iris1.eps}}
+\hfill
+\subfloat[$S$ не содержит затенений]{\includegraphics[width=0.3\textwidth]{\hdir/gamma_iris2.eps}}
+\hfill
+\subfloat[$S$ содержит затенения]{\includegraphics[width=0.3\textwidth]{\hdir/gamma_iris0.eps}}
+\caption{Примеры секторов с минимальной дисперсией яркости (выделены светлым)}
+\label{fig:Sectors}
 \end{figure}
+\end{center}
+\vspace{-0.5cm}
+
+Стоит заметить, что в качестве сектора $S$ выбирается сектор с фиксированым
+ раствором $\Delta \alpha$ такой, что его дисперсия минимальна, и, строго
+говоря, этот сектор может содержать затенения. В таких случаях точность
+распознавания не может быть высокой. Пример того, как наличие затенений
+в секторе $S$ влияет на точность распознавания, рассмотрен в разд.~5
+(пример 3, рис.~\ref{fig:samp3}). В данном примере сектор $S$ содержит ресницы;
+ таким образом, классификатор, обученный по этому сектору, не считает ресницы затенениями, что уменьшает точность. В дальнейшем планируется написать более точный алгоритм поиска незатененного сектора радужки.
 
 
+В качестве локальных текстурных признаков выбираются следующие $K = 8$ признаков:
+\begin{enumerate}[1.]
 
-Figure~\ref{fg:fig3} shows the received signal containing two radio impulses
-with the frequencies $f_1$\linebreak $ = 2$~kHz and $f_2 = 2.08$~kHz.
-According to Fig.~\ref{fg:fig2}, these signals are orthogonal since the frequency difference $\Delta f = 80$~Hz leads to the correlation coefficient $\hat{r} = 0$.
-\begin{figure}
-\centering{\includegraphics[width = 0.78\linewidth, trim = 0 230 0 20]{\hdir/fig3.eps}}
-\caption{Received signal containing two orthogonal radio impulses combined in the time domain}
-\label{fg:fig3}
-\vspace*{12pt}
+\item $B(\vec{x_n})$ ~--- яркость в точке $\vec{x_n} = (x, y)^\mathrm{T}$:
+\begin{equation*}
+B(\vec{x_n}) = I(x, y)\,.
+\end{equation*}
+
+\item $\overline{B}(\vec{x_n})$ ~--- средняя яркость в окрестности точки $\vec{x_n}$ (в окне размера $a$).\\
+В качестве окна размера $a$ будем использовать квадрат со стороной $2a+1$.
+Тогда количество точек в окне размера $a$ равно $(2a+1)^2$.\\
+Обозначим момент яркости в окрестности размера $a$ точки $\vec{x_n}$:
+\begin{equation*}
+M^{(z)}_a = \cfrac1{(2a+1)^2} \sum\limits_{i = -a}^{a} \sum\limits_{j = -a}^{a} I^z(x+i, y+j).
+\end{equation*}
+Тогда
+\begin{equation} \label{param2}
+\overline{B}(\vec{x_n}) = M_a^{(1)}.
+\end{equation}
+
+\item $\sigma(\vec{x_n})$ ~--- среднеквадратичное отклонение яркости в окрестности точки $\vec{x_n}$ (в окне размера $b$):
+\begin{equation} \label{param3}
+\sigma(\vec{x_n}) = \sqrt{ M_b^{(2)} - \left( M_b^{(1)} \right)^2 }\,.
+\end{equation}
+%\sigma(\vec{x_n}) = \sqrt{ \left( \cfrac1{(2b+1)^2} \sum\limits_{j = -b}^{b} \sum\limits_{k = -b}^{b} I^2[x+j, y+k] \right) - \left(\cfrac1{(2b+1)^2} \sum\limits_{j = -b}^{b} \sum\limits_{k = -b}^{b} I[x+j, y+k] \right)^2 }
+
+\item $\vec{C}(\vec{x_n})$ ~--- вектор из пяти компонент дискретного косинусного преобразования в окрестности точки $\vec{x_n}$.
+
+Как правило, дискретное косинусное преобразование считается в окне $w{\times}h$, где $w=h=8$, но так как в данном случае, из соображений симметрии, желательно, чтобы окно было симметрично центрированным, используется окно $7{\times}7 \;\; (w=h=7)$. Двумерное дискретное косинусное преобразование в окне $w{\times}h$ при $w=h=7$
+c~центром в~точке $(x, y)^\mathrm{T}$:
+\begin{multline*} %\label{param4}
+\widehat{C}_{p, q}(x, y) =  \alpha_p \alpha_q \sum\limits_{i=-3}^{3} \sum\limits_{j=-3}^{3} I(x+i, y+j) \cos\cfrac{\pi(2i+7)p}{2h} \cos\cfrac{\pi(2j+7)q}{2w}\,,
+\\
+0\leq p \leq h-1; \quad 0\leq q \leq w-1,
+\end{multline*}
+где
+\begin{equation*}
+\alpha_p = \left\{ \begin{aligned} &\cfrac1{\sqrt{w}}, p = 0\,; \\ &
+\cfrac{\sqrt2}{\sqrt{w}}, 1 \leq p \leq h-1\,; \end{aligned} \right.  \;\;\;\;\;\;
+\alpha_q = \left\{ \begin{aligned} &
+\cfrac1{\sqrt{h}}, q = 0\,; \\ &\cfrac{\sqrt2}{\sqrt{h}}, 1 \leq q \leq w-1\,. \end{aligned} \right.
+\end{equation*}
+Из полученной матрицы коэффициентов $7{\times}7$ берутся первые 5 коэффициентов
+за исключением $\widehat{C}_{0, 0}$ (рис.~\ref{fig:DCT}), так как коэффициент $\widehat{C}_{0, 0}$ равен средней яркости в окрест\-ности, которая уже используется в качестве признака:
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}
+\filldraw[fill=black!20!white, draw=black] (0-1,-1+1) -- (1-1,-1+1) -- (1-1,-2+1) -- (0-1,-2+1) -- (0-1,-1+1);
+\filldraw[fill=black!20!white, draw=black] (0-1,-2+1) -- (1-1,-2+1) -- (1-1,-3+1) -- (0-1,-3+1) -- (0-1,-2+1);
+\filldraw[fill=black!20!white, draw=black] (1-1,-0+1) -- (2-1,-0+1) -- (2-1,-1+1) -- (1-1,-1+1) -- (1-1,-0+1);
+\filldraw[fill=black!20!white, draw=black] (1-1,-1+1) -- (2-1,-1+1) -- (2-1,-2+1) -- (1-1,-2+1) -- (1-1,-1+1);
+\filldraw[fill=black!20!white, draw=black] (2-1,-0+1) -- (3-1,-0+1) -- (3-1,-1+1) -- (2-1,-1+1) -- (2-1,-0+1);
+\draw [->, ultra thick] (4, -1) -- (4.6, -1);
+\foreach \x in {0,...,3}
+    \foreach \y in {0,...,3}
+    {
+        \draw (\x ,-\y ) +(-1,+1) rectangle ++(0, 0);
+        \draw (\x  - 0.5,-\y  +0.5 ) node{(\x,\y)};
+    }
+
+    \draw [-, thin] (4-1 , 1 ) -- (4.5-1, 1) ;
+    \foreach \y in {0,...,3}
+    {
+        \draw [-, thin] (3 ,-\y ) -- (3.5, -\y) ;
+        \draw (4  - 0.5,-\y  +0.5 ) node{$\ldots$};
+    }
+    \draw [-, thin] (-1 ,-3 ) -- (-1, -3.5) ;
+    \foreach \x in {0,...,3}
+    {
+        \draw [-, thin] (\x ,-3 ) -- (\x, -3.5) ;
+        \draw (\x  - 0.5,-4  +0.5 ) node{$\vdots$};
+    }
+    \draw (4  - 0.5,-4  +0.5 ) node{$\ddots$};
+
+\filldraw[fill=black!20!white, draw=black] (6-1,-1+1) -- (6  ,-1+1) -- (6  ,-2+1) -- (6-1,-2+1) -- (6-1,-1+1);
+\filldraw[fill=black!20!white, draw=black] (6-1,-2+1) -- (6  ,-2+1) -- (6  ,-3+1) -- (6-1,-3+1) -- (6-1,-2+1);
+\filldraw[fill=black!20!white, draw=black] (6  ,-0+1) -- (6+1,-0+1) -- (6+1,-1+1) -- (6  ,-1+1) -- (6  ,-0+1);
+\filldraw[fill=black!20!white, draw=black] (6  ,-1+1) -- (6+1,-1+1) -- (6+1,-2+1) -- (6  ,-2+1) -- (6  ,-1+1);
+\filldraw[fill=black!20!white, draw=black] (6+1,-0+1) -- (6+2,-0+1) -- (6+2,-1+1) -- (6+1,-1+1) -- (6+1,-0+1);
+\draw (6+0  - 0.5,-1  +0.5 ) node{$C_1$};
+\draw (6+0  - 0.5,-2  +0.5 ) node{$C_3$};
+\draw (6+1  - 0.5,-0  +0.5 ) node{$C_2$};
+\draw (6+1  - 0.5,-1  +0.5 ) node{$C_4$};
+\draw (6+2  - 0.5,-0  +0.5 ) node{$C_5$};
+\foreach \x in {0,...,3}
+    \foreach \y in {0,...,3}
+    {
+        \draw (6+\x ,-\y ) +(-1,+1) rectangle ++(0, 0);
+%        \draw (5+\x  - 0.5,-\y  +0.5 ) node{(\x,\y)};
+    }
+    \draw [-, thin] (9 , 1 ) -- (9.5, 1) ;
+    \foreach \y in {0,...,3}
+    {
+        \draw [-, thin] (9 ,-\y ) -- (9.5, -\y) ;
+        \draw (10 - 0.5,-\y  +0.5 ) node{...};
+    }
+    \draw [-, thin] (5 ,-3 ) -- (5, -3.5) ;
+    \foreach \x in {6,...,9}
+    {
+        \draw [-, thin] (\x ,-3 ) -- (\x, -3.5) ;
+        \draw (\x  - 0.5,-4  +0.5 ) node{$\vdots$};
+    }
+    \draw (10  - 0.5,-4  +0.5 ) node{$\ddots$};
+
+\end{tikzpicture}
+\caption{Используемые коэффициенты дискретного косинусного преобразования} \label{fig:DCT}
+\end{center}
 \end{figure}
+\begin{equation*}
+\vec{C}(\vec{x_n}) = (\widehat{C}_{0, 1}, \widehat{C}_{1, 0}, \widehat{C}_{0, 2}, \widehat{C}_{1, 1}, \widehat{C}_{2, 0})^\mathrm{T}.
+\end{equation*}
+\end{enumerate}
 
-\begin{figure}%[ht]
-\vspace*{12pt}
-\centering{\includegraphics[width = 0.78\linewidth, trim = 0 200 0 35]{\hdir/fig4.eps}}
-\caption{Spectrum of two orthogonal radio impulses combined in the time domain. The maxima of spectral lines determine amplitude and frequency estimates of the radio impulses}
-\label{fg:fig4}
-\end{figure}
+В формулах \egref{param2} и \egref{param3} размеры окрестностей $a$ и $b$ выступают в качестве параметров алгоритма.\\
 
-The spectra of these two radio impulses is shown in Fig.~\ref{fg:fig4}. The side lobes of the first radio impulse ($U_1=2$) distort the amplitude of the second radio impulse ($U_2=1$).
+Каждой точке сектора $S: \vec{x_n} = (x, y)^\mathrm{T}$ сопоставляем вектор из признаков:
+\begin{equation*}
+\vec{p_n} = (B(\vec{x_n}), \overline{B}(\vec{x_n}), \sigma(\vec{x_n}), (\vec{C}(\vec{x_n}))^\mathrm{T})^\mathrm{T}\,.
+\end{equation*}
+Находим средний вектор:
+\begin{equation*}
+\vec{\mu} = \cfrac1N \sum \limits_{n = 1}^N \vec{p_n}\,;
+%\end{equation}
+%\begin{equation}
+\qquad \vec{\hat{p}_n} = \vec{p_n} - \vec{\mu}\,.
+\end{equation*}
+Из векторов $\vec{\hat{p}_n}$ составляется матрица объект-признак $M$ размерности $K{\times}N$:
+\begin{equation*}
+M = \left( \begin{matrix}
+\vec{\hat{p}_1} 			& \vec{\hat{p}_2} & \cdots & \vec{\hat{p}_n}
+\end{matrix} \right)\,.
+\end{equation*}
+Предполагаем, что объекты в пространстве, задаваемом данными параметрами,
+ распределены по многомерному гауссиану. Гипотезу о принадлежности каждого пикселя классу <<радужка>> принимаем или отвергаем, основываясь на расстоянии Махаланобиса.
 
-Figure \ref{fg:fig5} shows the surface of the transformed inverse likelihood functional:
-\begin{align*}
-\Delta 1 = \frac{1}{\Delta(\acute{\omega}_1, \acute{\omega}_2)}\,.
-%\label{eq:eq13}
-\end{align*}
+Матрица ковариаций, нормированная на средний вектор, задается следующей формулой:
+\begin{equation*}
+C = MM^\mathrm{T}.
+\end{equation*}
+Расстояние Махаланобиса от $\vec{x}$ до $\vec{\mu}$:
+\begin{equation*}
+D(\vec{x}) = \sqrt{(\vec{x}-\vec{\mu})^\mathrm{T}C^{-1}(\vec{x}-\vec{\mu})}\,.
+\end{equation*}
+Считаем, что пиксель $\vec{x}$ лежит в классе <<радужка>>, если
+\begin{equation} \label{Prob}
+\exp{(-D^2(\vec{x})) } > P_{\text{порог}}\,.
+\end{equation}\\
+Таким образом, алгоритм задается следующими параметрами: $a, b,
+P_{\text{порог}}$, где $a$ и $b$ ~--- размеры окон (окрестностей) для
+расчета 1-го и 2-го признаков \egref{param2} и~\egref{param3}, а $P_{\text{порог}}$ ~--- пороговое значение в формуле \egref{Prob}. Для определения оптимальных значений указанных параметров был использован генетический алгоритм.
 
-The maximum of the functional surface is the only one
-which determines the unambiguity of the problem solution. The location of the maximum makes it possible to find the values of estimation frequencies $\acute{\omega}_1$ and $\acute{\omega}_2$. Their substitution into likelihood equations makes it possible to find the estimates of complex amplitudes of radio impulses. The value of maximum of the likelihood functional allows
-one to find the noise variance in a received signal. Figures \ref{fg:fig3}--\ref{fg:fig5} illustrate the possibility of obtaining the solution in the area of radio impulse orthogonality.
-\begin{figure} %[t]
-\vspace*{36pt}
-\centering{\includegraphics[width = 0.78\linewidth, trim = 0 0 0 100]{\hdir/fig5_ed.eps}}
-\caption{Surface of the inverse likelihood functional. The single maximum determines the parameter estimates of two radio impulses and the term ``resolution'' is not required. The base width of the maximum of the likelihood functional depends on a signal-to-noise ratio
-and its maximal value ($95.45$) determines the estimate of the noise variance in a received signal ($-19.79$~dB relative to $1$)}
-\label{fg:fig5}
-\end{figure}
+\section{Подбор параметров}
+Важно заметить, что применение генетического алгоритма для подбора
+параметров является не обучением, а настройкой алгоритма, т.\,е.
+параметры выбираются единожды и~фиксируются.
 
-Figures \ref{fg:fig6}--\ref{fg:fig8} show the possibility of obtaining the solution in the area of radio impulse
-nonorthogonality. In this case, the radio impulse frequencies are $f_1=2$~kHz
-and $f_2 =2.02$~kHz.
-The difference is $20$~Hz.
-Figure~\ref{fg:fig6} shows the received signal.
+Для применения генетического алгоритма нужно ввести функцию ошибки алгоритма для оценки качества решения для конкретных параметров. Пусть результат работы алгоритма равен $J$, а экспертная разметка областей затенения равна $\hat{J}$, где $J$ и $\hat{J}$ --- бинарные изображения вида \egref{output}.
 
-\begin{figure}[t]
-\centering{\includegraphics[width = 0.61\linewidth, trim = 0 40 0 0]{\hdir/fig6.eps}}
-\caption{Received signal containing two nonorthogonal impulses combined in the time domain}
-\label{fg:fig6}
-%\end{figure}
-\vspace*{36pt}
-%\begin{figure}[t]
-\centering{\includegraphics[width = 0.61\linewidth, trim = 0 30 0 20]{\hdir/fig7.eps}}
-\caption{Spectrum of two nonorthogonal radio impulses combined in the time domain}
-\label{fg:fig7}
-\end{figure}
+Пусть $N_0$ ~--- общее количество классифицируемых точек, лежащих внутри
+заданной границы радужки, а $\hat{N}_0$ ~--- количество точек, классифицируемых
+как затенения в экспертной разметке. Обозначим через $\delta_{\mathrm{Iris}}
+(i, j)$ индикаторную функцию множества точек, лежащих внутри кольца, аппроксимируещего область радужки. Тогда
+\begin{equation*}
+N_0 = | \{(i, j) \; | \; \delta_{\mathrm{Iris}}(i, j) = 1\} | ;
+\;\;\; \hat{N}_0 = | \{(i, j) \; | \; \delta_{\mathrm{Iris}}(i, j) \hat{J}(i, j) = 1\} |.
+\end{equation*}
+Тогда относительная ошибка первого рода равна
+\begin{equation*}
+E_1 = \cfrac1{\hat{N}_0} \sum_{i=1}^{H} \sum_{j=1}^{W} \hat{J}(i, j)(1 - J(i, j)) \delta_{\mathrm{Iris}}(i, j),
+\end{equation*}
+а относительная ошибка второго рода равна
+\begin{equation*}
+E_2 = \cfrac1{N_0 - \hat{N}_0} \sum_{i=1}^{H} \sum_{j=1}^{W} J(i, j)(1 - \hat{J}(i, j)) \delta_{\mathrm{Iris}}(i, j).
+\end{equation*}
+Функция ошибки определяется как сумма относительных ошибок первого и второго рода:
+\begin{equation*}
+E= E_1 + E_2\,.
+\end{equation*}
 
-Figure \ref{fg:fig7} shows the spectrum of two radio impulses, which makes it difficult to obtain the information on radio impulse parameters.
+В данном генетическом алгоритме особь --- это вектор, состоящий из трех
+параметров алгоритма: $v = (a, b, P_{\text{порог}})^\mathrm{T}$. Оценка
+качества особи производилась на наборе из $M = 10$ изображений с экспертной
+разметкой затенений: $\mathcal{I} = \{I_m\}_{m = 1}^{M}$, т.\,е.
+функция качества особи определялась
+как средняя точность алгоритма на изображениях из $\mathcal{I}$:
+\begin{equation*}
+f(v) = f \left( \begin{matrix} a \\ b \\ P_{\text{порог}} \end{matrix} \right)  = \cfrac1M\sum\limits_{m = 1}^{M} \left(1-E(I_m, a, b, P_{\text{порог}})\right),
+\end{equation*}
+где $E(I, a, b, P)$~--- значение функции ошибки алгоритма с параметрами
+$(a, b, P)$ на изображении $I$. Селекция выполнялась методом рулетки, т.\,е.
+вероятность выбора особи $v$ в~качестве родителя пропорциональна $f(v)$.
 
-Figure~\ref{fg:fig8} shows the transformed likelihood functional, which allows
-one to estimate the radio impulse parameters.
-
-\begin{figure}[t]
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 70 0 0]{\hdir/fig8_ed.eps}}
-\caption{Surface of the inverse likelihood functional obtained in the area of radio impulse
-nonorthogonality}
-\label{fg:fig8}
-\end{figure}
-
-Figure~\ref{fg:fig9} shows the variations of radio impulse magnitude estimates depending on the changes in radio impulse frequencies. The best amplitude estimates can be found when
-$\Delta f$\linebreak $ = 10$~Hz.
-This corresponds to the correlation coefficient between radio impulses $\hat{r} \sim 0.9$, which fully confirms the theoretical estimate of the working area ($\hat{r} = 0$--0.9) for parameter estimation of two radio impulses.
-
-\begin{figure}[t]
-\vspace*{12pt}
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 250 0 20]{\hdir/fig9.eps}}
-\caption{Variation of the amplitude estimates of radio impulses depending on the changes of the frequency differences.
-The nonorthogonality area of the radio impulses for $\Delta f \leqslant 40$~Hz.
-The best amplitude estimates for radio impulse frequency differences of $10$~Hz. Radio impulse resolution has increased $4$~times in comparison with the Rayleigh resolution}
-\label{fg:fig9}
-\end{figure}
-
-Figure~\ref{fg:fig10} shows radio impulse frequency estimates vs.\
-their frequency differences. When the signal-to-noise ratio is $\sim 20$~dB and radio impulse duration is $25$~ms, the best estimates are obtained for $\Delta f = 10$~Hz. Thus,
-one can point out that the suggested technology of radio impulse parameter estimation is characterized by high resolution. When the signal-to-noise ratio is $20$~dB, the resolution of two radio impulses has increased $4$~times in comparison with the Rayleigh resolution.
-
-\begin{figure}[t]
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 250 0 0]{\hdir/fig10.eps}}
-\caption{Frequency estimates vs.\ frequency differences.
-The area of radio impulse nonorthogonality for $\Delta f \leqslant 40$~Hz.
-The best frequency estimates for radio impulse frequency difference of~$10$~Hz.
-Radio impulse resolution has increased $4$~times in comparison with the Rayleigh resolution}
-\label{fg:fig10}
-%\vspace*{12pt}
-\end{figure}
-\begin{figure}[h]
-\vspace*{6pt}
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 230 0 20]{\hdir/fig11.eps}}
-\caption{Statistics of radio impulse amplitude estimates.
-The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area).
-The estimates are satisfactory for signal-to-noise ratios exceeding~$0$~dB}
-\label{fg:fig11}
-\end{figure}
-
-Figure~\ref{fg:fig11} shows the statistics of radio impulse magnitudes depending on the signal-to-noise ratio when the radio impulse frequency is $\Delta f = 20$~Hz.
-As can be seen from the figure, the amplitude estimates are quite satisfactory when the signal-to-noise ratio exceeds $0$~dB.
-
-
-
-Figure~\ref{fg:fig12} shows the statistics of radio impulse frequencies depending on the signal-to-noise ratio for $\Delta f = 20$~Hz. As can be seen from the figure, radio impulse frequency estimates are quite satisfactory for signal-to-noise ratios exceeding
-$-5$~dB.
-
-
-
-Figure~\ref{fg:fig13} illustrates the changes of maxima of the inverse transformed likelihood functional depending on the signal-to-noise ratio in dB. The linear dependence confirms the theoretical suggestion that the noise variance can be estimated on the basis of the maximum of the inverse transformed likelihood functional.
-
-\section{Concluding remarks}
-
-\noindent
-An algorithm for solving the problem of parameter estimation of a~set of
-nonorthogonal radio impulses has been introduced
-using the maximum likelihood method on the basis of the transformed likelihood functional. Theoretical and practical studies lead to the following conclusions:
-
-\begin{figure} %[t]
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 220 0 20]{\hdir/fig12.eps}}
-\caption{Statistics of radio impulse frequency estimates. The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area). The estimates are satisfactory for signal-to-noise ratios exceeding~\mbox{$-5$~dB}}
-\label{fg:fig12}
-%\end{figure}
-\vspace*{18pt}
-%\begin{figure}[t]
-\centering{\includegraphics[width = 0.8\linewidth, trim = 0 220 0 20]{\hdir/fig13.eps}}
-\caption{Maximum of the likelihood functional vs.\ signal-to-noise ratio. The linearity of the dependence allows us to estimate the noise variance in the received message using the maximum of the inverse likelihood functional}
-\label{fg:fig13}
-\end{figure}
-
-
+В генетическом алгоритме использовались следующие генетические операторы:
 \begin{itemize}
-\item the transformed likelihood functional allows one to solve the problem of resolving and parameter estimation of two or several radio impulses in the area of their
-nonorthogonality. Application of this technique is efficient for different radio engineering problems and can be used for improving the capacity of communication channels using frequency division multiplexing;
-
-
-\item the working area for parameter estimation of a set of radio impulses is determined by determinant variations of a correlation matrix of a set of signals. Conditionality of the correlation matrix influences the possibility of resolving a set of signals. In the case of two radio impulses the working area depends on the normalized correlation coefficient in the range~0--0.9;
-\item the value of the transformed likelihood functional in its global minimum allows one to estimate the noise variance in a dataset and can be used as a criterion for estimating the number of radio impulses.
+\item cкрещивание:
+\begin{equation*}
+v \otimes w = \left( \begin{matrix} a_1 \\ b_1 \\ P_1 \end{matrix} \right) \otimes \left( \begin{matrix} a_2 \\ b_2 \\ P_2 \end{matrix} \right) = \left( \begin{matrix} r(a_1, a_2) \\ r(b_1, b_2) \\ r(P_1, P_2) \end{matrix} \right)\,,
+\end{equation*}
+где $r(x, y)$ ~--- случайная величина (распределенная по Бернулли):
+\begin{equation*}
+r(x, y) = \left\{ \begin{aligned}
+&x& \text{ с вероятностью } p = \frac13 \,;            \\
+&y& \text{ с вероятностью } p = \frac13 \,;            \\
+&\cfrac{x+y}2& \text{ с вероятностью } p = \frac13 \,; \\
+\end{aligned} \right.
+\end{equation*}
+\item мутация:
+\begin{equation*}
+M(v) = M \left( \begin{matrix} a \\ b \\ P \end{matrix} \right) =
+\left\{ \begin{aligned}
+&v& \text{ с вероятностью } p = \frac23              \,;  \\
+&(r_1, b, P)^\mathrm{T}& \text{ с вероятностью } p = \frac19 \,;  \\
+&(a, r_1, P)^\mathrm{T}& \text{ с вероятностью } p = \frac19\,;  \\
+&(a, b, r_2 )^\mathrm{T}& \text{ с вероятностью } p = \frac19 \,,  \\
+\end{aligned}\right.
+\end{equation*}
+где $r_1$ --- дискретная случайная величина, равномерно распределенная
+на [1, 15]; $r_2$ --- непрерывная случайная величина, равномерно
+распределенная на [0{,}6, 1]. Было проведено вычисление 15 поколений при размере популяции в 10 особей. На рис. \ref{fig:gen} приведен график зависимости максимальной функции качества в популяции от номера поколения в процессе выполнения генетического алгоритма. Лучшей особью в начальной популяции является вектор $v_0 = (5, 5, 0{,}7)^\mathrm{T}$.
 \end{itemize}
+\begin{figure}[H]
+\center{\includegraphics[height=8cm]{\hdir/genetics_graph.eps}}
+\caption{Зависимость максимальной функции качества в популяции от номера поколения}
+\label{fig:gen}
+\end{figure}
 
+В результате работы генетического алгоритма получены следующие параметры:
+\begin{equation*}
+v^* = \left( \begin{matrix} a \\ b \\ P \end{matrix} \right) = \left( \begin{matrix} 10 \\ 7 \\ 0{,}85 \end{matrix} \right); \;\;\; f(v^*) = 0{,}664.
+\end{equation*}
+Строго говоря, утверждать, что данные параметры являются оптимальными,
+нельзя, однако на рис. \ref{fig:gen} видно, что $f(v^*)$ больше, чем
+$f(v_0)$, т.\,е. подбор параметров генетическим алгоритмом улучшил результат. Это так же видно на гистограммах на рис.~\ref{fig:hist}
+(см.\ разд.~5).
+\begin{center}
+\begin{figure}[t]
+\centering
+\subfloat [Параметры $v_0$] {\includegraphics[width = 0.3\textwidth]{\hdir/gamma_res0bad.eps}}
+\hspace{0.1\textwidth}
+\subfloat [Параметры $v^*$] {\includegraphics[width = 0.3\textwidth]{\hdir/gamma_res0good.eps}}
+\caption {Результат работы алгоритма на различных наборах параметров} \label{fig:res0}
+\end{figure}
+\end{center}
 
+\section{Вычислительный эксперимент}
+Метод был реализован в системе Matlab, код реализации находится в общем
+доступе~\cite{Code}. К сожалению, возможности сравнить результаты
+с~результатами других методов пока нет, ввиду отсутствия размеченных баз,
+на которых получены результаты других методов. Данная реализация метода
+была протестирована на базе изображений CASIA \cite{CASIA} с~экспертной
+разметкой границ радужки, незатененного сектора и областей затенения (для
+оценки ошибки). Алгоритм запускался c параметрами: $v_0 =
+(5, 5, 0{,}7)^\mathrm{T}$ и~$v^*$. 
+
+Примеры вывода алгоритмов с параметрами $v_0$ и $v^*$ на одном и том же изображении приведены на рис. \ref{fig:res0}. На рис. \ref{fig:res0} показаны две проблемы алгоритма:
+\begin{enumerate}[1)]
+\item на изображениях виден шум (некоторые отдельные точки радужки классифицируются как затенения и наоборот);
+\item существует проблема с распознаванием век ~--- часть верхнего века мало отличается от радужки.
+\end{enumerate}
+Для компенсации данных недостатков алгоритма применялась
+морфологическая пост\-об\-ра\-бот\-ка. К логическому изображению вывода алгоритма применялись фильтры замыкания и размыкания. Фильтры считались в окнах $7{\times}7$. Точность алгоритма увеличилась после применения фильтра, это видно на рис.~\ref{fig:hist}--\ref{fig:samp3}.
+\nopagebreak
+
+На рис. \ref{fig:hist} представлены гистограммы распределения функционалов
+качества $E$ для каждой из исследуемых модификаций алгоритмов
+на 500 изображениях из базы CASIA~\cite{CASIA}.
+%\nopagebreak
+\begin{figure}[h]
+\centering
+\subfloat [Параметры $v_0$; $\overline{E} = 0{,}524$] {\includegraphics[width = 0.33\textwidth]{\hdir/Bad_hist0.eps}}
+\hfill
+\subfloat [Параметры $v^*$; $\overline{E} \!=\! 0{,}344$] {\includegraphics[width = 0.33\textwidth]{\hdir/Good_hist0.eps}}
+\hfill
+\subfloat [Параметры $v^*$ + фильтр; $\overline{E} = 0{,}286$] {\includegraphics[width = 0.33\textwidth]{\hdir/Dil_hist0.eps}}
+\caption {Гистограммы ошибок для различных модификаций алгоритма} \label{fig:hist}
+\end{figure}
+
+Стоит также заметить, что в экспертной разметке затенений не учитываются блики, в то время как данный алгоритм классифицирует блики как затенения. На некоторых изображениях это приводит к заведомо заниженной оценке точности распознавания.
+
+Далее приведены три примера работы алгоритма с параметрами $v^*$ и применением фильтра.\\
+\noindent \textbf{Пример 1.} На рис. \ref{fig:samp1} показаны результаты
+работы алгоритмов на файле 2003R05.bmp из базы CASIA, изображенном на
+рис.~\ref{fig:samp1},\,\textit{a}. Результат до применения фильтра изображен
+на рис.~\ref{fig:samp1},\,\textit{б}. Результат после применения фильтра
+изображен на рис.~\ref{fig:samp1},\,\textit{в}. Время работы: $ t = 12{,}7~\text{с.}$ Функция ошибки: $E = 0{,}102$.\\
+\begin{figure}[h]
+\centering
+\subfloat [Исходное изображение] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp1_inp.eps}}
+\hfill
+\subfloat [Результат без фильтра] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp1_unfilt.eps}}
+\hfill
+\subfloat [Результат с фильтром] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp1_filt.eps}}
+\caption {Результаты работы на изображении 2003R05.bmp из базы CASIA \cite{CASIA}} \label{fig:samp1}
+\end{figure}
+
+\noindent\textbf{Пример 2.} На рис. \ref{fig:samp2} показаны результаты
+работы алгоритмов на файле 2007R01.bmp из базы CASIA, изображенном на
+рис.~\ref{fig:samp2},\,\textit{a}. Результат до применения фильтра изображен
+на рис. \ref{fig:samp2},\,\textit{б}. Результат после применения фильтра
+изображен на рис.~\ref{fig:samp2},\,\textit{в}.
+Время работы: $ t = 10{,}3$~с. Функция ошибки: $E = 0{,}156$.\\
+\begin{figure}[H]
+\centering
+\subfloat [Исходное изображение] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp2_inp.eps}}
+\hfill
+\subfloat [Результат без фильтра] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp2_unfilt.eps}}
+\hfill
+\subfloat [Результат с фильтром] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp2_filt.eps}}
+\caption {Результаты работы на изображении 2007R01.bmp из базы CASIA \cite{CASIA}} \label{fig:samp2}
+\end{figure}
+\noindent \textbf{Пример 3.} На рис.~\ref{fig:samp3} показаны результаты
+работы алгоритмов на файле 2015R11.bmp из базы CASIA, изображенном на
+рис.~\ref{fig:samp3},\,\textit{a}. Результат до применения фильтра изображен
+на рис.~\ref{fig:samp3},\,\textit{б}. Результат после применения фильтра
+изображен на рис.~\ref{fig:samp3},\,\textit{в}. Время работы: $ t =
+10{,}7~\text{с.}$ Функция ошибки: $E = 0{,}484$. В этом примере сектор $S$ содержит затенения и, как следствие, алгоритм не распознал ресницы, однако тем не менее распознал веки.\\
+\begin{figure}[H]
+\centering
+\subfloat [Исходное изображение] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp3_inp.eps}}
+\hfill
+\subfloat [Результат без фильтра] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp3_unfilt.eps}}
+\hfill
+\subfloat [Результат с фильтром] {\includegraphics[width = 0.33\linewidth]{\hdir/gamma_samp3_filt.eps}}
+\caption {Результаты работы на изображении 2015R11.bmp из базы CASIA \cite{CASIA}} \label{fig:samp3}
+\end{figure}
+
+\section{Заключение}
+Представлен метод, позволяющий с высокой точностью выделять области затенения радужки. Основное преимущество метода состоит в том, что он является полностью автоматическим и не требует ручной разметки для обучающей выборки. Также отличительной чертой является тот факт, что метод строит новый классификатор для каждого изображения, что обеспечивает стабильность работы на изображениях с разной структурой радужки и с разной освещенностью. Скорость работы метода невелика (среднее время работы на одном изображении на выборке CASIA \cite{CASIA} составляет 10~с), однако
+это время можно уменьшить, используя более быстрые языки программирования.
+
+%\bibliographystyle{jmlda_rus.bst}
+%\bibliography{MyBase}
+\renewcommand{\bibname}{Литература}
+\begin{thebibliography}{10}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\selectlanguage{#1}\fi}
+
+\bibitem{conf/icip/Daugman02}
+\selectlanguageifdefined{english}
+\emph{Daugman~J.}
+How iris recognition works~//
+Conference (International) on Image Processing Proceedings. IEEE, 2002. Vol.~1. P.~33--36.
+
+\bibitem{bb95018}
+\selectlanguageifdefined{english}
+\emph{Wildes~R.\,P.}
+Iris recognition: An emerging biometric technology~//
+Proc. IEEE, 1997. Vol.~85. No.\,9. P.~1348--1363.
+
+\bibitem{bb94769}
+\selectlanguageifdefined{english}
+\emph{He~Z.\,F., Tan~T.~N., Sun~Z.~A., Qiu~X.\,C.}
+Robust eyelid, eyelash and shadow localization for iris recognition~//
+15th IEEE Conference (International) on Image Processing Proceedings. IEEE, 2008. P.~265--268.
+
+\bibitem{bb94887}
+\selectlanguageifdefined{english}
+\emph{Krichen~E., Garcia-Salicetti~S., Dorizzi~B.}
+A new probabilistic iris quality measure for comprehensive noise detection~//
+1st IEEE Conference (International) on Biometrics: Theory, Applications, and Systems. IEEE, 2007.
+P.~1--6.
+
+\bibitem{bb95039}
+\selectlanguageifdefined{english}
+\emph{Daugman~J.}
+New methods in iris recognition~//
+IEEE Trans. Syst. Man Cyb., 2007.
+Vol.~37.                    No.\,5. P.~1167--1175.
+
+\bibitem{bb94767}
+\selectlanguageifdefined{english}
+\emph{He~Z.~F., Tan~T.~N., Sun~Z.~A., Qiu~X.~C.}
+Toward accurate and fast iris segmentation for iris biometrics~//
+IEEE Trans. Pattern Anal.,
+2009.
+Vol.~31. No.\,9. P.~1670--1684.
+
+\bibitem{bb94813}
+\selectlanguageifdefined{english}
+\emph{Zhang~D., Monro~D.~M., Rakshit~S.}
+Eyelash removal method for human iris recognition~//
+Conference (International) on Image Processing Proceedings. IEEE, 2006. P.~285--288.
+
+\bibitem{conf/icassp/LiS09}
+\selectlanguageifdefined{english}
+\emph{Li~Y., Savvides~M.}
+A pixel-wise, learning-based approach for occlusion estimation of iris images
+  in polar domain~//
+ICASSP. IEEE, 2009.
+P.~1357--1360.
+
+\bibitem{IrisSeg}
+\selectlanguageifdefined{russian}
+\emph{Ганькин~К.~А., Гнеушев~А.~Н., Матвеев~И.~А.}
+Сегментация изображения радужки глаза, основанная на приближенных методах с
+  последующими уточнениями~//
+Известия РАН. Теория и системы управления,
+2014.   №\,2. С.~80--94.
+
+\bibitem{Code}
+\selectlanguageifdefined{russian}
+\emph{Соломатин~И.~А.}
+Реализация алгоритма выделения областей затенения радужки классификатором
+  локальных текстурных признаков.
+2015.
+  \url{http://svn.code.sf.net/p/mlalgorithms/code/Group274/Solomatin2015EESLocalization/code/}.
+
+\bibitem{CASIA}
+\selectlanguageifdefined{english}
+Chinese Academy of Sciences Institute of Automation. CASIA-IrisV3:
+  CASIA-Iris-Lamp image database.
+\url{http://www.cbsr.ia.ac.cn/IrisDatabase.htm}.
+
+\end{thebibliography}
 
 \renewcommand{\bibname}{References}
-\begin{thebibliography}{11}
-\bibitem{1}
-{Marple, S.\,L., J.} 1986.
-\BibTitle{Digital spectral analysis: With applications}.
-Upper Saddle River, NJ: Prentice-Hall, Inc. 492~p.
+\begin{thebibliography}{10}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\selectlanguage{#1}\fi}
 
-\bibitem{2}
-{Helstrom, C.\,W.}  1960.
-\BibTitle{Statistical theory of signal detection}.
-International ser. of monographs on
-electronics and instrumentation.
-Macmillan. Vol.~9. 364~p.
+\bibitem{conf/icip/Daugman02}
+\selectlanguageifdefined{english}
+Daugman, J.
+2002.
+How iris recognition works.
+\textsl{Conference (International) on Image Processing Proceedings}. IEEE. 1:33--36.
 
-\bibitem{3}
-{Tikhonov,~V.\,I.}  1983.
-\BibTitle{Optimal signal reception}. Moscow: Radio and Communications. 320~p.
+\bibitem{bb95018}
+\selectlanguageifdefined{english}
+Wildes, R.~P.
+1997.
+Iris recognition: An emerging biometric technology.
+\textsl{IEEE Proc.}
+85(9):1348--1363.
 
-\bibitem{8} %4
-{Chigov, A.\,A.} 2010.
-\BibTitle{Superrayleigh resolution. Classical approach to the problem}.
-Moscow: Krasand.   104~p.  (In Russian.)
+\bibitem{bb94769}
+\selectlanguageifdefined{english}
+He, Z.~F., T.~N. Tan, Z.~A. Sun,  and X.~C. Qiu.
+2008.
+Robust eyelid, eyelash and shadow localization for iris recognition.
+\textsl{15th IEEE Conference (International) on Image Processing Proceedings}. IEEE.
+265--268.
 
-\bibitem{10} %5
-{Volkov, V.\,Y., L.\,S.~Turnetskyi, and A.\,V.~Oneshko.}   2011.
-Straight  line edge extraction in noisy images.
-\BibJournal{Informatsionno-upravliaiushchie sistemy~---
-Information and Control Systems} 4(53):13--17.
+\bibitem{bb94887}
+\selectlanguageifdefined{english}
+Krichen, E., S.~Garcia-Salicetti,  and B.~Dorizzi.
+2007.
+A new probabilistic iris quality measure for comprehensive noise detection.
+\textsl{1st IEEE Conference (International) on Biometrics: Theory, Applications, and Systems.}
+1--6.
 
-\bibitem{9} %6
-{Volkov, V.\,Y.} 2013.
-\BibTitle{Discrete filtering techniques and problems of image processing in radio
-engineering observation systems}.  St.\ Petersburg: Saint Petersburg
-University of Telecommunications.   144~p. (In Russian.)
+\bibitem{bb95039}
+\selectlanguageifdefined{english}
+Daugman, J.
+2007.
+New methods in iris recognition.
+\textsl{IEEE Trans.\ Syst.\ Man Cyb.}
+37(5):1167--1175.
 
-\bibitem{6} %7
-{Trifonov, A.\,P., and Yu.\,S. Shinakov.} 1986.
-\BibTitle{Joint signal distinction and their parameter estimation in the presence
-of noise}. Moscow: Radio and Communication.  246~p. (In Russian.)
+\bibitem{bb94767}
+\selectlanguageifdefined{english}
+He, Z.~F., T.~N. Tan, Z.~A. Sun,  and X.~C. Qiu.
+2009.
+Toward accurate and fast iris segmentation for iris biometrics.
+\textsl{IEEE Trans. Pattern Anal.}
+31(9):1670--1684.
 
-\bibitem{13} %8
-{Stoica, P., B.~Ottersten, M.~Viberg, and R.\,L.~Moses.} 1996.
-Maximum likelihood array processing for stochastic coherent sources.
-\BibJournal{IEEE Trans. Signal Proces.}  44(1):96--105.
+\bibitem{bb94813}
+\selectlanguageifdefined{english}
+Zhang, D., D.~M. Monro,  and S.~Rakshit.
+2006.
+Eyelash removal method for human iris recognition.
+\textsl{Conference (International) on Image Processing Proceedings}.
+285--288.
 
-\bibitem{4} %9
-{Troyan, V.\,N., and  Yu.\,V. Kiselev.} 2000.
-\BibTitle{Statistical techniques of processing and interpretation of geophysical
-data}. St.\ Petersburg: St.\ Petersburg Polytechnical University. 578~p. (In Russian.)
+\bibitem{conf/icassp/LiS09}
+\selectlanguageifdefined{english}
+Li, Y.,  and M.~Savvides.
+2009.
+A pixel-wise, learning-based approach for occlusion estimation of iris images
+  in polar domain.
+\textsl{ICASSP}.
+IEEE.
+1357--1360.
 
-\bibitem{5} %10
-{Perov, A.\,I.} 2003.
-\BibTitle{Statistical theory of radio engineering systems}.
-Moscow: Radio Engineering. 400~p.
+\bibitem{IrisSeg}
+\selectlanguageifdefined{english}
+Gankin, K., A.~Gneushev,  and I.~Matveev.
+2014.
+Iris image segmentation based on approximate methods with subsequent
+  refinements.
+\textsl{J.~Comput.\ Sys.\ Sc.\ Int.}
+53(2):224--238.
 
-\bibitem{11} %11
-{Zelniker, E.\,E., and I.~V.\,L.~Clarkson.} 2003.
- Maximum-likelihood  circle-parameter estimation via convolution.
-\BibJournal{7th Conference on Digital Image Computing: Techniques and Applications Proceedings}.
-Eds.\ C.~Sun, H.~Talbot, S.~Ourselin, and T.~Adriaansen.  Sydney. 509--518.
+\bibitem{Code}
+\selectlanguageifdefined{english}
+Solomatin, I.~A.
+2015.
+Algorithm, detecting visible areas of iris by qualifier of local textural
+  features.
+Available at:
+  \url{http://svn.code.sf.net/p/mlalgorithms/code/Group274/Solomatin2015EESLocalization/code/} (accessed January 11, 2016).
 
-\bibitem{12}
-{Babu, P.} 2012.
-Spectral analysis of nonuniformly sampled data and applications.
-Uppsala, Sweden: Uppsala University. Dissertation.
-
-\bibitem{7} %13
-Pachotin, V.\,A., V.\,A.~Bessonov, S.\,V.~Molostova,
-and K.\,V.~Vlasova.  2008.
-\BibTitle{Theoretical fundamentals of optimal signal processing}.
-Kaliningrad.  186~p.
-\end{thebibliography}
-
-\Russian
-\renewcommand{\bibname}{Литература}
-\begin{thebibliography}{11}
-\bibitem{1}
-\BibAuthor{Марпл-мл. С.\,Л.}
-Цифровой спектральный анализ и его приложения~/
-Пер. с англ.~--- М.: Мир, 1990.  584~с.
-(\BibAuthor{Marple~S.\,L.}
-{Digital spectral analysis: With applications}.~---
-Upper Saddle River, NJ, USA: Prentice-Hall, Inc., 1986. 492~p.)
-\bibitem{2}
-\BibAuthor{Хелстром К.}
-Статистическая теория обнаружения сигналов / Пер. с англ.~--- М.: ИЛ, 1963.  432~с.
-(\BibAuthor{Helstrom~C.\,W.}
-{Statistical theory of signal detection}.~---
-International ser. of monographs on
-electronics and instrumentation.~---
-Macmillan, 1960. Vol.~9. 364~p.)
-\bibitem{3}
-\BibAuthor{Тихонов В.\,И.} Оптимальный прием сигналов.~---
-М.: Радио и связь, 1983. 320~с.
-
-\bibitem{8} %4
-\BibAuthor{Чижов А.\,А.} Сверхрэлеевское разрешение. Т.~1:
-Классический взгляд на проблему.~--- М.: КРАСАНД, 2010.
-96~с.; Т.~2: Преодоление фактора некорректности обратной
-задачи рассеяния и проекционная радиолокация.~--- М.: КРАСАНД, 2010. 104~с.
-
-\bibitem{10} %5
-\BibAuthor{Волков В.\,Ю., Турнецкий Л.\,С., Онешко~А.\,В.}
-Выделение прямолинейных кромок на зашумленных изображениях~//
-Информационно-управляющие системы, 2011. Вып.~4(53). С.~13--17.
-
-\bibitem{9} %6
-\BibAuthor{Волков В.\,Ю.}
-Методы дискретной фильтрации и задачи обработки изображений
-в~радиотехнических системах наблюдения.~---  СПб.: СПбГУТ, 2013. 144~с.
-
-\bibitem{6} %7
-\BibAuthor{Трифонов А.\,П., Шинаков Ю.\,С.}
-Совместное различение сигналов и оценка их параметров на фоне помех.~---
-М.: Радио и связь, 1986. 246~с.
-
-\bibitem{13} %8
-\BibAuthor{Stoica P.,  Ottersten B., Viberg M., Moses~R.\,L.}
-Maximum likelihood array processing for stochastic coherent sources~//
-IEEE Trans. Signal Proces., 1996.  Vol.~44. No.\,1. P.~96--105.
-
-\bibitem{4} %9
-\BibAuthor{Троян В.\,Н., Киселев Ю.\,В.}
-Статистические методы обработки и интерпретации геофизических данных.~---
-СПб.: Изд-во С.-Петерб. ун-та, 2000. 578~с.
-
-\bibitem{5} %10
-\BibAuthor{Перов А.\,И.}
-Статистическая теория радиотехнических систем: Учебное пособие для вузов.~---
- М.: Радиотехника, 2003.  400~с.
-
-\bibitem{11} %11
-\BibAuthor{Zelniker E.\,E.,  Clarkson~I.\,V.\,L.}
-Maximum-likelihood circle-parameter estimation via convolution~//
-7th Conference on Digital Image Computing: Techniques and Applications Proceedings~/
-Eds. C.~Sun, H.~Talbot, S.~Ourselin, T.~Adriaansen.~--- Sydney, 2003.
-P.~509--518.
-\bibitem{12} %12
-\BibAuthor{Babu P.}
- Spectral analysis of nonuniformly sampled data and applications.~---
-Uppsala, Sweden: Uppsala University,  2012. Dissertation.
-
-\bibitem{7} %13
-\BibAuthor{Пахотин~В.\,А., Бессонов~В.\,А., Молостова~С.\,В., Власова~К.\,В.}
-Теоретические основы оптимальной обработки сигналов.~---
-Калининград: Изд-во РГУ им.\ И.~Канта, 2008.  186~с.
+\bibitem{CASIA}
+\selectlanguageifdefined{english}
+CASIA.
+Chinese Academy of Sciences Institute of Automation. CASIA-IrisV3:
+  CASIA-Iris-Lamp image database.
+Available at: \url{http://www.cbsr.ia.ac.cn/IrisDatabase.htm}  (accessed January 11, 2016).
 
 \end{thebibliography}
 
+
+
+% Решение Программного Комитета:
+%\ACCEPTNOTE
+%\AMENDNOTE
+%\REJECTNOTE
 \end{document}
+
