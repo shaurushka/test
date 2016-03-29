@@ -1,578 +1,613 @@
-\documentclass[12pt, twoside]{article}
+\documentclass[12pt,twoside]{article}
+
 \usepackage{jmlda}
+
+\usepackage{etex}
+%\usepackage[printwatermark]{xwatermark}
+
 \newcommand{\hdir}{.}
-\renewcommand{\hdir}{Yankovskaya2015Prism}
+
+\begin{document}
+
+%\newwatermark[oddpages,fontfamily=ccr,color=gray!25,angle=45,scale=3, xpos=0,ypos=0]{Proofreading\\ stage}
+
+
+\English
 
 %\NOREVIEWERNOTES
 \title
-    [2-симплекс призма~--- когнитивное средство принятия и обоснования решений] % Краткое название; не нужно, если полное название влезает в~колонтитул
-    {2-симплекс призма~--- когнитивное средство принятия и обоснования решений в~интеллектуальных динамических системах}
+    %[Шаблон статьи для публикации] % Краткое название; не нужно, если полное название влезает в~колонтитул
+    {Estimation of radio impulse parameters using~the~maximum~likelihood method}
 \author
-    %[А.\,Е.~Янковская, А.\,В.~Ямшанов, Н.\,М.~Кривдюк] % список авторов для колонтитула; не нужен, если основной список влезает в колонтитул
-    {А.\,Е.~Янковская, А.\,В.~Ямшанов, Н.\,М.~Кривдюк} % основной список авторов, выводимый в оглавление
-    [А.\,Е.~Янковская$^{1,2,3,4}$, А.\,В.~Ямшанов$^4$, Н.\,М.~Кривдюк$^4$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
+    %[И.\,О.~Автор] % список авторов для колонтитула; не нужен, если основной список влезает в колонтитул
+    {K.\,V. Vlasova, V.\,A. Pachotin, D.\,M. Klionskiy, and~D.\,I.~Kaplun} % основной список авторов, выводимый в оглавление
+    [K.\,V.~Vlasova$^1$, V.\,A.~Pachotin$^2$, D.\,M.~Klionskiy$^3$,
+and~D.\,I.~Kaplun$^3$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
 \thanks
-    {Работа поддержана грантами РФФИ (проекты \No\No\,13-07-00373, 13-07-98037
-и~14-07-00673) и частично РГНФ (проект \No\,13-06-00709).}
+    {The work is supported by the grant of the Russian Foundation for
+Basic Research No.\,15-37-50902 and Contract No.\,02.G25.31.0058 dated 12.02.2013 (Ministry of Education and Science of Russian Federation).}
 \email
-    {ayyankov@gmail.com, yav@keva.tusur.ru, skratnat@gmail.com}
+    {p\_ksenia@mail.ru, VPakhotin@kantiana.ru, klio2003@list.ru, dikaplun@etu.ru}
 \organization
-    {$^1$Томский государственный архитектурно-строительный университет,
-г. Томск, пл. Соляная 2\par
- $^2$Томский государственный университет, г. Томск, пр. Ленина, 36\par
-$^3$Сибирский государственный медицинский университет, г. Томск, Московский
-тракт, 2\par
-$^4$Томский государственный университет систем управления и радиоэлектроники, г.~Томск,~пр.~Ленина,~40}
-\abstract
-{
-  Для ряда проблемных и междисциплинарных областей, таких как медицина, биомедицина, экогеология, образование, дорожное строительство, впервые в интеллектуальных динамических системах предлагается для принятия и обоснования решений применять оригинальное когнитивное средство~---
-2-симплекс призму.
-  Идея применения $n$-симплексов, теорема для принятия и обоснования решений
-на основе $n$-симплексов и использование ее в интеллектуальных системах (ИС)
-впервые предложены А.\,Е.~Янковской в 1990 г.
-  Описывается применение 2-симплекс призмы для принятия и обоснования решений в интеллектуальных динамических системах, основанных на тестовых методах распознавания образов, нечеткой и пороговой логиках.
-
-  \bigskip
-  \noindent
-  \textbf{Ключевые слова}: \emph {2-симплекс призма; n-симплекс; когнитивное средство; принятие решений; обоснование решений; интеллектуальные системы; интеллектуальные динамические системы; тестовые методы распознавания образов; нечеткая логика; пороговая логика; области применения 2-симплекс призмы}
+    {$^1$Baltic Fishing Fleet State Academy, Russian Federation, Kaliningrad\par
+	$^2$Immanuel Kant Baltic Federal University, Russian Federation, Kaliningrad\par
+	$^3$Saint Petersburg Electrotechnical University ``LETI,'' Russian Federation, Saint Petersburg
 }
-\titleEng
-    {2-simplex prism~--- a cognitive tool for decision-making and~its~justifications in intelligent dynamic systems}
-\authorEng
-    {A.\,E.~Yankovskaya$^{1,2,3,4}$, A.\,V.~Yamshanov$^4$, N.\,M.~Krivdyuk$^4$}
-\organizationEng
-    {$^1$Tomsk State University of Architecture and Building, 2 Solyanaya Sq., Tomsk, Russia\par
-$^2$Tomsk State University, 36~Pr. Lenina, Tomsk, Russia\par
-$^3$Siberian State Medical University, 2~Moskovskiy trakt, Tomsk, Russia\par
- $^4$Tomsk State University of Control Systems and Radioelectronics,
-40~Pr. Lenina, Tomsk, Russia}
-\abstractEng
-{
-  \noindent
-  The cognitive tool 2-simplex prism is first proposed for application at decision-making and its justification in intelligent dynamic systems for different problem areas: medicine, biomedicine, ecogeology, education, road building etc.
-  The idea of n-simplex application, the theorem for decision-making and its justification for intelligent systems proposed by A. Yankovskaya in 1990 year.
-  Usage of 2-simplex prism for application at decision-making and its justification in intelligent dynamic systems based on test methods of pattern recognition and methods of fuzzy and threshold logics is described.
+\abstract
+    {\noindent
+The paper is devoted to the development of an algorithm for resolution and parameter estimation of radio impulses with partially overlapping spectra in the area of their
+nonorthogonality (the correlation coefficient varies from 0 to 0.9). The implementation of the suggested algorithm makes it possible to design filters for resolving frequency-dependent signals and,
+ therefore, to increase the capacity of a communication channel.
+The maximum likelihood method has been used
+to obtain analytical expressions and to perform model investigations for frequency resolution of
+nonorthogonal signals. The dynamic range of signal parameter estimates has been found as a function of signal-to-noise ratio and correlation coefficient.
+It has been shown that the likelihood functional value in its global minimum allows
+one to estimate noise variance and the number of radio impulses in a received signal.
+	
 
-  \bigskip
-  \noindent
-  \textbf{Keywords}: \emph{2-simplex prism; n-simplex; cognitive tool; decision-making; justification; intelligent systems; intelligent dynamic systems; test methods of pattern recognition; fuzzy logic; threshold logic; areas of 2-simplex prism application}}
+\noindent
+\textbf{Keywords}: \emph{maximum-likelihood method; radio impulse, resolution;
+frequency-dependent signal; communication channel; nonorthogonal signals;
+signal-to-noise ratio}
+}
 
-\begin{document}
- \maketitle
+
+\titleRus
+    {Оценивание параметров радиоимпульса с~использованием метода максимального правдоподобия}
+\authorRus
+    {К.\,В.~Власова$^1$, В.\,А.~Пахотин$^2$, Д.\,М.~Клионский$^3$, Д.\,И.~Каплун$^3$}
+\organizationRus
+    {$^1$Балтийская государственная академия рыбопромыслового флота, г. Калиниград, Россия\par
+ $^2$Балтийский федеральный университет имени Иммануила Канта,  г. Калиниград, Россия\par
+    $^3$Санкт-Петербургский государственный электротехнический университет <<ЛЭТИ>>,
+г.~Санкт-Петербург, Россия}
+\abstractRus
+    {
+		Статья посвящена разработке алгоритма для разрешения и оценивания параметров радиоимпульсов с частично перекрывающимися спектрами в области их неортогональности (коэффициент корреляции изменяется в пределах от 0 до 0,9).
+Предложенный алгоритм позволяет проектировать фильтры для разрешения частотно-зависимых сигналов и, как следствие, появляется возможность повышения пропускной способности канала связи. В~статье использован метод максимального правдоподобия
+для получения аналитических выражений и проведения модельных исследований для частотного разрешения неортогональных сигналов. Динамический диапазон оценок параметров сигналов был определен как функция отношения сигнал/шум и коэффициента
+корреляции. Показано, что значения функционала правдоподобия в точке
+глобального минимума позволяют оценить дисперсию шума и количество радиоимпульсов в принятом сигнале.
+		
+		\bigskip
+\noindent
+		\textbf{Ключевые слова}: \emph {метод максимального правдоподобия; радиоимпульс; разрешение; частотно-зависимый сигнал; канал связи, неортогональные сигналы; отношение сигнал/шум}
+}
+
+\maketitle
+
 %\linenumbers
 
-\section{Введение}
-Когнитивная графика как научное направление, связанное с принятием
-и обоснованием решений в ИС, начала развиваться с~1970-х~гг.
-Значительный вклад в развитие когнитивных средств внесли R.~Axelrod~\cite{axelrod1976structure},
-R.\,G.~Basaker и~T.\,L.~Saati~\cite{basaker1965graph}, Д.\,А.~Поспелов
-с~соавт.~\cite{pospelov1992cognitive,pospelov1996hotspot,pospelov1996combine},
-А.\,А.~Зенкин~\cite{zenkin1991cognitive,zenkin1996cognitive},
-В.\,А.~Албу и~В.\,Ф.~Хорошевский~\cite{albu1990cogr},
-Б.\,А.~Кобринский~\cite{kobr1996imaginary}, А.\,Е.~Янковская
-с~соавт.~\cite{yank1997decision,yank2009networks,yank2010vizualization}.
+\section{Introduction}
+\noindent
+The paper discusses the problem of estimating parameters of a set of radio impulses with close frequencies. Their spectra partially overlap so that it is difficult to determine the precise number of radio impulses and estimate their parameters using the Rayleigh criterion. In this case,
+ radio impulses are nonorthogonal in the frequency domain so that
+one can consider several radio impulses orthogonal if their spectra satisfy the Rayleigh criterion.
+It is necessary to determine amplitudes and frequencies of a set of
+nonorthogonal radio impulses when the reception moment is known
+and their duration.
 
-Растущий интерес к разработке и использованию прикладных ИС стимулирует спрос на создание графических, включая когнитивные, средств визуализации различных информационных структур, выявленных закономерностей, а также принятия и обоснования решений.
-Графические изображения на экране компьютера упрощают восприятие и понимание закономерностей в данных и знаниях.
+Modern radio systems function according to the analysis of orthogonal signals.
+Active pulse radar systems can be used for estimating the parameters of two or
+even greater number of targets, if their correlation functions do not overlap,
+i.\,e., when they are orthogonal relative to the reception moment. It is possible
+in spectroscopy to separate two spectral lines, if the Rayleigh criterion is
+satisfied (i.\,e., orthogonality in the frequency domain is observed). At
+present, if the orthogonality is not satisfied, this might result in gross errors in signal parameter estimation or a failure in signal detection.
 
-В настоящее время средства когнитивной графики широко используются в
-различных ИС для решения разнообразных задач для проблемных и междисциплинарных
-областей: медицина, образование, геология, проектирование, радиоэлектроника,
-социология, психология, психиатрия, экобиомедицина, экогеология и др.
-Средства когнитивной графики широко применяются в разнообразных ИС:
-для анализа информационных структур, выявления различного рода закономерностей
-в~данных и~знаниях, принятия и~обоснования принятия результатов решения;
-в~интеллектуальных обучающе-тестирующих системах: для визуализации
-и~прогнозирования результатов процесса обучения, для оптимизации учебного
-процесса и~др.
+Nowadays, there are several techniques applied in practice for improving the
+quality of signal parameter estimation due to a better resolution: Prony
+technique, MUSIC, etc.~\cite{1}. The most widely used techniques are based
+on the optimal reception theory \cite{2,3}. However, the implementation of
+the aforementioned techniques is connected with a number of
+difficulties~\cite{8, 9, 10}. The problem of signal parameter
+estimation and resolution of such signals within the scope of the
+optimal reception theory can be handled only when the signals under
+study are orthogonal~\cite{4, 5, 6, 11, 12, 13}. However, when one
+works in the area of signal nonorthogonality, the logarithm of the likelihood function has a complex structure with a lot of local minima and its minimization is ambiguous.
 
-Весьма актуальным является применение когнитивных средств для анализа
-и~визуализации динамических процессов при принятии и обосновании решений.
-Например, преподавателю необходимо учитывать полученные респондентами
-в~ходе обучения результаты, для постановки итоговой оценки или врачу
-для отслеживания осуществленных мероприятий
-в~ходе лечения пациентов в целях успешного лечения.
-Применение когнитивной графики при принятии решений существенно упрощает анализ информации и способствует принятию оптимального решения.
+Let us employ the results of the optimal reception theory, which were
+developed and extended for the area of signal nonorthogonality.
+The present authors suggest the solution of this problem for nonorthogonal
+signals using the logarithm of the likelihood function transformed by the
+system of likelihood equations obtained for energetic signal parameters~\cite{7}.
+As a result of this transform, minimization of the logarithm of the likelihood function proves to be ambiguous. The logarithm of the likelihood function (after transformation) presents a surface in a multidimensional space of
+nonenergetic signal parameters. The minimum of this surface is the base for estimating both
+nonenergetic and energetic signal parameters. The minimum of the surface of the logarithm of the likelihood function for a set of signals is the same and,
+ therefore, the term ``resolution of similar signals'' is not used and one
+ can solve the problem of signal parameter estimation in the area of their nonorthogonality.
 
-Предлагаемая статья является продолжением исследования применения когнитивных
-средств, основанных на $n$-симплексе \cite{yank2000mirror,yank2004optimization}.
-Несомненным преимуществом когнитивных средств, основанных на $n$-симплексе,
-является инвариантность к проблемным областям.
-Отметим, что целесообразно создание средств когнитивной графики
-с использованием современных технологий и с учетом всех доступных платформ:
-desktop-приложения (приложения для настольного персонального
-компьютера), приложения для смартфонов и~планшетов, WEB-при\-ло\-жения.
-
-Ниже описываются математические основы представления исследуемого объекта
-в~\mbox{2-симп}\-лек\-се и основы представления исследуемого объекта (процесса)
-на базе \mbox{2-симп}\-лекс призмы; приводятся примеры применения 2-симплекс призмы
-в~разработанных, а~также разрабатываемых ИС; предлагаются дальнейшие направления исследований.
-
-\section{Математические основы представления исследуемого объекта в 2-симплекс призме}
-В основе принятия и обоснования решений, а также графической визуализации
-правильного $n$-симплекса лежит следующая теорема, сформулированная
-в~\cite{yank1991transformation,kondr1992triang}.
-
-\textbf{Теорема}.
-Для любого набора одновременно не равных нулю чисел \(a_1, a_2, …, a_{n+1}\),
-где \(n\)~--- размерность правильного $n$-симплекса,
-можно найти одну и только одну такую точку, что
-\(h_1:h_2:\cdots:h_{n+1} = a_1:a_2:\cdots: a_{n+1}\), где $h_i,
-(i = 1, \dots, n + 1)$~--- расстояние этой точки до \(i\)-й
-грани~\cite{yank1991transformation,kondr1992triang}.
-Коэффициент $a_i, (i = 1, \dots, n + 1)$ представляет собой степень условной близости исследуемого объекта к \(i\)-му образу.
-
-Эта теорема использовалась при построении более чем тридцати прикладных
-интеллектуальных системах и трех инструментальных средств, предназначенных
-для выявления различного рода закономерностей и принятия диагностических,
-организационно-управ\-лен\-че\-ских и классификационных решений, для принятия решения и их обоснования.
-
-Далее приведем соотношения между коэффициентами и высотами для 2-симплекса.
-Поскольку 2-симплекс обладает свойством постоянства суммы расстояний (\(h\)) из любой точки до его граней и свойством сохранения отношений между этими расстояниями \(h_1:a_1=h_2:a_2=h_3:a_3\), то расстояния \(h_1, h_2, h_3\) от точки до сторон треугольника вычисляются на основе коэффициентов \(a_i (i \in {1, 2, 3})\) и операции нормализации исходя из следующих соотношений:
-
-\begin{equation*}
-\begin{array}{l}H = \sum\limits_{i=1}^{3} h_i; \\
-H = A \sum\limits_{i=1}^{3} a_i; \\
-\displaystyle\frac{h_1}{a_1} = \displaystyle\frac{h_2}{a_2} = \displaystyle\frac{h_3}{a_3}\end{array}
-\end{equation*}
-по формуле:
-\begin{equation*}
-h_i = A  a_i,\quad i \in \{1, 2, 3\}.
-\end{equation*}
-
-Когнитивное средство «2-симплекс призма» представляет собой правильную
-треугольную призму, содержащую в основаниях и срезах 2-симплексы,
-зафиксированные в конкретные моменты времени.
-В целях вычисления расстояния от основания призмы до \mbox{2-симп}\-лек\-са
-\(h_2\) введем следующие параметры: $H_2$~--- высота 2-симплекс призмы,
- задаваемая пользователем и сопоставленная продолжительности исследования;
-\(t\)~--- момент фиксации параметров исследуемого объекта;
-$T_{\min}$~--- момент первой фиксации параметров исследуемого объекта;
-$T_{\max}$~--- момент последней фиксации параметров исследуемого объекта.
-Расстояние $h_2$ вычисляется по следующей формуле:
-                \begin{equation*}
-h_2 = H_2  \frac{t - T_{\min}}{T_{\max} - T_{\min}}.
-\end{equation*}
-
-\section{Применение 2-симплекс призмы в различных проблемных областях}
-Когнитивное средство 2-симплекс призма предназначено для применения в различных проблемных и междисциплинарных областях.
-Рассмотрим примеры применения \mbox{2-симп}\-лекс призмы в различных областях:
-(1)~диагностики и интервенции организационного стресса (ОС);
-(2)~экспресс-диагностики и профилактики депрессии; (3)~образовании.
-
-Рассмотрим пример диагностики и интервенции ОС с использованием 2-симплекс
-призмы в ИС экспресс-диагностики и интервенции ОС (ДИОС) \cite{yank2012dios},
-основанной на идее трехступенчатой диагностики и выбора интервенции на базе
-сконструированного авторами опросника \cite{yank2012dios, kornetov2011dios}
-по каждой из трех стадий ОС (1~--- напряжения; 2~--- адаптации; 3~---
-истощения) и базируемой на пороговой и нечеткой
-логиках~\cite{beck1961depression, zadeh1994fuzzy}.
-Идея трехступенчатой диагностики ОС позволяет в более короткие сроки оказывать дифференцированную помощь при наличии ОС у обследуемых.
-
-Для экспресс-диагностики ОС используется опросник, включающий вопросы по трем
-стадиям ОС: 1~--– напряжения (возбуждения); 2~--– адаптации
-(сохранения энергии); 3~--– истощения.
-В основе опросника лежит концепция Г.~Селье~\cite{selye1936diverse}.
-В 1-й и~2-й стадиях используется 7 признаков (симптомов) для выявления ОС;
-в 3-й стадии~--- 8 признаков, причем количество значений каждого признака
-равно 5 (никогда~--- 0; редко~--- 0,25; иногда~--- 0,5; часто~--- 0,75;
-постоянно~---~1).
-
-После проведения тестирования система обрабатывает анкету исследуемого и выдает результаты диагностики ОС по каждой из стадий.
-Полученные результаты передаются в модуль когнитивной графики.
-В случае если не предусмотрено исследование динамики развития ОС,
-то для принятия и обоснования используется когнитивное средство \mbox{2-симп}\-лекс.
-Если необходимо наблюдение в динамике за обследуемым, то используется
-\mbox{2-симп}\-лекс призма.
-Отображаемая динамика результатов по диагностике ОС с применением 2-симплекс призмы позволяет определить степень близости к тому или иному диагнозу на каждом этапе лечения.
-
-2-симплекс призма одновременно отображает только три образа, однако ИС ДИОС выявляет как 3 стадии ОС (возбуждения, адаптация, истощение), так и отсутствие стресса.
-В связи с этим предлагается для отображения динамики использовать две 2-симплекс призмы: первая предназначена для отображения динамики для трех стадий ОС (рис. 1), вторая~--- для отображения двух первых стадий и факта отсутствия стресса (рис. 2).
-Отметим, что если у обследуемого история развития болезни укладывается в рамки диагнозов, сопоставленных сторонам одной из двух 2-симплекс призм, то целесообразно использовать только одну призму.
-Также заметим, что в 2-симплекс призме используются когнитивные свойства, представленные цветовой палитрой для отображения опасности диагнозов и сопоставляемых им образов,
-например красным цветом отображается самая тяжелая стадия ОС~--- истощение.
-Кроме того, поскольку рис. 1 и 2 используют перспективную проекцию, может создаться ощущение, что линии, соединяющие точки и грани, не перпендикулярны граням.
-\begin{figure}[b]
-\centering
-\includegraphics{\hdir/prism_dios}
-\caption{Отображение результатов четырех тестов диагностики ОС в 2-симплекс призме}\end{figure}
-
-Представим иллюстративный пример, когда история развития болезни не укладывается в рамки диагнозов, сопоставленных сторонам одной 2-симплекс призмы, а необходимо использовать две 2-симплекс призмы.
-При этом проведено 5 тестов по определению стадии ОС.
-В первой 2-симплекс призме отображены результаты 1-, 2-, 3- и~4-го тестов, во
-второй 2-симплекс призме отображены результаты 3-, 4- и~5-го тестов.
-На рис. 1 представлена 2-симплекс призма, отображающая первую часть лечения обследуемого со стадии истощения (3) до стадии возбуждения (1).
+The solution of the signal parameter estimation problem depends on the determinant of
+a~correlation matrix when the Rao--Kramer variance estimate is obtained.
 
 
-Первый тест (\(T_1\)) выявил у обследуемого стадии адаптации (2) и истощения (3), причем стадия истощения преобладает над стадией адаптации и существенно преобладает над стадией возбуждения (1).
-Второй тест (\(T_2\)) выявил, что болезнь развивается от стадии истощения (3) к стадии адаптации (2).
-Третий тест (\(T_3\)) выявил, что болезнь развилась до уровня, находящегося между стадией адаптации (2) и возбуждения (1).
-Четвертый тест (\(T_4\)) выявил преобладание стадии возбуждения (1).
+\section{Theoretical Background}
 
-Вторая 2-симплекс призма (см.\ рис. 2) отображает процесс перехода от
-стадии адаптации~(2) к отсутствию стресса (0).
+\noindent
+This section contains the main analytical expressions for an algorithm for processing a set of
+nonorthogonal (in the frequency domain) radio impulses based on the transformed likelihood functional.
+Two radio impulses are used to obtain certain expressions for calculating amplitude variances. These variances were used for estimating the application area of the algorithm depending on the correlation coefficient between the signals.
+
+Consider a received signal consisting of $N$  radio impulses in the complex form:
+\begin{align}
+\hat{y}(t) = \sum_{n = 1}^{N} \hat{U}_n e^{i \omega_n t} + U_n(t)
+\label{eq:eq1}
+\end{align}
+where
+$\hat{U}_n$ is the complex amplitude of the $n$th radio impulse;
+$\omega_n$ is the circular frequency of the $n$th radio impulse;
+and $U_n (t)$ is the additive Gaussian noise with the mean value equal to zero, variance equal to $\sigma^2$ and the correlation interval equal to $\tau_k$.
+
+Using \eqref{eq:eq1}, one can obtain the logarithm of the likelihood function:
+\begin{align}
+\ln L(\vec{\acute{\lambda}})
+= - \frac{1}{2 \sigma^2 \tau_k} \int\limits_0^T \left| \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right|^2 dt
+= - \frac{1}{2 \sigma^2 \tau_k} \Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n)
+\label{eq:eq2}
+\end{align}
+where
+$\vec{\acute{\lambda}}$ is the vector of the estimated parameters of radio
+impulses;
+$\Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n)$ is the likelihood functional;
+$T$ is the duration of the received signal; and
+the dashes on top of the variables correspond to the parameters that have to be estimated.
+The received message $\hat{y}(t)$ corresponds to the mathematical model of a signal with $N$ copies differing by $\acute{\omega}_1, \dots, \acute{\omega}_N$.
+The energy of the message depends on complex amplitudes of radio impulses $\widehat{\acute{U}}_n$ and does not depend on other parameters  $(\acute{\omega}_1, \dots, \acute{\omega}_N)$.
+Therefore, one can consider complex amplitudes to be energetic parameters
+and frequencies~--- nonenergetic parameters.
+
+Minimization of \eqref{eq:eq2} is ambiguous due to variability of amplitudes and frequencies of radio impulses, which leads to ambiguity in the solution of the system of likelihood equations in the area of
+nonorthogonality. The surface of functional \eqref{eq:eq2} has many local minima, which makes it difficult to estimate the parameters of the received message.
+If it is necessary to obtain one minimum of the likelihood surface,
+Eq.~\eqref{eq:eq2} should be transformed
+in order to exclude energetic parameters from the minimization process.
+
+Amplitude exclusion requires one to differentiate \eqref{eq:eq2} and then
+solve the corresponding equation. As a result, one will have a system of likelihood equations:
+\begin{equation}
+\left.
+\begin{array}{c}
+\int\limits_0^T \left( \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right) e^{-i \acute{\omega}_1 t}\, dt = 0\,; \\[3pt]
+\dots\dots\dots\dots\dots\dots\dots\dots\dots\dots\,; \\[3pt]
+\int\limits_0^T \left( \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right) e^{-i \acute{\omega}_N t}\, dt = 0\,.
+\end{array}
+\right\}
+\label{eq:eq3}
+\end{equation}
+These equations can be used to find the amplitudes of $N$ radio impulses,
+which depend on the estimated frequencies $\acute{\omega}_1, \dots,
+\acute{\omega}_N$. Now, designate the amplitudes as $\widehat{\acute{U}}1_n$.
+
+The likelihood functional can also be written in the following form:
+\begin{align*}
+\Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n)
+&= \int\limits_0^T \left| \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right|^2 dt = \nonumber \\
+&= \int\limits_0^T \left( \hat{y}(t) - \sum_{n = 1}^{N} \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right)
+\left( \hat{y}^*(t) - \widehat{\acute{U}}^*_n e^{i \acute{\omega}_1 t} - \dots - \widehat{\acute{U}}^*_n e^{i \acute{\omega}_N t}\right) dt\,.
+%\label{eq:eq4}
+\end{align*}
+
+After certain transformations, one arrives at
+\begin{align*}
+\Delta(\widehat{\acute{U}}_n, {\acute{\omega}}_n) =
+\int\limits_0^T | \hat{y}(t) |^2 -
+\int\limits_0^T \left( \hat{y}^*(t) \sum_{n = 1}^N  \widehat{\acute{U}}_n e^{i \acute{\omega}_n t} \right) dt
+%\label{eq:eq5}
+\end{align*}
+where the asterisk means complex conjugate.
+
+However, system \eqref{eq:eq3} can be used for finding the amplitudes of radio impulses $\widehat{\acute{U}}_n$ depending on the frequency estimates  $\acute{\omega}_1, \dots, \acute{\omega}_N$.
+These amplitudes can be designated as  $\widehat{\acute{U}}1_n$.
+Now, one can write the transformed likelihood functional
+\begin{align}
+\Delta({\acute{\omega}}_n) = \int\limits_0^T | \hat{y}(t) |^2 -
+\int\limits_0^T \left( \hat{y}^*(t) \sum_{n = 1}^N  \widehat{\acute{U}}1_n e^{i \acute{\omega}_n t} \right) dt\,,
+\label{eq:eq6}
+\end{align}
+depending on only nonenergetic radio impulse parameters, i.\,e.,
+ the estimated frequencies~$\acute{\omega}_1, \dots, \acute{\omega}_N$.
+Therefore, the surface will have only one global minimum indicating the
+estimated frequency values  $\acute{\omega}_1, \dots, \acute{\omega}_N$.
+Substituting them in the likelihood system~\eqref{eq:eq3}, one can estimate the amplitude values $\widehat{\acute{U}}_n$.
+
+If the number of radio impulses in the received signal and
+in the signal model is the same, the likelihood functional~\eqref{eq:eq6}
+determines the noise variance in the received message. However, in practice,
+the apriori information on the expected number of radio impulses
+is not always available. This fact can be illustrated using the
+following example. In communications applications, one can receive two or a greater number of radio impulses with unknown frequencies. The number of radio impulses is also unknown and they have to be resolved. Another example is related to radio spectroscopy, where the number of spectral lines is unknown. The spectral lines can be orthogonal or
+nonorthogonal. These examples confirm the necessity of estimating the number of radio impulses in the received message.
+The present authors suggest an algorithm based on changing the number of signal copies $N$  in the mathematical model and finding the values of the likelihood functional \eqref{eq:eq6} in its minimum.
+
+If the number of signal copies  $N$ in the mathematical model is greater than the number of radio impulses in the received message, the amplitudes of extra components are close to zero since they are determined by separate noise maxima. The minimal value of likelihood \eqref{eq:eq6} will be determined by the noise variance.
+
+If the number of signal copies  $N$ is smaller than in the received message, the value of the likelihood functional rises dramatically since it determines the noise variance in the received message and the radio impulses which are not included in the model.
+
+Thus, processing the received message requires one to increase the number of
+signal copies~$N$ till the minimum value of the likelihood functional stops decreasing.
+
+Evaluation of the quality of the solution in the optimal reception theory is
+based on estimating variances using Rao--Kramer estimates. Consider two radio
+impulses in a data set starting at the same time point. One
+can estimate the variance of radio impulse amplitudes in the
+minimal point of the likelihood functional for $\acute{\omega}_1 = \omega_1$ and
+$\acute{\omega}_2 = \omega_2$.
+By computing the elements of the Fisher information matrix
+according to the expression
+\begin{align*}
+J_{ij} = - M \left( \frac{d^2 \ln L(\vec{\acute{\lambda}})}{d \lambda_i \lambda_j} \right),
+%\label{eq:eq7}
+\end{align*}
+one can find a new matrix consisting of the elements
+\begin{align*}
+J_{ij} = \int\limits_0^T e^{i(\acute{\omega}_i - \acute{\omega}_j)t} \,dt\,.
+%\label{eq:eq8}
+\end{align*}
+These are complex correlation coefficients between the radio impulses. The diagonal elements of a matrix, which is inverse to the Fisher information matrix, define the variances of radio impulse amplitudes. The inverse matrix has the following form:
+
+\begin{align*}
+\hat{D}_U = \frac{A_{ij}}{\det \hat{J}}
+%\label{eq:eq9}
+\end{align*}
+where $A_{ij}$ is the algebraic adjunct for the element of the Fisher matrix
+with the indices $i,\,j$ and $\det \hat{J}$ is the determinant of the Fisher information matrix.
+
+Thus, the variance of radio impulse amplitudes is determined by $\det \hat{J}$ of the Fisher information matrix.
+In the case of two radio impulses, the amplitude variance will have the following form:
+\begin{align*}
+D_{U_1} = D_{U_2} = \frac{\sigma^2}{K (1 - |\hat{r}|^2)}
+%\label{eq:eq10}
+\end{align*}
+where $K$ is the number of noncorrelated noise samples on the processing
+interval $T$ and~$\hat{r}$ is the normalized correlation coefficient between radio impulses.
+
+
+If $|\hat{r}| = 0$, the amplitude variance will have the following form:
+\begin{align*}
+D_{U_0} = \frac{\sigma^2}{K}\,.
+%\label{eq:eq11}
+\end{align*}
+
+
+Now, let us introduce the normalized variance:
+\begin{align*}
+D = \frac{D_U}{D_{U_0}} = \frac{1}{1 - |\hat{r}|^2}\,.
+%\label{eq:eq12}
+\end{align*}
+\begin{figure}[H] %fig1
+\centering{\includegraphics[height = 7cm, width = 0.6\linewidth, trim = 0 40 0 20]{\hdir/fig1_ed.eps}}
+\caption{Relative variance vs.\ normalized correlation coefficient.
+Relative variance increases by~\mbox{$\sim 7$}~dB in the range $|\hat{r}| = 0$--0.9;
+ when $|\hat{r}| >0.9$, the relative variance rises dramatically}
+\label{fg:fig1}
+\end{figure}
+This expression is characterized by the fact that for $|\hat{r}| = 0$--0.9,
+ the changes of the relative variance are approximately $7$ dB.
+In the area where $|\hat{r}| > 0.9$, the relative variance grows
+abruptly as shown in Fig.~\ref{fg:fig1}.
+Thus, if a signal contains two radio impulses, the problem of radio impulse parameter estimation will be solved for the following range of the normalized correlation coefficient: $| \hat{r} | = 0$--0.9.
+
+
+\section{Model Investigations}
+
+\noindent
+This section is devoted to studying the problem of estimating the parameters of two radio impulses in the area of their
+nonorthogonality using the maximum likelihood technique and spectral analysis.
+It will be shown that the maximum likelihood technique can be used for solving this problem in the area of
+nonorthogonality. The results of the experiments are provided to estimate
+the quality of the solution depending on the signal-to-noise ratio and
+correlation coefficient between two radio impulses.
+The estimation of the noise variance in the received message
+is illustrated using the dataset (the functional value in its minimum).
+
+Model investigations have been carried out for a realization containing two radio impulses combined in the time domain.
+The radio impulses have the following parameters: amplitudes $U_1=2$ and
+$U_2=1$; initial phases $\varphi_1 = 10^\circ$ and $\varphi_2= 170^\circ$;
+frequencies $f_1=2$~kHz and $f_2$\linebreak $ = 2.08$~kHz; signal-to-noise ratio is $20$~dB;
+and radio impulse duration is $25$~ms. The Rayleigh restriction for radio impulse resolution arises when the frequencies become close by $\Delta f = 40$~Hz.
+
+
+
+Figure~\ref{fg:fig2} shows the normalized correlation coefficient vs.\ the frequency difference $\Delta f$ between two signals.
+When $\Delta f = 40$ and  80~Hz, the correlation coefficient is equal to zero and the signals are orthogonal.
+The values $\Delta f < 40$~Hz correspond to the signal nonorthogonality area. The correlation coefficient values different from zero for $\Delta f > 40$~Hz are caused by side lobes of the signal spectrum.
+\begin{figure}[h]
+\centering{\includegraphics[height = 8cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig2_ed.eps}}
+\caption{Correlation coefficient between radio impulses. Radio impulse duration
+is $25$~ms. The radio impulses are orthogonal for $40$, $80$, and $120$~Hz.
+When the radio impulse frequency difference is $10$~Hz and the correlation
+coefficient is equal to $0.9$, the theoretical estimate of the working area is confirmed}
+\label{fg:fig2}
+\end{figure}
+
+
+
+Figure~\ref{fg:fig3} shows the received signal containing two radio impulses
+with the frequencies $f_1$\linebreak $ = 2$~kHz and $f_2 = 2.08$~kHz.
+According to Fig.~\ref{fg:fig2}, these signals are orthogonal since the frequency difference $\Delta f = 80$~Hz leads to the correlation coefficient $\hat{r} = 0$.
+\begin{figure}
+\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 20 20 0 30]{\hdir/fig3_ed.eps}}
+\caption{Received signal containing two orthogonal radio impulses combined in the time domain}
+\label{fg:fig3}
+\end{figure}
+
+
+
+The spectra of these two radio impulses is shown in Fig.~\ref{fg:fig4}. The side lobes of the first radio impulse ($U_1=2$) distort the amplitude of the second radio impulse ($U_2=1$).
+
+Figure \ref{fg:fig5} shows the surface of the transformed inverse likelihood functional:
+\begin{align*}
+\Delta 1 = \frac{1}{\Delta(\acute{\omega}_1, \acute{\omega}_2)}\,.
+%\label{eq:eq13}
+\end{align*}
+
+\begin{figure} %[t]
+\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 20 20 20 20]{\hdir/fig4_ed.eps}}
+\caption{Spectrum of two orthogonal radio impulses combined in the time domain. The maxima of spectral lines determine amplitude and frequency estimates of the radio impulses}
+\label{fg:fig4}
+\end{figure}
+\begin{figure} %[t]
+\centering{\includegraphics[width = 0.6\linewidth, trim = 20 45 20 20]{\hdir/fig5_ed.eps}}
+\caption{Surface of the inverse likelihood functional. The single maximum determines the parameter estimates of two radio impulses and the term ``resolution'' is not required. The base width of the maximum of the likelihood functional depends on a signal-to-noise ratio
+and its maximal value ($95.45$) determines the estimate of the noise variance in a received signal ($-19.79$~dB relative to $1$)}
+\label{fg:fig5}
+\end{figure}
+
+The maximum of the functional surface is the only one
+which determines the unambiguity of the problem solution. The location of the maximum makes it possible to find the values of estimation frequencies $\acute{\omega}_1$ and $\acute{\omega}_2$. Their substitution into likelihood equations makes it possible to find the estimates of complex amplitudes of radio impulses. The value of maximum of the likelihood functional allows
+one to find the noise variance in a received realization. Figures \ref{fg:fig3}--\ref{fg:fig5} illustrate the possibility of obtaining the solution in the area of radio impulse orthogonality.
+
+Figures \ref{fg:fig6}--\ref{fg:fig8} show the possibility of obtaining the solution in the area of radio impulse
+nonorthogonality. In this case, the radio impulse frequencies are $f_1=2$~kHz
+and $f_2 =2.02$~kHz.
+The difference is $20$~Hz.
+Figure~\ref{fg:fig6} shows the received signal.
+
 \begin{figure}[t]
-\centering
-\includegraphics{\hdir/prism_dios2}
-\caption{Отображение результатов пяти диагностик ОС в 2-симплекс призме}\end{figure}
+\centering{\includegraphics[width = 0.6\linewidth, trim = 0 40 0 40]{\hdir/fig6_ed.eps}}
+\caption{Received signal containing two nonorthogonal impulses combined in the time domain}
+\label{fg:fig6}
+\end{figure}
 
-Пятый тест (\(T_5\)) выявил отсутствие ОС.
-
-Рассмотрим отображение результатов тестирования качества знаний респондентов
-в~модуле интерпретации результатов обучающе-тестирующей системы с~использованием
-оценочных коэффициентов, определяющих, насколько хорошо респондент справляется
-с~различными заданиями на основе способностей (навыков) \cite{yank2015detect}.
-В разрабатываемой авторами обуча\-юще-тес\-ти\-ру\-ющей системе респондент
-после изучения выбранной дис\-цип\-ли\-ны проходит смешанный диагностический тест,
-представляющий собой оптимальное сочетание условной и безусловной
-составляющей~\cite{yank2011logic}.
-Во время прохождения смешанного диагностического теста (СДТ) формируется карта
-действий респондента (КДР).
-После прохождения респондентом СДТ КДР проецируется в набор оценочных коэффициентов на основе следующих способностей (навыков):
-(1) запоминание и воспроизведение учебного материала в неизмененном виде;
-(2) воспроизведение учебного материала в измененном виде;
-(3) извлечение новых знаний на основе изученного учебного материала;
-(4) решение новых задач и т.\,д.
-
-При разработке клиент-серверной программной системы с мультимедийными возможностями целесообразен перевод набора оценочных коэффициентов в следующие показатели:
-(1) решение задач, требующих большой сосредоточенности;
-(2) решение нетривиальных задач;
-(3) быстрая обучаемость и знание большого количества технологий.
-
-Отметим, что при оценке способностей респондентов на основе оценочных коэффициентов возможна ситуация, когда респондент одинаково владеет или не владеет знаниями по оцениваемым способностям.
-Это отображается кругом в центре 2-симплекса, что затрудняет визуально определить значение показателей.
-С целью разделения этих двух состояний используется цветовая индикация --– насыщенность цвета для круга, отображающего прохождение теста, сопоставлена набранному количеству баллов по тесту (рис.~3).
+Figure \ref{fg:fig7} shows the spectrum of two radio impulses, which makes it difficult to obtain the information on radio impulse parameters.
 
 \begin{figure}[t]
-\centering
-\includegraphics{\hdir/prism_using}
-\caption{Пример использования 2-симплекс призмы для обучающе-тестирующих систем}\end{figure}
+\centering{\includegraphics[width = 0.6\linewidth, trim = 0 30 0 20]{\hdir/fig7_ed.eps}}
+\caption{Spectrum of two nonorthogonal radio impulses combined in the time domain}
+\label{fg:fig7}
+\end{figure}
 
-На основе 2-симплекс призмы предлагается осуществлять анализ динамики развития способностей как респондента, так и группы респондентов.
-Используя 2-симплекс призму, как и любое графическое средство, необходимо учитывать, что отображение результатов большой группы респондентов резко увеличивает сложность анализа.
+Figure~\ref{fg:fig8} shows the transformed likelihood functional, which allows
+one to estimate the radio impulse parameters.
 
-Применение 2-симплекс призмы не ограничивается вышеописанными примерами.
+\begin{figure}[t]
+\centering{\includegraphics[width = 0.6\linewidth, trim = 40 70 40 30]{\hdir/fig8_ed.eps}}
+\caption{Surface of the inverse likelihood functional obtained in the area of radio impulse
+nonorthogonality}
+\label{fg:fig8}
+\end{figure}
 
-\section{Заключение}
-Одним из важных свойств отображения информации в 2-симплекс призме является
-возможность анализировать динамику положения исследуемого объекта на заданном
-временн\'{о}м интервале, что позволяет пользователям принимать и обосновывать принимаемые решения, анализируя изменение параметров исследуемого объекта.
+Figure~\ref{fg:fig9} shows the variations of radio impulse magnitude estimates depending on the changes in radio impulse frequencies. The best amplitude estimates can be found when
+$\Delta f$\linebreak $ = 10$~Hz.
+This corresponds to the correlation coefficient between radio impulses $\hat{r} \sim 0.9$, which fully confirms the theoretical estimate of the working area ($\hat{r} = 0$--0.9) for parameter estimation of two radio impulses.
 
-Применение когнитивных средств целесообразно для любой проблемной
-и меж\-дис\-цип\-ли\-нар\-ной области, в которой необходимо проводить
-принятие и обоснование решения об отношении исследуемого объекта к тому
-или иному образу (классу) в фиксированный момент времени или на заданном
-промежутке времени.
-В отличие от ранее разработанных когнитивных средств, основанных на
-$n$-симплексе \cite{yank2014cogtools, yank2013simplex}, 2-симплекс призма
-позволяет исследовать объект динамически на заданном пользователем
-временн\'{о}м интервале.
+\begin{figure}[t]
+\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 20]{\hdir/fig9_ed.eps}}
+\caption{Variation of the amplitude estimates of radio impulses depending on the changes of the frequency differences.
+The nonorthogonality area of the radio impulses for $\Delta f \leqslant 40$~Hz.
+The best amplitude estimates for radio impulse frequency differences of $10$~Hz. Radio impulse resolution has increased $4$~times in comparison with the Rayleigh resolution}
+\label{fg:fig9}
+\end{figure}
 
+Figure~\ref{fg:fig10} shows radio impulse frequency estimates vs.\
+their frequency differences. When the signal-to-noise ratio is $\sim 20$~dB and radio impulse duration is $25$~ms, the best estimates are obtained for $\Delta f = 10$~Hz. Thus,
+one can point out that the suggested technology of radio impulse parameter estimation is characterized by high resolution. When the signal-to-noise ratio is $20$~dB, the resolution of two radio impulses has increased $4$~times in comparison with the Rayleigh resolution.
 
-\renewcommand{\bibname}{Литература}
-\begin{thebibliography}{99}
-\bibitem{axelrod1976structure}
-  \BibAuthor{Axelrod R.}
-  The structure of decision: Cognitive maps of political elites.~---
-{Princeton University Press, 1976.}        395~p.
+\begin{figure}[t]
+\centering{\includegraphics[height = 9cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig10_ed.eps}}
+\caption{Frequency estimates vs.\ frequency differences.
+The area of radio impulse nonorthogonality for $\Delta f \leqslant 40$~Hz.
+The best frequency estimates for radio impulse frequency difference of~$10$~Hz.
+Radio impulse resolution has increased $4$~times in comparison with the Rayleigh resolution}
+\label{fg:fig10}
+\end{figure}
+\begin{figure}[H]
+\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig11_ed.eps}}
+\caption{Statistics of radio impulse amplitude estimates.
+The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area).
+The estimates are satisfactory for signal-to-noise ratios exceeding~$0$~dB}
+\label{fg:fig11}
+\end{figure}
 
-\bibitem{basaker1965graph}
-  \BibAuthor{Basaker R.\,G., Saati T.\,L.}
-  Finite graphs and networks: An introduction with applications.~---
-New York, NY\,--\,London\,--\,Toronto: Research Analysis Corp., Mc Graw Hill
-Co., 1965.
-294~p.
-
-\bibitem{pospelov1992cognitive}
-  \BibAuthor{Поспелов Д.\,А.}
-  Когнитивная графика~--- окно в новый мир~//
-Программные продукты и~сис\-те\-мы, 1992. Т.~2. С.~4--6.
-
-\bibitem{pospelov1996hotspot}
-  \BibAuthor{Поспелов Д.\,А.}
-  Десять <<горячих точек>> в исследованиях по искусственному интеллекту~//
-{Интеллектуальные системы (МГУ), 1996. Т.~1. Вып.~1-4. С.~47--56.}
-
-\bibitem{pospelov1996combine}
-  \BibAuthor{Поспелов Д.\,А., Литвинцева Л.\,В.}
-  Как совместить левое и правое?~//
-{Новости искусственного интеллекта. 1996. №\,2. С.~66--71.}
-
-\bibitem{zenkin1991cognitive}
-  \BibAuthor{Зенкин А.\,А.}
-  Когнитивная компьютерная графика. ---
-{М.: Наука, 1991.} 192~с.
-
-\bibitem{zenkin1996cognitive}
-  \BibAuthor{Зенкин А.\,А.}
-  Знание-порождающие технологии когнитивной реальности~//
-{Новости искусственного интеллекта. 1996. №\,2. С.~72--78.}
-
-\bibitem{albu1990cogr}
-  \BibAuthor{Албу В.\,А., Хорошевский В.\,Ф.}
-  КОГР система когнитивной графики: разработка, реализация и применения //
-{Изв. АН СССР. Техническая кибернетика, 1990. №\,5.} С.~105--118.
-
-\bibitem{kobr1996imaginary}
-  \BibAuthor{Кобринский Б.\,А.}
-  К вопросу учета образного  мышления и интуиции в экспертных медицинских системах~//
-{V Национальная конф. с междунар. участием «Искусственный интеллект-96»:
-Сб. науч. тр.}, 1996. Т.~2. С.~110--117.
-
-\bibitem{yank1997decision}
-  \BibAuthor{Янковская А.\,Е.}
-  Принятие и обоснование решений с использованием методов когнитивной графики на основе знаний экспертов различной квалификации~//
-{Известия РАН. Теория и~система управления, 1997. №\,5. С.~125--126.}
-
-\bibitem{yank2009networks}
-  \BibAuthor{Yankovskaya A., Galkin D.}
-  Cognitive computer based on $n$-$m$ multiterminal networks for pattern
-recognition in applied intelligent systems~//
-{Conference GraphiCon'2009 Proceedings}.~--– Moscow: Maks Press, 2009.
-P.~299--300.
-
-\bibitem{yank2010vizualization}
-  \BibAuthor{Yankovskaya A.\,E., Galkin D.\,V., Chernogoryuk G.\,E.}
-  Computer visualization and cognitive graphics tools for applied intelligent
-systems~//
-{IASTED  Conference (International) on Automation, Control and
-Information Technology Proceedings, 2010. Vol.~1. P.~249--253.}
-
-\bibitem{yank2000mirror}
-  \BibAuthor{Янковская А.\,Е., Тетенев Ф.\,Ф., Черногорюк Г.\,Э.}
-  Отражение образного мышления специалиста в интеллектуальной
-распознающей системе патогенеза заболевания //
-{Компьютерная хроника, 2000. №\,6. С.~77--92.}
-
-\bibitem{yank2004optimization}
-  \BibAuthor{Yankovskaya A.\,E., Mozheiko V.\,I.}
-  Optimization of a set of tests selection satisfying the criteria prescribed~//
-7th  Conference (International) on Pattern Recognition and Image Analysis: New
-Information Technologies Proceedings.~--- St. Petersburg: SPbETU,
-2004. Vol.~I.  С.~145--148.
-
-\bibitem{yank1991transformation}
-  \BibAuthor{Янковская А.\,Е.}
-  Преобразование пространства признаков в пространство образов на  базе ло\-ги\-ко-комбинаторных методов и свойств некоторых геометрических фигур~//
-{Распознавание образов и анализ изображений: новые информационные технологии:
-Тез. докл. I Всесоюзной конф.~--- Минск, 1991. Ч.~II. С.~178--181.}
-
-\bibitem{kondr1992triang}
-  \BibAuthor{Кондратенко С.\,В., Янковская А.\,Е.}
-  Система визуализации TRIANG для обоснования принятия решений с использованием когнитивной графики~//
-{Тез. докл. III Конф. по искусственному интеллекту.~---
-Тверь, 1992. Т.~I. С.~152--155}.
-
-\bibitem{yank2012dios}
-  \BibAuthor{Янковская А.\,Е., Китлер С.\,В., Силаева А.\,В.}
-  Интеллектуальная система диагностики и~интервенции организационного стресса: ее развитие и апробация //
-{Открытое образование, 2012. №\,2(91). С.~61--69.}
-
-\bibitem{kornetov2011dios}
-  \BibAuthor{Корнетов Н.\,А., Янковская А.\,Е., Китлер С.\,В.,
-Силаева А.\,В., Шагалова Л.\,В.}
-  К вопросу динамики развития представлений об организационном стрессе и подходов к его оценке~//
-{Фундаментальные исследования. 2011. №\,10.} Ч.~3. С.~598--603.
+Figure~\ref{fg:fig11} shows the statistics of radio impulse magnitudes depending on the signal-to-noise ratio when the radio impulse frequency is $\Delta f = 20$~Hz.
+As can be seen from the figure, the amplitude estimates are quite satisfactory when the signal-to-noise ratio exceeds $0$~dB.
 
 
 
-\bibitem{beck1961depression}  %19
-  \BibAuthor{Beck A.\,T., Ward C., Mendelson M.}
-  Beck Depression Inventory (BDI)~//
-{Arch. Gen. Psychiat., 1961. Vol.~4. No.\,6. P.~561--571.}
-
-\bibitem{zadeh1994fuzzy} %20
-  \BibAuthor{Zadeh, L.\,A.}
-  Fuzzy logic, neural networks, and soft computing~//
-{Commun. ACM, 1994. Vol.~37. No.\,3. P.~77--84.}
-
-\bibitem{selye1936diverse} %21
-  \BibAuthor{Selye H.}
-  A syndrome produced by diverse nocuous agents~//
-{Nature, 1936. Vol.~138. Р.~32}.
-
-\bibitem{yank2015detect}
-  \BibAuthor{Янковская А.\,Е., Шурыгин Ю.\,А., Ямшанов А.\,В., Кривдюк Н.\,М.}
-  Определение уровня усвоенных знаний по обучающему курсу, представленному семантической сетью~//
-{Открытые семантические технологии проектирования интеллектуальных систем:
-Мат-лы V~Междунар. науч.-техн. конф.~--- Минск: БГУИР, 2015. С.~331--339.}
-
-\bibitem{yank2011logic}
-  \BibAuthor{Янковская А.\,Е.}
-  Логические тесты и средства когнитивной графики.~---
-{LAP LAMBERT Academic Publishing, 2011. 92~с. }
+Figure 12 shows the statistics of radio impulse frequencies depending on the signal-to-noise ratio for $\Delta f = 20$~Hz. As can be seen from the figure, radio impulse frequency estimates are quite satisfactory for signal-to-noise ratios exceeding
+$-5$~dB.
 
 
 
-\bibitem{yank2013simplex} %24
-  \BibAuthor{Yankovskaya A., Krivdyuk N.}
-  Cognitive graphics tool based on 3-simplex for decision-making and
-substantiation of decisions in intelligent system~//
-{IASTED  Conference (International) on Technology for Education and Learning
-Proceedings, 2013. P.~463--469}.
+Figure~\ref{fg:fig13} illustrates the changes of maxima of the inverse transformed likelihood functional depending on the signal-to-noise ratio in dB. The linear dependence confirms the theoretical suggestion that the noise variance can be estimated on the basis of the maximum of the inverse transformed likelihood functional.
 
-\bibitem{yank2014cogtools} %25
-  \BibAuthor{Янковская А.\,Е. Ямшанов А.\,В. Кривдюк Н.\,М.}
-  Средства когнитивной графики в интеллектуальных обучающе-тестирующих системах~//
-{Открытые семантические технологии проектирования интеллектуальных систем:
-Мат-лы IV Междунар. науч.-техн. конф.~--- Минск: БГУИР, 2014. С.~303--308.}
+\section{Concluding Remarks}
 
+\noindent
+An algorithm for solving the problem of parameter estimation of a~set of
+nonorthogonal radio impulses has been introduced
+using the maximum likelihood method on the basis of the transformed likelihood functional. Theoretical and practical investigations lead to the following conclusions:
+
+
+
+
+
+\begin{itemize}
+\item the transformed likelihood functional allows one to solve the problem of resolving and parameter estimation of two or several radio impulses in the area of their
+nonorthogonality. Application of this technique is efficient for different radio engineering problems and can be used for improving the capacity of communication channels using frequency division multiplexing;
+
+\begin{figure} %[t]
+\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig12_ed.eps}}
+\caption{Statistics of radio impulse frequency estimates. The difference of radio impulse frequencies is $20$~Hz (nonorthogonality area). The estimates are satisfactory for signal-to-noise ratios exceeding~\mbox{$-5$~dB}}
+\label{fg:fig12}
+\end{figure}
+
+\item the working area for parameter estimation of a set of radio impulses is determined by determinant variations of a correlation matrix of a set of signals. Conditionality of the correlation matrix influences the possibility of resolving a set of signals. In the case of two radio impulses the working area depends on the normalized correlation coefficient in the range~0--0.9; and
+\item the value of the transformed likelihood functional in its global minimum allows one to estimate the noise variance in a dataset and can be used as a criterion for estimating the number of radio impulses.
+\end{itemize}
+
+\begin{figure} %[t]
+\centering{\includegraphics[height = 10cm, width = 0.6\linewidth, trim = 0 20 0 30]{\hdir/fig13_ed.eps}}
+\caption{Maximum of the likelihood functional vs.\ signal-to-noise ratio. The linearity of the dependence allows us to estimate the noise variance in the received message using the maximum of the inverse likelihood functional}
+\label{fg:fig13}
+\end{figure}
+
+\renewcommand{\bibname}{References}
+\begin{thebibliography}{11}
+\bibitem{1}
+{Marple, S.\,L., J.} 1986.
+\BibTitle{Digital spectral analysis: With applications}.
+Upper Saddle River, NJ: Prentice-Hall, Inc.
+
+\bibitem{2}
+{Helstrom, C.\,W.}  1960.
+\BibTitle{Statistical theory of signal detection}.
+International ser. of monographs on
+electronics and instrumentation.
+Macmillan. Vol.~9. 364~p.
+
+\bibitem{3}
+{Tikhonov,~V.\,I.}  1983.
+\BibTitle{Optimal signal reception}. Moscow: Radio and Communications.
+
+\bibitem{8} %4
+{Chigov, A.\,A.} 2010.
+\BibTitle{Superrayleigh resolution. Classical approach to the problem}.
+Moscow: Krasand.   104~p.  (In Russian.)
+
+\bibitem{10} %5
+{Volkov, V.\,Y., L.\,S.~Turnetskyi, and A.\,V.~Oneshko.}   2011.
+Straight  line edge extraction in noisy images.
+\BibJournal{Informatsionno-upravliaiushchie sistemy~---
+Information and Control Systems} 4(53):13--17.  
+
+\bibitem{9} %6
+{Volkov, V.\,Y.} 2013.
+\BibTitle{Discrete filtering techniques and problems of image processing in radio
+engineering observation systems}.  St.\ Petersburg: Saint Petersburg
+University of Telecommunications.   144~p. (In Russian.)
+
+\bibitem{6} %7
+{Trifonov, A.\,P., and Yu.\,S. Shinakov.} 1986.
+\BibTitle{Joint signal distinction and their parameter estimation in the presence
+of noise}. Moscow: Radio and Communication.  (In Russian.)
+
+\bibitem{13} %8
+{Stoica, P., B.~Ottersten, M.~Viberg, and R.\,L.~Moses.} 1996.
+Maximum likelihood array processing for stochastic coherent sources.
+\BibJournal{IEEE Trans. Signal Proces.}  44(1):96--105.
+
+\bibitem{4} %9
+{Troyan, V.\,N., and  Yu.\,V. Kiselev.} 2000.
+\BibTitle{Statistical techniques of processing and interpretation of geophysical
+data}. St.\ Petersburg: St.\ Petersburg Polytechnical University.  (In Russian.)
+
+\bibitem{5} %10
+{Perov, A.\,I.} 2003.
+\BibTitle{Statistical theory of radio engineering systems}.
+Moscow: Radio Engineering. 400~p.
+
+\bibitem{11} %11
+{Zelniker, E.\,E., and I.~V.\,L.~Clarkson.} 2003.
+ Maximum-likelihood  circle-parameter estimation via convolution.
+\BibJournal{7th Conference on Digital Image Computing: Techniques and Applications Proceedings}.
+Eds.\ C.~Sun, H.~Talbot, S.~Ourselin, and T.~Adriaansen.  Sydney. 509--518.
+
+\bibitem{12}
+{Babu, P.} 2012.
+Spectral analysis of nonuniformly sampled data and applications.
+Uppsala, Sweden: Uppsala University. Dissertation.
+
+\bibitem{7} %13
+Pachotin, V.\,A., V.\,A.~Bessonov, S.\,V.~Molostova,
+and K.\,V.~Vlasova.  2008.
+\BibTitle{Theoretical fundamentals of optimal signal processing}.
+Kaliningrad.  186~p.
 \end{thebibliography}
 
-%\section{References}
-\renewcommand{\bibname}{References}
-\begin{thebibliography}{99}
-\bibitem{axelrod1976structure}
-{Axelrod, R.}     1976.
-\BibTitle{The structure of decision: Cognitive maps of political elites}.
-Princeton University Press. 395~p.
+\Russian
+\renewcommand{\bibname}{Список литературы}
+\begin{thebibliography}{11}
+\bibitem{1}
+\BibAuthor{Марпл-мл. С.\,Л.}
+Цифровой спектральный анализ и его приложения~/
+Пер. с англ.~--- М.: Мир, 1990.  584~с.
+(\BibAuthor{Marple~S.\,L.}
+{Digital spectral analysis: With applications}.~---
+Upper Saddle River, NJ, USA: Prentice-Hall, Inc., 1986.)
+\bibitem{2}
+\BibAuthor{Хелстром К.}
+Статистическая теория обнаружения сигналов / Пер. с англ.~--- М.: ИЛ, 1963.  432~с.
+(\BibAuthor{Helstrom~C.\,W.}
+{Statistical theory of signal detection}.~---
+International ser. of monographs on
+electronics and instrumentation.~---
+Macmillan, 1960. Vol.~9. 364~p.)
+\bibitem{3}
+\BibAuthor{Тихонов В.\,И.} Оптимальный прием сигналов.~---
+М.: Радио и связь, 1983.
 
-\bibitem{basaker1965graph}
-{Basaker, R.\,G., and T.\,L.~Saati}. 1965.
-\BibTitle{Finite graphs and networks: An introduction with applications}.
-New York, NY\,--\,London\,--\,Toronto: Research Analysis Corp., Mc Graw Hill Co.
-294~p.
+\bibitem{8} %4
+\BibAuthor{Чижов А.\,А.} Сверхрэлеевское разрешение. Т.~1:
+Классический взгляд на проблему.~--- М.: КРАСАНД, 2010.
+96~с.; Т.~2: Преодоление фактора некорректности обратной
+задачи рассеяния и проекционная радиолокация.~--- М.: КРАСАНД, 2010. 104~с.
 
-\bibitem{pospelov1992cognitive}
-{Pospelov, D.\,A.} 1992.
-  Cognitive graphics~--- a~window into the new world.
-  \BibJournal{Software Products Systems} 2:4--6. (In Russian.)
+\bibitem{10} %5
+\BibAuthor{Волков В.\,Ю., Турнецкий Л.\,С., Онешко~А.\,В.}
+Выделение прямолинейных кромок на зашумленных изображениях~//
+Информационно-управляющие системы, 2011. Вып.~4(53). С.~13--17.
 
-\bibitem{pospelov1996hotspot}
-{Pospelov, D.\,A.} 1996.
-  Ten ``hot spots''\ in research on artificial intelligence
-  \BibJournal{Intelligent Systems (MSU)} 1(1-4):47--56. (In Russian.)
+\bibitem{9} %6
+\BibAuthor{Волков В.\,Ю.}
+Методы дискретной фильтрации и задачи обработки изображений
+в~радиотехнических системах наблюдения.~---  СПб.: СПбГУТ, 2013. 144~с.
 
-\bibitem{pospelov1996combine}
-{Pospelov, D.\,A., and L.\,V.~Litvintseva}. 1996.
-  How to combine left and right?
-  \BibJournal{News Artificial Intelligence} 2:66--71. (In Russian.)
+\bibitem{6} %7
+\BibAuthor{Трифонов А.\,П., Шинаков Ю.\,С.}
+Совместное различение сигналов и оценка их параметров на фоне помех.~---
+М.: Радио и связь, 1986.
 
-\bibitem{zenkin1991cognitive}
-{Zenkin, A.\,A.} 1991.
-\BibTitle{Cognitive computer graphics}.
-Мoscow: Nauka. 192~p. (In Russian.)
+\bibitem{13} %8
+\BibAuthor{Stoica P.,  Ottersten B., Viberg M., Moses~R.\,L.}
+Maximum likelihood array processing for stochastic coherent sources~//
+IEEE Trans. Signal Proces., 1996.  Vol.~44. No.\,1. P.~96--105.
 
-\bibitem{zenkin1996cognitive}
-{Zenkin, A.\,A.} 1996.
-  Knowledge-generating technologies of cognitive reality.
-  \BibJournal{News Artificial Intelligence} 2:72--78. (In Russian.)
+\bibitem{4} %9
+\BibAuthor{Троян В.\,Н., Киселев Ю.\,В.}
+Статистические методы обработки и интерпретации геофизических данных.~---
+СПб.: Изд-во С.-Петерб. ун-та, 2000.
+\bibitem{5} %10
+\BibAuthor{Перов А.\,И.}
+Статистическая теория радиотехнических систем: Учебное пособие для вузов.~---
+ М.: Радиотехника, 2003.  400~с.
 
-\bibitem{albu1990cogr}
-{Albu, V.\,А., and V.\,F. Khoroshevskiy}. 1990.
-  COGR~--- Cognitive graphics system, design, development, application.
-  \BibJournal{Russ. Acad. Sci. Bull. Technical Cybernetics}  5:105--118. (In Russian.)
+\bibitem{11} %11
+\BibAuthor{Zelniker E.\,E.,  Clarkson~I.\,V.\,L.}
+Maximum-likelihood circle-parameter estimation via convolution~//
+7th Conference on Digital Image Computing: Techniques and Applications Proceedings~/
+Eds. C.~Sun, H.~Talbot, S.~Ourselin, T.~Adriaansen.~--- Sydney, 2003.
+P.~509--518.
+\bibitem{12} %12
+\BibAuthor{Babu P.}
+ Spectral analysis of nonuniformly sampled data and applications.~---
+Uppsala, Sweden: Uppsala University,  2012. Dissertation.
 
-\bibitem{kobr1996imaginary}
-{Kobrinskiy, B.\,A.} 1996.
-  Why should we take into account imaginary thinking and intuition in medical expert systems.
-  \BibJournal{5th National Conference with
-International Participation ``Artificial Intelligence-96'' Proceedings}. Kazan.
-2:110--117. (In Russian.)
-
-\bibitem{yank1997decision}
- {Yankovskaya, A.\,E.} 1997.
-  Decision-making and decision-justification using cognitive graphics methods
-based on the experts of different qualification.
-  \BibJournal{Russ. Acad. Sci. Bull., Theory and Control Systems} 5:125--126.
-(In Russian.)
-
-\bibitem{yank2009networks}
-{Yankovskaya, A., and D. Galkin}. 2009.
-  Cognitive computer based on $n$-$m$ multiterminal networks for pattern
-recognition in applied intelligent systems.
-  \BibJournal{Conference GraphiCon'2009 Proceedings}. Moscow: Maks Press.
-299--300.
-
-\bibitem{yank2010vizualization}
-{Yankovskaya, A.\,E., D.\,V. Galkin, and G.\,E.~Chernogoryuk}. 2010.
-  Computer visualization and cognitive graphics tools for applied intelligent
-systems.
-   \BibJournal{IASTED  Conference (International) on Automation, Control and
-Information Technology Proceedings}. 1:249--253.
-
-\bibitem{yank2000mirror}
-{Yankovskaya, A.\,E., F.\,F. Tetenev, and G.\,E.~Chernogoryuk}. 2000.
-  Reflection of creative thinking expert in intellectual pattern recognition system disease pathogenesis.
-  \BibJournal{Computer Chronicle} 6:77--92. (In Russian.)
-
-\bibitem{yank2004optimization}
- {Yankovskaya, A.\,E., and V.\,I. Mozheiko}. 2004.
-  Optimization of a set of tests selection satisfying the criteria prescribed.
-  \BibJournal{7th  Conference (International)
-on Pattern Recognition and Image Analysis: New Information Technologies
-Proceedings}. St. Petersburg: SPbETU. I:145--148.
-
-\bibitem{yank1991transformation}
-{Yankovskaya, A.\,E.} 1991.
-  Transformation of features space in patterns space on the base of the logical-combinatorial methods and properties of some geometric figures.
-  \BibJournal{Conference (International) on Pattern
-Recognition and Image Analysis: New Information: Abstracts.} Minsk.  II:178--181. (In Russian.)
-
-\bibitem{kondr1992triang}
-  {Kondratenko, S.\,V., and A.\,E. Yankovskaya}. 1992.
-  System of visualization TRIANG for decision-making substantiation with use
-of cognitive graphics.
-  \BibJournal{3rd Conference on Artificial Intelligence Proceedings}.
- Tver. I:152--155. (In Russian.)
-
-\bibitem{yank2012dios}
-{Yankovskaya, A.\,E., S.\,V. Kitler, and A.\,V. Silaeva}. 2012.
-  Intelligent system of diagnostics and intervention of organizational stress:
-Its development and testing.
-\BibJournal{Open Education}  2(91):61--69. (In Russian.)
-
-\bibitem{kornetov2011dios}
-{Kornetov, N.\,A., A.\,E. Yankovskaya, S.\,V. Kitler, A.\,V.~Silaeva,
-and L.\,V.~Shagalova}. 2011.
-  About development dynamics of representations about organizational
-stress and approaches to its evaluation.
-  \BibJournal{Fundamental Research} 10(3):598--603. (In Russian.)
-
-\bibitem{beck1961depression}  %19
-{Beck, A.\,T., C.~Ward, and M.~Mendelson.} 1961.
-  Beck Depression Inventory (BDI).
-  \BibJournal{Arch. Gen. Psychiat.} 4(6):561--571.
-
-\bibitem{zadeh1994fuzzy} %20
-{Zadeh, L.\,A.} 1994.
-  Fuzzy logic, neural networks, and soft computing.
-  \BibJournal{Commun. ACM}  37(3):77--84.
-
-\bibitem{selye1936diverse}  %21
-{Selye, H.} 1936.
-  A~syndrome produced by diverse nocuous agents.
-  \BibJournal{Nature} 138:32.
-
-
-
-\bibitem{yank2015detect} %22
-{Yankovskaya, A.\,E., Y.\,A. Shurigin, A.\,V. Yamshanov, and N.\,M. Krivdyuk}. 2015.
-  Determination of the student knowledge level on the base of a training course which is presented by a semantic network.
-  \BibJournal{Open Semantic Technologies for Intelligent Systems (OSTIS-2015)
-Proceedings}. Minsk: BSUIR. 331--339. (In Russian.)
-
-\bibitem{yank2011logic}
-{Yankovskaya, A.\,E.} 2011.
-  \BibTitle{Logic tests and cognitive graphic tools}.
-{LAP LAMBERT Academic Publishing}. 92~p.
-%ISBN: 978-3-8454-3409-4.
-
-
-\bibitem{yank2013simplex} %24
-{Yankovskaya, A.\,E., and N.\,M. Krivdyuk}. 2013.
-  Cognitive graphics tool based on 3-simplex for decision-making and
-substantiation of decisions in intelligent system.
-  \BibJournal{IASTED  Conference (International) Technology for Education and
-Learning Proceedings}.  463--469.
-
-\bibitem{yank2014cogtools}
-{Yankovskaya, A.\,E., A.\,V. Yamshanov, and N.\,M. Krivdyuk}.  2014.
-  Cognitive graphic tools in intelligent training-testing systems.
-  \BibJournal{Open Semantic Technologies for Intelligent Systems (OSTIS-2014)
-Proceedings}. Minsk: BSUIR. 303--308. (In Russian.)
+\bibitem{7} %13
+\BibAuthor{Пахотин~В.\,А., Бессонов~В.\,А., Молостова~С.\,В., Власова~К.\,В.}
+Теоретические основы оптимальной обработки сигналов.~---
+Калининград: Изд-во РГУ им.\ И.~Канта, 2008.  186~с.
 
 \end{thebibliography}
 
 \end{document}
-
