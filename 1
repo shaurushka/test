@@ -3,20 +3,22 @@
 \usepackage{etex}
 
 \setcounter{page}{1961}
+\newcommand{\hdir}{.}
+\renewcommand{\hdir}{Sologub2015NonlinearRegression}
 
-\newcommand{\w}{\mathbf{w}}  %Sologub
-\newcommand{\x}{\mathbf{x}}  %Sologub
-\newcommand{\y}{\mathbf{y}}  %Sologub
-\newcommand{\m}{\mathfrak{m}}  %Sologub
-\newcommand{\n}{\mathfrak{n}}  %Sologub
+%\newcommand{\w}{\mathbf{w}}  %Sologub
+%\newcommand{\x}{\mathbf{x}}  %Sologub
+%\newcommand{\y}{\mathbf{y}}  %Sologub
+%\newcommand{\m}{\mathfrak{m}}  %Sologub
+%\newcommand{\n}{\mathfrak{n}}  %Sologub
 
-\newtheorem{theorem}{Теорема} %Sologub
-\newtheorem{lemm}{Лемма}  %Sologub
-\newtheorem{defin}{Определение}  %Sologub
+%\newtheorem{theorem}{Теорема} %Sologub
+%\newtheorem{lemm}{Лемма}  %Sologub
+%\newtheorem{defin}{Определение}  %Sologub
 
-\newcommand{\dom}{\text{dom}}  %Sologub
-\newcommand{\cod}{\text{cod}}  %Sologub
-\newcommand{\id}{\text{id}}  %Sologub
+%\newcommand{\dom}{\text{dom}}  %Sologub
+%\newcommand{\cod}{\text{cod}}  %Sologub
+%\newcommand{\id}{\text{id}}  %Sologub
 %
 
 \begin{document}
@@ -486,7 +488,9 @@ $$
 \begin{theorem}
 Две трансформации графов $\Gamma \overset{p_1,m_1}{\to} \Omega$ и $\Omega \overset{p_2,m_2}{\to} \Gamma'$ являются последовательно независимыми, если существуют морфизмы $i:\Phi_1 \to \Delta_2$ и $j:\Lambda_2 \to \Delta_1$, такие, что $f_2 \circ i = \n_1$ и $g_1 \circ j = \m_2$:
 \end{theorem}
-%
+
+\vspace*{-24pt}
+\noindent
 \begin{equation*}
 \begin{centering}
 \xymatrix{
@@ -513,7 +517,7 @@ $$
 С использованием данных критериев можно определить, как связаны друг с другом независимые параллельно и последовательно трансформации. Данная теорема является частным случаем теоремы Черча--Россера. %\cite{Kozen_church–rossermade}.
 
 \paragraph{Трансформация одиночной склейкой}
-Как было отмечено, конструкции соединения в алгебраическом подходе являются кодекартовыми квадратами в смысле морфизмов категории графов. С другой стороны, правило $p = ( \Lambda \leftarrow \Psi \rightarrow \Phi)$ может быть также рассмотрено как частичный морфизм графов $p: \Lambda \rightarrow \Phi$, доменом которого является множество $\dom(p)=\Psi$. Более того, диаграмма $(\Gamma \leftarrow \Delta \rightarrow \Omega)$ может быть рассмотрена как частичный морфизм графов $s:\Gamma \rightarrow \Omega$ с~доменом $\dom(s)=\Delta$. Таким образом, получается следующая диаграмма: %\\[-36pt]
+Как было отмечено, конструкции соединения в алгебраическом подходе являются кодекартовыми квадратами в смысле морфизмов категории графов. С другой стороны, правило $p = ( \Lambda \leftarrow \Psi \rightarrow \Phi)$ может быть также рассмотрено как частичный морфизм графов $p: \Lambda \rightarrow \Phi$, доменом которого является множество $\dom(p)=\Psi$. Более того, диаграмма $(\Gamma \leftarrow \Delta \rightarrow \Omega)$ может быть рассмотрена как частичный морфизм графов $s:\Gamma \rightarrow \Omega$ с~доменом $\dom(s)=\Delta$. Таким образом, получается следующая диаграмма:\\[-12pt]
 %
 %\noindent
 \begin{equation}
@@ -540,9 +544,9 @@ $$
 \shorthandon{"}
 \label{trans4-0}
 \end{equation}
-
+%
 %\vspace*{-18pt}
-\noindent
+%\noindent
 На данной диаграмме горизонтальные морфизмы являются частичными,
 а вертикальные~--- полными морфизмами графов. По сути, диаграмма~(\ref{trans4-0})
 является кодекартовым квадратом в расширенной категории графов, которая состоит из графов и частичных морфизмах на графах и показывает, что трансформации графов могут быть выражены как одиночные кодекартовы квадраты в расширенной категории графов. Данный подход развивался Раулем~\cite{Raoult19841} и был полностью разработан Лёве~\cite{raey}, итогом их работы является подход однократного вытеснения.
