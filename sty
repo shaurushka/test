@@ -498,8 +498,8 @@
 
 % Библиографическая запись текущей статьи
 \def\paper@record{
- \ruseng{Машинное обучение и анализ данных, 2015. Том\,1, \No\,14.}%\\
-        {Machine Learning and Data Analysis, 2015. Volume\,1.\,Issue 14. }
+ \ruseng{Машинное обучение и анализ данных, 2016. Том\,2, \No\,1.}%\\
+        {Machine Learning and Data Analysis, 2016. Volume\,2.\,Issue 1. }
 }
 
 % Оформление аннотации
@@ -714,6 +714,7 @@
 \renewenvironment{thebibliography}[1]
   {
   \def\bibname{\ruseng{Литeратура}{References}}
+  \newcommand\setLangBack{\ruseng{\Russian}{\English}}
   \bibsection{\bibname}%
     \list{\@biblabel{\@arabic\c@enumiv}}{%
       \settowidth\labelwidth{\@biblabel{#1}}%
@@ -726,14 +727,16 @@
       \renewcommand\theenumiv{\@arabic\c@enumiv}%
     }%
     \typeBibItem
+    
 %        \clubpenalty4000%
 %        \@clubpenalty\clubpenalty
 %        \widowpenalty4000%
 %        \sfcode`\.\@m%
   }{%
     \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}%
-    \endlist
+    \endlist%
     \begin{flushright}
+    \setLangBack
     \typeReceived
     \end{flushright}
     \vskip10ex
