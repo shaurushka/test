@@ -16,7 +16,7 @@
 \email
     {isa-ro@yandex.ru, amkatrutsa@yandex.ru}
 \organization
-    {Московский физико-технический институт, г. Долгопрудный, Институтский пер., 9}
+    {Московский физико-технический институт, Россия, г. Долгопрудный, Институтский пер., 9}
 \abstract
     {
     Работа посвящена использованию методов метрического обучения в задачах кластеризации.
@@ -31,7 +31,7 @@
 \bigskip
 \noindent
 \textbf{Ключевые слова}: \emph {кластеризация; $k$-средних; алгоритм
-адаптивного метрического обучения; $EM$-алгоритм}}
+адаптивного метрического обуче\-ния; $EM$-алгоритм}}
 
 \thanks{Проект поддержан грантом РФФИ \No \ 16-37-00485.}
 
@@ -193,9 +193,9 @@ C использованием данных обозначений задача 
 \section{Решение задачи метрического обучения}
 Для решения задачи~(\ref{GLmax}) алгоритм адаптивного метрического обучения использует \mbox{EM-под}\-ход.
 На каждом шаге итеративно вычисляются локальные оптимальные значения матриц $\mathbf{G}$ и $\mathbf{L}$.
-На $E$-шаге необходимо найти матрицу $\mathbf{L}$, которая является решением оптимизационной задачи~(\ref{GLmax}) при фиксированной матрице $\mathbf{G}$.
-В качестве начального приближения получим взвешенную индикаторную матрицу $\mathbf{L}$ с помощью алгоритма кластеризации $k$-средних с евклидовой метрикой.
-На $M$-шаге производится нахождение оптимального значения матрицы $\mathbf{G}$ при фиксированной матрице $\mathbf{L}$.
+На $E$-ша\-ге необходимо найти матрицу $\mathbf{L}$, которая является решением оптимизационной задачи~(\ref{GLmax}) при фиксированной матрице $\mathbf{G}$.
+В качестве начального приближения получим взвешенную индикаторную матрицу $\mathbf{L}$ с помощью алгоритма клас\-те\-ри\-за\-ции $k$-сред\-них с евклидовой метрикой.
+На $M$-ша\-ге производится нахождение оптимального значения матрицы $\mathbf{G}$ при фиксированной матрице $\mathbf{L}$.
 Алгоритм завершается при стабилизации функционала $Q$ на последовательности итераций.
 
 \paragraph{Алгоритм $k$-средних}
@@ -261,27 +261,26 @@ C использованием данных обозначений задача 
 
 Применим к данной выборке базовый алгоритм $k$-средних.
 Результат кластеризации показан на рис.~2, где черным цветом выделены найденные центры классов и линии уровня функции распределения, построенной по выборочной ковариационной матрице.
+\begin{figure} %[h]
+    \center{\includegraphics[width=1\linewidth]{\hdir/true_distribution.eps}}
+    \caption{Истинное распределение двумерных модельных данных}
+    \vspace*{12pt}
+\end{figure}
+
+\begin{figure}%[!ht]
+    \center{\includegraphics[width=1\linewidth]{\hdir/kmeans_clustering.eps}}
+    \caption{Результат кластеризации алгоритмом $k$-средних}
+     \vspace*{12pt}
+\end{figure}
 
 Взяв за начальное приближение результаты работы алгоритма $k$-средних,
 проведем клас\-те\-ри\-за\-цию с помощью алгоритма адаптивного метрического обучения.
 Результаты работы алгоритма продемонстрированы на рис.~$3$.
-\begin{figure}[h]
-    \center{\includegraphics[width=1\linewidth]{\hdir/true_distribution.eps}}
-    \caption{Истинное распределение двумерных модельных данных}
-\end{figure}
-
-
-
-
-
 
 На рисунках заметно улучшение результатов кластеризации.
 Измеренная точность кластеризации алгоритма $k$-средних составила 0,76,
 алгоритма адаптивного метрического обучения~--- 0,94, что говорит о работоспособности данного подхода.
-\begin{figure} %[!ht]
-    \center{\includegraphics[width=1\linewidth]{\hdir/kmeans_clustering.eps}}
-    \caption{Результат кластеризации алгоритмом $k$-средних}
-\end{figure}
+
 \begin{figure} %[!ht]
     \center{\includegraphics[width=1\linewidth]{\hdir/AML_clustering.eps}}
     \caption{Результат кластеризации алгоритмом адаптивного метрического обучения}
@@ -432,7 +431,7 @@ Letter recognition dataset.
 \bibitem{opt_digits}
 \selectlanguageifdefined{english}
 Optical recognition of handwritten digits dataset.
-\url{http://archive.ics.uci.edu/ml/machine-learning-databases/optdigits/}.
+\url{http://archive.ics.uci.edu/ml/machine-} \url{learning-databases/optdigits/}.
 
 \bibitem{seeds}
 \selectlanguageifdefined{english}
@@ -442,12 +441,12 @@ Seeds dataset.
 \bibitem{image}
 \selectlanguageifdefined{english}
 Image segmentation dataset dataset.
-\url{http://archive.ics.uci.edu/ml/machine-learning-databases/image/}.
+\url{http://archive.ics.uci.edu/ml/machine-learning-} \url{databases/image/}.
 
 \bibitem{breast}
 \selectlanguageifdefined{english}
 Breast cancer wisconsin dataset.
-  \url{http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/}.
+  \url{http://archive.ics.uci.edu/ml/machine-learning-} \url{databases/breast-cancer-wisconsin/}.
 \Russian
 \end{thebibliography}
 
@@ -559,7 +558,7 @@ Cambridge University Press. 478~p.
 \selectlanguageifdefined{english}
 Letter recognition dataset.
 Available at:
-  \url{http://archive.ics.uci.edu/ml/machine-learning-databases/letter-recognition/}
+  \url{http://archive.ics.uci.edu/ml/machine-} \url{learning-databases/letter-recognition/}
 (accessed March~28, 2016).
 
 \bibitem{opt_digits}
@@ -573,21 +572,21 @@ Available at:
 \selectlanguageifdefined{english}
 Seeds dataset.
 Available at:
-  \url{http://archive.ics.uci.edu/ml/machine-learning-databases/00236/}
+  \url{http://archive.ics.uci.edu/ml/machine-learning-} \url{databases/00236/}
 (accessed March~28, 2016).
 
 \bibitem{image}
 \selectlanguageifdefined{english}
 Image segmentation dataset dataset.
 Available at:
-  \url{http://archive.ics.uci.edu/ml/machine-learning-databases/image/}
+  \url{http://archive.ics.uci.edu/ml/machine-} \url{learning-databases/image/}
 (accessed March~28, 2016).
 
 \bibitem{breast}
 \selectlanguageifdefined{english}
 Breast cancer wisconsin dataset.
 Available at:
-  \url{http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/}
+  \url{http://archive.ics.uci.edu/ml/machine-} \url{learning-databases/breast-cancer-wisconsin/}
 (accessed March~28, 2016).
 
 \end{thebibliography}
