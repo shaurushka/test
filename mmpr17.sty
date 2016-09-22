@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%             Стилевой файл Всероссийской конференции                       %%
-%%             Математические методы распознавания образов		                 %%
+%%             Стилевой файл Международной конференции                       %%
+%%             Интеллектуализация обработки информации		                 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%               copyleft (GPL)      К.В.Воронцов, 2007-2015                 %%
+%%               copyleft (GPL)      К.В.Воронцов, 2007-2016                 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{mmpr17}[2015/04/15 17-th Russian Conference "`Mathematical Method for Pattern Recognition"'  (MMPR)]
+\ProvidesPackage{idp11}[2016/04/15 11-th International Conference ``Intelligent Data Processing'' (IDP)]
 
 % Опция draft: выводить замечания, доп.информацию в оглавлении, статистику
 \newif\ifdraft\draftfalse
@@ -27,14 +27,11 @@
 \ProcessOptions
 
 \RequirePackage{cmap}
-\RequirePackage[cp1251]{inputenc}
-%\RequirePackage[T2A]{fontenc}
-
+\RequirePackage[utf8]{inputenc}
 \RequirePackage{amssymb}
 \RequirePackage{amsmath}
 \RequirePackage{mathrsfs}
 \RequirePackage{euscript}
-\RequirePackage{enumerate}
 %\RequirePackage{upgreek}
 \RequirePackage[english,russian]{babel}
 \RequirePackage{array}
@@ -112,6 +109,14 @@
 \newcommand{\ruseng}[2]{\iflanguage{russian}{#1}\relax\iflanguage{english}{#2}\relax}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Команда для дублирования символа, по которому разрывается формула на дв строки
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\hm}[1]{#1\nobreak\discretionary{}%
+{\hbox{$\mathsurround=0pt #1$}}{}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Оформление заголовков статей
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -138,9 +143,8 @@
     \end{flushleft}%
     \vskip\vskipAfterTitle
     % в чистовом режиме записать в оглавление только авторов и название
-    \ruseng
-        {\addcontentsline{toc}{mmrotitle}{\typeTocAuthorTitle{\@author@rus}{\@title@rus}}}%
-        {\addcontentsline{tec}{mmrotitle}{\typeTocAuthorTitle{\@author@eng}{\@title@eng}}}%
+    \ruseng{\addcontentsline{toc}{mmrotitle}{\typeTocAuthorTitle{\@author@rus}{\@title@rus}}}%
+           {\addcontentsline{tec}{mmrotitle}{\typeTocAuthorTitle{\@author@eng}{\@title@eng}}}%
     % в черновом режиме дописать в оглавление:
     % организацию, статус, имя файла, имена рецензентов, отметки о прохождении корректуры и рецензирования
     \ifdraft{\Russian
@@ -228,7 +232,7 @@
         {\xdef\@email{#3}}%
         {\xdef\@email{\@old@email,#3}}%
     %\index{#1}%
-    \ruseng{\index[_mmpr17rus]{#1}}{\index[_mmpr17eng]{#1}}%
+    \ruseng{\index[_idp11rus]{#1}}{\index[_idp11eng]{#1}}%
     \par\typeAuthor{#2} \hfill\typeEmail{#3}\gobblespace
 }
 \newcommand{\organization}[1]{%
@@ -240,9 +244,14 @@
 
 % Библиографическая запись текущей статьи
 \def\paper@record@rus{{\Russian
-    Математические методы распознавания образов, г. Светлогорск, 2015~г.}}
+    Международная конференция ИОИ-11. Испания, г. Барселона}}%, \mbox{19--25 сентября} 2015~г.}}
 \def\paper@record@eng{{\English
-	Mathematical Methods for Pattern Recognition, Svetlogorsk, 2015}}
+	International Conference IIP-11. Barcelona, Spain}}%, \mbox{September 19--25}, 2015}}
+%\def\paper@record{
+%	\ruseng{\Russian
+%    Международная конференция ИОИ-11. Испания, г. Барселона}%, \mbox{19--25 сентября} 2015~г.}}
+%	{\English
+%	International Conference IIP-11. Barcelona, Spain}}%, \mbox{September 19--25}, 2015}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Переопределение колонтитулов
@@ -264,8 +273,8 @@
         \rightmark\hfill\type@chapter@code\quad\thepage\\[-2ex]\hrule}}%
     \renewcommand{\@evenhead}{\parbox{\textwidth}{\footnotesize
         \thepage\quad\type@chapter@code\hfill\leftmark\\[-2ex]\hrule}}%
-    \renewcommand{\@oddfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record@eng}}%\hrule\vskip1ex
-    \renewcommand{\@evenfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record@rus}}%
+    \renewcommand{\@oddfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record@rus}}%}}%\hrule\vskip1ex
+    \renewcommand{\@evenfoot}{\parbox{\textwidth}{\scriptsize\slshape\paper@record@eng}}%}}%
 }
 \pagestyle{empty}
 
@@ -338,7 +347,7 @@
 
 % вёрстка одного пункта оглавления
 %\hangindent=0pt\hangafter=5
-\newcommand\l@mmrochapter{\vskip3ex\@dottedtocline{0}{0ex}{0ex}}
+\newcommand\l@mmrochapter{\vskip3ex\@dottedtocline{0}{0ex}{3ex}}
 \newcommand\l@mmrotitle{\smallskip\@dottedtocline{1}{0ex}{3ex}}
 
 % переопределение команды генерации оглавления
@@ -752,7 +761,7 @@
         \@for\@reviewer@name:=\@reviewers@list\do{%
             \ifthenelse{\equal{\@@reviewer}{\@reviewer@name}\or\equal{\@@reviewer}{*}}
                 {\ifwritebat
-                    \@write@reviewers@bat{\ZipAdd \@reviewer@name iip10.sty \@paper@name.tex \@paper@name.pdf}%
+                    \@write@reviewers@bat{\ZipAdd \@reviewer@name idp11.sty \@paper@name.tex \@paper@name.pdf}%
                 \fi}%
                 {}%
         }%
