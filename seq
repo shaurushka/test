@@ -1,0 +1,922 @@
+% This file was created with JabRef 2.10.
+% Encoding: UTF8
+
+
+@Article{Han:2004,
+author="Han, Jiawei
+and Pei, Jian
+and Yin, Yiwen
+and Mao, Runying",
+title="Mining Frequent Patterns without Candidate Generation: A Frequent-Pattern Tree Approach",
+journal="Data Mining and Knowledge Discovery",
+year="2004",
+volume="8",
+number="1",
+pages="53--87",
+issn="1573-756X",
+doi="10.1023/B:DAMI.0000005258.31418.83",
+url="http://dx.doi.org/10.1023/B:DAMI.0000005258.31418.83"
+}
+
+@misc{hse_demo_family,
+    author = "HSE",
+    title     = "http://www.hse.ru/en/demo/family/",
+    url       = "http://www.hse.ru/en/demo/family/"
+}
+
+@misc{ggp,
+    author = "GGP",
+    title = "``Parents and Children, 
+Men and Women in Family and in Society`` 
+is an all Russia representative panel sample survey",
+    url = "http://www.ggp-i.org/"
+}
+
+@misc{CSA,
+        author = "DanilGizdatullin",
+        title = "https://github.com/DanilGizdatullin/ContiguousSequencesAnalysis",
+        url = "https://github.com/DanilGizdatullin/ContiguousSequencesAnalysis"
+}
+
+@article{Jensen:2014,
+	Author = {Jensen, Anders Boeck and Moseley, Pope L. and Oprea, Tudor I. and Elles{\o}e, Sabrina Gade and Eriksson, Robert and Schmock, Henriette and Jensen, Peter Bj{\o}dstrup and Jensen, Lars Juhl and Brunak, S{\o}ren},
+	Date = {2014/06/24/online},
+	Date-Added = {2017-01-10 13:39:30 +0000},
+	Date-Modified = {2017-01-10 13:39:30 +0000},
+	Day = {24},
+	Journal = {Nature Communications},
+	L3 = {10.1038/ncomms5022; http://www.nature.com/articles/ncomms5022#supplementary-information},
+	M3 = {Article},
+	Month = {06},
+	Pages = {4022 EP  -},
+	Publisher = {The Author(s) SN  -},
+	Title = {Temporal disease trajectories condensed from population-wide registry data covering 6.2 million patients},
+	Ty = {JOUR},
+	Url = {http://dx.doi.org/10.1038/ncomms5022},
+	Volume = {5},
+	Year = {2014},
+	Bdsk-Url-1 = {http://dx.doi.org/10.1038/ncomms5022}}
+
+
+@article{Elzinga:2013,
+title = "Versatile string kernels ",
+journal = "Theoretical Computer Science ",
+volume = "495",
+number = "",
+pages = "50 - 65",
+year = "2013",
+note = "",
+issn = "0304-3975",
+doi = "http://dx.doi.org/10.1016/j.tcs.2013.06.006",
+url = "http://www.sciencedirect.com/science/article/pii/S030439751300460X",
+author = "Cees H. Elzinga and Hui Wang",
+keywords = "String kernel",
+keywords = "String matching",
+keywords = "Subsequences",
+keywords = "Gap-penalizing",
+keywords = "Soft matching",
+keywords = "Run-length encoding",
+keywords = "Partial rankings ",
+abstract = "Abstract This paper proposes a class of string kernels that can handle a variety of subsequence-based features. Slight adaptations of the basic algorithm allow for weighing subsequence lengths, restricting or soft-penalizing gap-size, character-weighing and soft-matching of characters. An easy extension of the kernels allows for comparing run-length encoded strings with a time-complexity that is independent of the length of the original strings. Such kernels have applications in image processing, computational biology, in demography and in comparing partial rankings. "
+}
+
+
+
+@article{Egho:2015,
+  author    = {Elias Egho and
+               Chedy Ra{\"{\i}}ssi and
+               Toon Calders and
+               Nicolas Jay and
+               Amedeo Napoli},
+  title     = {On measuring similarity for sequences of itemsets},
+  journal   = {Data Min. Knowl. Discov.},
+  volume    = {29},
+  number    = {3},
+  pages     = {732--764},
+  year      = {2015},
+  url       = {http://dx.doi.org/10.1007/s10618-014-0362-1},
+  doi       = {10.1007/s10618-014-0362-1},
+  timestamp = {Fri, 10 Apr 2015 16:19:16 +0200},
+  biburl    = {http://dblp2.uni-trier.de/rec/bib/journals/datamine/EghoRCJN15},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@inproceedings{Viger:2016,
+  author    = {Philippe Fournier{-}Viger and
+               Jerry Chun{-}Wei Lin and
+               Antonio Gomariz and
+               Ted Gueniche and
+               Azadeh Soltani and
+               Zhihong Deng and
+               Hoang Thanh Lam},
+  title     = {The {SPMF} Open-Source Data Mining Library Version 2},
+  booktitle = {Machine Learning and Knowledge Discovery in Databases - European Conference,
+               {ECML} {PKDD} 2016, Riva del Garda, Italy, September 19-23, 2016,
+               Proceedings, Part {III}},
+  pages     = {36--40},
+  year      = {2016},
+  url       = {http://dx.doi.org/10.1007/978-3-319-46131-1_8},
+  doi       = {10.1007/978-3-319-46131-1_8},
+  timestamp = {Mon, 05 Sep 2016 12:12:24 +0200},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/pkdd/Fournier-VigerL16},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+
+
+@InProceedings{Trie:1959,
+    Title = {File searching using variable length keys},
+    Author = {de la Briandais},
+    Booktitle = {File searching using variable length keys. Proc. Western J. Computer Conf. pp. 295-–298. Cited by Brass. Rene},
+    Year = {1959}
+}
+
+
+@InProceedings{Ganter:2001,
+    Title = {Pattern Structures and Their Projections},
+    Author = {Bernhard Ganter and Sergei O. Kuznetsov},
+    Booktitle = {Harry S. Delugach and Gerd Stumme, editors, Conceptual Structures:
+Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
+    Year = {2001}
+}
+
+
+@InProceedings{Alam:2014,
+  Title                    = {Defining Views with Formal Concept Analysis for Understanding {SPARQL} Query Results},
+  Author                   = {Mehwish Alam and Amedeo Napoli},
+  Booktitle                = {Proceedings of the Eleventh International Conference on Concept Lattices and Their Applications, Ko{\v{s}}ice, Slovakia, October 7-10, 2014.},
+  Year                     = {2014},
+  Pages                    = {255--266},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/cla/AlamN14},
+  Crossref                 = {DBLP:conf/cla/2014},
+  Timestamp                = {Mon, 27 Oct 2014 21:23:27 +0100},
+  Url                      = {http://ceur-ws.org/Vol-1252/cla2014_submission_32.pdf}
+}
+
+@InProceedings{Hacene:2007,
+  Title                    = {A Proposal for Combining Formal Concept Analysis and Description Logics for Mining Relational Data},
+  Author                   = {Mohamed Rouane Hacene and Marianne Huchard and Amedeo Napoli and Petko Valtchev},
+  Booktitle                = {Formal Concept Analysis, 5th International Conference, {ICFCA} 2007, Clermont-Ferrand, France, February 12-16, 2007, Proceedings},
+  Year                     = {2007},
+  Pages                    = {51--65},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icfca/RouaneHNV07},
+  Crossref                 = {DBLP:conf/icfca/2007},
+  Doi                      = {10.1007/978-3-540-70901-5_4},
+  Timestamp                = {Tue, 11 Sep 2007 15:39:40 +0200},
+  Url                      = {http://dx.doi.org/10.1007/978-3-540-70901-5_4}
+}
+
+@InProceedings{Ignatov:2013,
+  Title                    = {Near-Duplicate Detection for Online-Shops Owners: An FCA-Based Approach},
+  Author                   = {Dmitry I. Ignatov and Andrey V. Konstantinov and Yana Chubis},
+  Booktitle                = {ECIR},
+  Year                     = {2013},
+  Pages                    = {722-725},
+
+  Bibsource                = {DBLP, http://dblp.uni-trier.de},
+  Crossref                 = {DBLP:conf/ecir/2013},
+  Ee                       = {http://dx.doi.org/10.1007/978-3-642-36973-5_69}
+}
+
+@InProceedings{Ignatov:2012,
+  Title                    = {{A New Cross-Validation Technique to Evaluate Quality of Recommender Systems}},
+  Author                   = {Dmitry I. Ignatov and Jonas Poelmans and Guido Dedene and Stijn Viaene},
+  Booktitle                = {PerMIn},
+  Year                     = {2012},
+  Pages                    = {195-202},
+  Publisher                = {Springer},
+  Series                   = {LNCS},
+  Volume                   = {7143},
+
+  Bibsource                = {DBLP, http://dblp.uni-trier.de},
+  Crossref                 = {DBLP:conf/permin/2012},
+  Ee                       = {http://dx.doi.org/10.1007/978-3-642-27387-2_25},
+  Owner                    = {Dmitry},
+  Timestamp                = {2012.04.21}
+}
+
+@InProceedings{Wang:2004,
+  Title                    = {{BIDE:} Efficient Mining of Frequent Closed Sequences},
+  Author                   = {Jianyong Wang and Jiawei Han},
+  Booktitle                = {Proceedings of the 20th International Conference on Data Engineering, {ICDE} 2004},
+  Year                     = {2004},
+  Pages                    = {79--90},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icde/WangH04},
+  Crossref                 = {DBLP:conf/icde/2004},
+  Doi                      = {10.1109/ICDE.2004.1319986},
+  Timestamp                = {Sat, 09 Aug 2014 14:37:16 +0200},
+  Url                      = {http://dx.doi.org/10.1109/ICDE.2004.1319986}
+}
+
+@Article{Aassve:2007,
+  Title                    = {Strings of Adulthood: A Sequence Analysis of Young British Women’s Work-Family Trajectories},
+  Author                   = {Aassve, Arnstein and Francesco C. Billari and Raffaella Piccarreta},
+  Journal                  = {European Journal of Population},
+  Year                     = {2007},
+  Number                   = {3/4},
+  Pages                    = {369--388},
+  Volume                   = {23},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Abbott:2000,
+  Title                    = {Sequence Analysis and Optimal Matching Methods in Sociology : Review and Prospect},
+  Author                   = {Abbott, Andrew and Angela Tsay},
+  Journal                  = {Sociological Methods \& Research},
+  Year                     = {2000},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@InProceedings{Agrawal:1995,
+  Title                    = {Mining Sequential Patterns},
+  Author                   = {Rakesh Agrawal and Ramakrishnan Srikant},
+  Booktitle                = {Proceedings of the Eleventh International Conference on Data Engineering},
+  Year                     = {1995},
+  Pages                    = {3--14},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icde/AgrawalS95},
+  Doi                      = {10.1109/ICDE.1995.380415},
+  Timestamp                = {Sat, 09 Aug 2014 14:37:14 +0200},
+  Url                      = {http://dx.doi.org/10.1109/ICDE.1995.380415}
+}
+
+@Article{Aisenbrey:2010,
+  Title                    = {New Life for Old Ideas: The ‘Second Wave’ of Sequence Analysis Bringing the ‘Course’ Back Into the Life Course},
+  Author                   = {Aisenbrey, Silke and Anette E. Fasang},
+  Journal                  = {Sociological Methods \& Research},
+  Year                     = {2010},
+  Number                   = {3},
+  Pages                    = {420--462},
+  Volume                   = {38},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Billari:2005,
+  Title                    = {Analyzing Demographic Life Courses through Sequence Analysis},
+  Author                   = {Billari, Francesco and Raffaella Piccarreta},
+  Journal                  = {Mathematical Population Studies},
+  Year                     = {2005},
+  Number                   = {2},
+  Pages                    = {81--106},
+  Volume                   = {12},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Billari:2001,
+  Title                    = {Sequence Analysis in Demographic Research},
+  Author                   = {Billari, Francesco C.},
+  Journal                  = {Canadian Studies in Population},
+  Year                     = {2001},
+  Number                   = {2},
+  Pages                    = {439--458.},
+  Volume                   = {28},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Billari:2006,
+  Title                    = {{Timing, Sequencing, and Quantum of Life Course Events: A Machine Learning Approach}},
+  Author                   = {Billari, Francesco C. and Johannes F\"{u}rnkranz and Alexia Prskawetz},
+  Journal                  = {European Journal of Population},
+  Year                     = {2006},
+  Number                   = {1},
+  Pages                    = {37--65},
+  Volume                   = {22},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Billari:2004,
+  Title                    = {Italian ‘Latest-Late’ Transition to Adulthood: An Exploration of Its Consequences on Fertility},
+  Author                   = {Billari, Francesco C. and Alessandro Rosina},
+  Journal                  = {Genus},
+  Year                     = {2004},
+  Pages                    = {71},
+  Volume                   = {1},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Blockeel:2012,
+  Title                    = {An inductive database system based on virtual mining views},
+  Author                   = {Blockeel, Hendrik and Calders, Toon and Fromont, Élisa and Goethals, Bart and Prado, Adriana and Robardet, Céline},
+  Journal                  = {Data Mining and Knowledge Discovery},
+  Year                     = {2012},
+  Number                   = {1},
+  Pages                    = {247-287},
+  Volume                   = {24},
+
+  Doi                      = {10.1007/s10618-011-0229-7},
+  ISSN                     = {1384-5810},
+  Keywords                 = {Inductive databases; Query languages; Query processing},
+  Language                 = {English},
+  Publisher                = {Springer US},
+  Url                      = {http://dx.doi.org/10.1007/s10618-011-0229-7}
+}
+
+@InProceedings{Blockeel:2001,
+  Title                    = {Detecting Temporal Change in Event Sequences: An Application to Demographic Data},
+  Author                   = {Hendrik Blockeel and Johannes F{\"{u}}rnkranz and Alexia Prskawetz and Francesco C. Billari},
+  Booktitle                = {Principles of Data Mining and Knowledge Discovery, 5th Eur. Conf., {PKDD} 2001},
+  Year                     = {2001},
+  Pages                    = {29--41},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/pkdd/BlockeelFPB01},
+  Doi                      = {10.1007/3-540-44794-6_3},
+  Timestamp                = {Tue, 28 Jun 2011 15:12:02 +0200},
+  Url                      = {http://dx.doi.org/10.1007/3-540-44794-6_3}
+}
+
+@Article{WEKA:2010,
+  Title                    = {{{WEKA} - Experiences with a Java Open-Source Project}},
+  Author                   = {Remco R. Bouckaert and Eibe Frank and Mark A. Hall and Geoffrey Holmes and Bernhard Pfahringer and Peter Reutemann and Ian H. Witten},
+  Journal                  = {Journal of Machine Learning Research},
+  Year                     = {2010},
+  Pages                    = {2533--2541},
+  Volume                   = {11},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/journals/jmlr/BouckaertFHHPRW10},
+  Timestamp                = {Fri, 01 Apr 2011 14:32:51 +0200},
+  Url                      = {http://portal.acm.org/citation.cfm?id=1953016}
+}
+
+@InCollection{Boulicaut:2010,
+  Title                    = {Data Mining Query Languages},
+  Author                   = {Boulicaut, Jean-Francois and Masson, Cyrille},
+  Booktitle                = {Data Mining and Knowledge Discovery Handbook},
+  Publisher                = {Springer US},
+  Year                     = {2010},
+  Editor                   = {Maimon, Oded and Rokach, Lior},
+  Pages                    = {655-664},
+
+  Doi                      = {10.1007/978-0-387-09823-4_33},
+  ISBN                     = {978-0-387-09822-7},
+  Keywords                 = {Query languages; Association Rules; Inductive Databases},
+  Language                 = {English},
+  Url                      = {http://dx.doi.org/10.1007/978-0-387-09823-4_33}
+}
+
+@Article{Jackson:2005,
+  Title                    = {The Structure of the Life Course: Gender and Racioethnic Variation in the Occurrence and Sequencing of Role Transitions},
+  Author                   = {Braboy Jackson, Pamela and Alexandra Berkowitz},
+  Journal                  = {Advances in Life Course Research},
+  Year                     = {2005},
+  Number                   = {9},
+  Pages                    = {55--90},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Book{Breiman:1984,
+  Title                    = {Classification and Regression Trees},
+  Author                   = {Leo Breiman and J. H. Friedman and R. A. Olshen and C. J. Stone},
+  Publisher                = {Wadsworth},
+  Year                     = {1984},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/books/wa/BreimanFOS84},
+  ISBN                     = {0-534-98053-8},
+  Timestamp                = {Thu, 03 Jan 2002 11:51:52 +0100}
+}
+
+@Article{Buzmakov:2016,
+  Title                    = {On mining complex sequential data by means of {FCA} and pattern structures},
+  Author                   = {Aleksey Buzmakov and Elias Egho and Nicolas Jay and Sergei O. Kuznetsov and Amedeo Napoli and Chedy Ra{\"{\i}}ssi},
+  Journal                  = {Int. J. General Systems},
+  Year                     = {2016},
+  Number                   = {2},
+  Pages                    = {135--159},
+  Volume                   = {45},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/journals/ijgs/BuzmakovEJKNR16},
+  Doi                      = {10.1080/03081079.2015.1072925},
+  Timestamp                = {Wed, 23 Mar 2016 19:17:09 +0100},
+  Url                      = {http://dx.doi.org/10.1080/03081079.2015.1072925}
+}
+
+@InProceedings{Buzmakov:2013,
+  Title                    = {{On Projections of Sequential Pattern Structures (with an Application on Care Trajectories)}},
+  Author                   = {Aleksey Buzmakov and Elias Egho and Nicolas Jay and Sergei O. Kuznetsov and Amedeo Napoli and Chedy Ra{\"{\i}}ssi},
+  Booktitle                = {10th Int. Conf. on Concept Lattices and Their Applications},
+  Year                     = {2013},
+  Pages                    = {199--208},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/cla/BuzmakovEJKNR13},
+  Timestamp                = {Mon, 28 Oct 2013 20:22:21 +0100},
+  Url                      = {http://ceur-ws.org/Vol-1062/paper17.pdf}
+}
+
+@Article{Cerf:2013,
+  Title                    = {Parameter-free classification in multi-class imbalanced data sets },
+  Author                   = {Loïc Cerf and Dominique Gay and Nazha Selmaoui-Folcher and Bruno Crémilleux and Jean-François Boulicaut},
+  Journal                  = {Data \& Knowledge Engineering },
+  Year                     = {2013},
+  Number                   = {0},
+  Pages                    = {109 - 129},
+  Volume                   = {87},
+
+  Abstract                 = {Abstract Many applications deal with classification in multi-class imbalanced contexts. In such difficult situations, classical CBA-like approaches (Classification Based on Association rules) show their limits. Most CBA-like methods actually are One-Vs-All approaches (OVA), i.e., the selected classification rules are relevant for one class and irrelevant for the union of the other classes. In this paper, we point out recurrent problems encountered by \{OVA\} approaches applied to multi-class imbalanced data sets (e.g., improper bias towards majority classes, conflicting rules). That is why we propose a new One-Versus-Each (OVE) framework. In this framework, a rule has to be relevant for one class and irrelevant for every other class taken separately. Our approach, called fitcare, is empirically validated on various benchmark data sets and our theoretical findings are confirmed. },
+  Doi                      = {http://dx.doi.org/10.1016/j.datak.2013.06.001},
+  ISSN                     = {0169-023X},
+  Keywords                 = {Classification},
+  Url                      = {http://www.sciencedirect.com/science/article/pii/S0169023X13000682}
+}
+
+@Book{Cimiano:2006,
+  Title                    = {Ontology learning and population from text - algorithms, evaluation and applications},
+  Author                   = {Philipp Cimiano},
+  Publisher                = {Springer},
+  Year                     = {2006},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/books/daglib/0017553},
+  Doi                      = {10.1007/978-0-387-39252-3},
+  ISBN                     = {978-0-387-30632-2},
+  Timestamp                = {Thu, 24 Mar 2011 18:59:40 +0100},
+  Url                      = {http://dx.doi.org/10.1007/978-0-387-39252-3}
+}
+
+@Article{Orange:2013,
+  Title                    = {{Orange: Data Mining Toolbox in Python}},
+  Author                   = {Janez Dem\v{s}ar and Toma\v{z} Curk and Ale\v{s} Erjavec and \v{C}rt Gorup and Toma\v{z} Ho\v{c}evar and Mitar Milutinovi\v{c} and Martin Mo\v{z}ina and Matija Polajnar and Marko Toplak and An\v{z}e Stari\v{c} and Miha \v{S}tajdohar and Lan Umek and Lan \v{Z}agar and Jure \v{Z}bontar and Marinka \v{Z}itnik and Bla\v{z} Zupan},
+  Journal                  = {Journal of Machine Learning Research},
+  Year                     = {2013},
+  Pages                    = {2349-2353},
+  Volume                   = {14},
+
+  Url                      = {http://jmlr.org/papers/v14/demsar13a.html}
+}
+
+@InProceedings{Dong:1999,
+  Title                    = {Efficient Mining of Emerging Patterns: Discovering Trends and Differences},
+  Author                   = {Dong, Guozhu and Li, Jinyan},
+  Booktitle                = {Proc. of the Fifth ACM SIGKDD Int. Conf. on Knowledge Discovery and Data Mining},
+  Year                     = {1999},
+  Pages                    = {43--52},
+  Publisher                = {ACM},
+  Series                   = {KDD '99},
+
+  Acmid                    = {312191},
+  Doi                      = {10.1145/312129.312191},
+  ISBN                     = {1-58113-143-7},
+  Numpages                 = {10},
+  Url                      = {http://doi.acm.org/10.1145/312129.312191}
+}
+
+@InProceedings{Dong:1999a,
+  Title                    = {{CAEP:} Classification by Aggregating Emerging Patterns},
+  Author                   = {Guozhu Dong and Xiuzhen Zhang and Limsoon Wong and Jinyan Li},
+  Booktitle                = {Discovery Science, 2nd Int. Conf., {DS} '99},
+  Year                     = {1999},
+  Pages                    = {30--42},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/dis/DongZWL98},
+  Doi                      = {10.1007/3-540-46846-3_4},
+  Timestamp                = {Mon, 20 Jun 2011 17:28:41 +0200},
+  Url                      = {http://dx.doi.org/10.1007/3-540-46846-3_4}
+}
+
+@Article{Finn:1983,
+  Title                    = {{On Machine-Oriented Formalization of Plausible Reasoning in the Style of F. Backon–J. S. Mill}},
+  Author                   = {Viktor K. Finn},
+  Journal                  = {Semiotika i Informatika},
+  Year                     = {1983},
+  Number                   = {20},
+  Pages                    = {35–101},
+
+  Owner                    = {machine1},
+  Timestamp                = {2015.06.03}
+}
+
+@Article{fournierviger:2014,
+  Title                    = {{SPMF: A Java Open-Source Pattern Mining Library}},
+  Author                   = {Philippe Fournier-Viger and Antonio Gomariz and Ted Gueniche and Azadeh Soltani and Cheng-Wei Wu and Vincent S. Tseng},
+  Journal                  = {Journal of Machine Learning Research},
+  Year                     = {2014},
+  Pages                    = {3389-3393},
+  Volume                   = {15},
+
+  Url                      = {http://jmlr.org/papers/v15/fournierviger14a.html}
+}
+
+@Article{Gabadinho:2011,
+  Title                    = {{Analyzing and Visualizing State Sequences in R with TraMineR}},
+  Author                   = {Alexis Gabadinho and Gilbert Ritschard and Nicolas S Müller and Matthias Studer},
+  Journal                  = {J. of Stat. Software},
+  Year                     = {2011},
+
+  Month                    = {4},
+  Number                   = {4},
+  Pages                    = {1--37},
+  Volume                   = {40},
+
+  Accepted                 = {2011-01-03},
+  Bibdate                  = {2011-01-03},
+  Coden                    = {JSSOBK},
+  Day                      = {7},
+  ISSN                     = {1548-7660},
+  Submitted                = {2009-08-12},
+  Url                      = {http://www.jstatsoft.org/v40/i04}
+}
+
+@Book{Ganter:1999:FCA,
+  Title                    = {{Formal Concept Analysis: Mathematical Foundations}},
+  Author                   = {Ganter, Bernhard and Wille, Rudolf},
+  Publisher                = {Springer-Verlag New York, Inc.},
+  Year                     = {1999},
+
+  Address                  = {Secaucus, NJ, USA},
+  Edition                  = {1st},
+
+  ISBN                     = {3540627715},
+  Owner                    = {Dmitry},
+  Timestamp                = {2012.04.21}
+}
+
+@Article{Gauthier:2009,
+  Title                    = {{How Much Does It Cost? Optimization of Costs in Sequence Analysis of Social Science Data}},
+  Author                   = {Gauthier, Jacques-Antoine and Eric D. Widmer and Philipp Bucher and Cédric Notredame},
+  Journal                  = {Sociological Methods \& Research},
+  Year                     = {2009},
+  Number                   = {1},
+  Pages                    = {197--231},
+  Volume                   = {38},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Book{Han:2006,
+  Title                    = {Data Mining: Concepts and Techniques},
+  Author                   = {Jiawei Han and Micheline Kamber},
+  Publisher                = {Morgan Kaufmann},
+  Year                     = {2006},
+  Edition                  = {2nd}
+}
+
+@InProceedings{Ignatov:2011b,
+  Title                    = {{Recommender System Based on Algorithm of Bicluster Analysis RecBi}},
+  Author                   = {Ignatov,Dmitry and Poelmans, Jonas and Zaharchuk, Vasily},
+  Booktitle                = {CEUR Workshop proceedings Vol-757, CDUD'11 - Concept Discovery in Unstructured Data},
+  Year                     = {2011},
+  Editor                   = {Ignatov, Dmitry and Poelmans,Jonas and Kuznetsov, Sergei },
+  Pages                    = {pp. 122-126},
+
+  Owner                    = {Dmitry},
+  Timestamp                = {2012.04.21}
+}
+
+@InProceedings{Ignatov:2008,
+  Title                    = {{Concept-based Recommendations for Internet Advertisement}},
+  Author                   = {Ignatov, Dmitry I. and Kuznetsov, Sergei O.},
+  Booktitle                = {Proc. CLA 2008},
+  Year                     = {2008},
+  Editor                   = {Belohlavek, R. and Kuznetsov, S. O.},
+  Pages                    = {157--166},
+  Publisher                = {Palacký University, Olomouc, 2008},
+  Series                   = {CEUR WS},
+  Volume                   = {Vol. 433},
+
+  ISBN                     = {978–80–244–2111–7},
+  Owner                    = {Dmitry},
+  Timestamp                = {2012.04.21}
+}
+
+@InProceedings{Ignatov:2011a,
+  Title                    = {{From Triconcepts to Triclusters}},
+  Author                   = {Ignatov, Dmitry I. and Kuznetsov, Sergei O. and Magizov, Ruslan A. and Zhukov, Leonid E.},
+  Booktitle                = {Proceedings of the 13th international conference on Rough sets, fuzzy sets, data mining and granular computing},
+  Year                     = {2011},
+
+  Address                  = {Berlin, Heidelberg},
+  Pages                    = {257--264},
+  Publisher                = {Springer-Verlag},
+  Series                   = {RSFDGrC'11},
+
+  Acmid                    = {2026832},
+  ISBN                     = {978-3-642-21880-4},
+  Keywords                 = {data mining, folksonomy, formal concept analysis, threeway data, triclustering},
+  Location                 = {Moscow, Russia},
+  Numpages                 = {8},
+  Owner                    = {Dmitry},
+  Timestamp                = {2012.04.21},
+  Url                      = {http://dl.acm.org/citation.cfm?id=2026782.2026832}
+}
+
+@InProceedings{Ignatov:2015,
+  Title                    = {Pattern Mining and Machine Learning for Demographic Sequences},
+  Author                   = {Dmitry I. Ignatov and Ekaterina Mitrofanova and Anna Muratova and Danil Gizdatullin},
+  Booktitle                = {Knowledge Engineering and Semantic Web, {KESW} 2015, Proceedings},
+  Year                     = {2015},
+  Pages                    = {225--239},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/kesw/IgnatovMMG15},
+  Doi                      = {10.1007/978-3-319-24543-0_17},
+  Timestamp                = {Wed, 30 Sep 2015 10:17:23 +0200},
+  Url                      = {http://dx.doi.org/10.1007/978-3-319-24543-0_17}
+}
+
+@InProceedings{Kaytoue:2015,
+  Title                    = {Pattern Structures and Concept Lattices for Data Mining and Knowledge Processing},
+  Author                   = {Mehdi Kaytoue and V{\'{\i}}ctor Codocedo and Aleksey Buzmakov and Jaume Baixeries and Sergei O. Kuznetsov and Amedeo Napoli},
+  Booktitle                = {{ECML} {PKDD} 2015, Proceedings, Part {III}},
+  Year                     = {2015},
+  Pages                    = {227--231},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/pkdd/KaytoueCBBKN15},
+  Doi                      = {10.1007/978-3-319-23461-8_19},
+  Timestamp                = {Sun, 30 Aug 2015 12:57:34 +0200},
+  Url                      = {http://dx.doi.org/10.1007/978-3-319-23461-8_19}
+}
+
+@InProceedings{Kuznetsov:1999,
+  Title                    = {Learning of Simple Conceptual Graphs from Positive and Negative Examples},
+  Author                   = {Sergei O. Kuznetsov},
+  Booktitle                = {{PKDD} '99, Proceedings},
+  Year                     = {1999},
+  Pages                    = {384--391},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/pkdd/Kuznetsov99},
+  Doi                      = {10.1007/978-3-540-48247-5_47},
+  Timestamp                = {Mon, 20 Jun 2011 17:30:34 +0200},
+  Url                      = {http://dx.doi.org/10.1007/978-3-540-48247-5_47}
+}
+
+@InProceedings{Low-Kam:2013,
+  Title                    = {Mining Statistically Significant Sequential Patterns},
+  Author                   = {Cecile Low-Kam and Chedy Raissi and Mehdi Kaytoue and Jian Pei},
+  Booktitle                = {IEEE 13\textsuperscript{th} Int. Conf. on Data Mining},
+  Year                     = {2013},
+  Pages                    = {488--496},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.14}
+}
+
+@Book{Mill:1843,
+  Title                    = {A system of logic, ratonative and inductive},
+  Author                   = {John Stuart Mill},
+  Publisher                = {J. W. Parker},
+  Year                     = {1843},
+
+  Address                  = {London},
+  Volume                   = {Vol. 1},
+
+  Owner                    = {machine1},
+  Timestamp                = {2015.06.03}
+}
+
+@InProceedings{Pei:2001,
+  Title                    = {{PrefixSpan: Mining Sequential Patterns by Prefix-Projected Growth}},
+  Author                   = {Jian Pei and Jiawei Han and Behzad Mortazavi{-}Asl and Helen Pinto and Qiming Chen and Umeshwar Dayal and Meichun Hsu},
+  Booktitle                = {Proceedings of the 17th International Conference on Data Engineering},
+  Year                     = {2001},
+  Pages                    = {215--224},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icde/PeiHPCDH01},
+  Doi                      = {10.1109/ICDE.2001.914830},
+  Timestamp                = {Sat, 09 Aug 2014 14:37:16 +0200},
+  Url                      = {http://dx.doi.org/10.1109/ICDE.2001.914830}
+}
+
+@Article{Pei:2004,
+  Title                    = {Mining Sequential Patterns by Pattern-Growth: The PrefixSpan Approach},
+  Author                   = {Jian Pei and Jiawei Han and Behzad Mortazavi{-}Asl and Jianyong Wang and Helen Pinto and Qiming Chen and Umeshwar Dayal and Meichun Hsu},
+  Journal                  = {{IEEE} Trans. Knowl. Data Eng.},
+  Year                     = {2004},
+  Number                   = {11},
+  Pages                    = {1424--1440},
+  Volume                   = {16},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/journals/tkde/PeiHMWPCDH04},
+  Doi                      = {10.1109/TKDE.2004.77},
+  Timestamp                = {Wed, 09 Sep 2015 09:50:37 +0200},
+  Url                      = {http://dx.doi.org/10.1109/TKDE.2004.77}
+}
+
+@Article{Quinlan:1986,
+  Title                    = {Induction of Decision Trees},
+  Author                   = {J. Ross Quinlan},
+  Journal                  = {Machine Learning},
+  Year                     = {1986},
+  Number                   = {1},
+  Pages                    = {81--106},
+  Volume                   = {1},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/journals/ml/Quinlan86},
+  Doi                      = {10.1023/A:1022643204877},
+  Timestamp                = {Thu, 26 May 2011 15:24:55 +0200},
+  Url                      = {http://dx.doi.org/10.1023/A:1022643204877}
+}
+
+@Article{Ritschard:2005,
+  Title                    = {Life Course Data In Demography And Social Sciences: Statistical And Data-Mining Approaches},
+  Author                   = {Ritschard, Gilbert and Michel Oris},
+  Journal                  = {Adv. in Life Course Research},
+  Year                     = {2005},
+  Pages                    = {283--314},
+  Volume                   = {10},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@PhdThesis{Rudolph:2006,
+  Title                    = {Relational exploration: combining description logics and formal concept analysis for knowledge specification},
+  Author                   = {Sebastian Rudolph},
+  School                   = {Dresden University of Technology},
+  Year                     = {2006},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/phd/de/Rudolph2006},
+  ISBN                     = {978-3-86644-113-2},
+  Timestamp                = {Wed, 18 Apr 2012 14:13:31 +0200},
+  Url                      = {http://hsss.slub-dresden.de/deds-access/hsss.urlmapping.MappingServlet?id=1172682174599-1228}
+}
+
+@Article{Wiggins:2007,
+  Title                    = {Optimal Matching Analysis Using Ideal Types to Describe the Lifecourse: An Illustration of How Histories of Work, Partnerships and Housing Relate to Quality of Life in Early Old Age},
+  Author                   = {Wiggins, Richard D. and Christian Erzberger Martin Hyde and Paul Higgs and David Blane},
+  Journal                  = {International Journal of Social Research Methodology},
+  Year                     = {2007},
+  Number                   = {4},
+  Pages                    = {259--78},
+  Volume                   = {10},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Article{Worts:2013,
+  Title                    = {Individualization, Opportunity and Jeopardy in American Women’s Work and Family Lives: A Multi-State Sequence Analysis},
+  Author                   = {Worts, Diana and Amanda Sacker and Anne McMunn and Peggy McDonough},
+  Journal                  = {Advances in Life Course Research},
+  Year                     = {2013},
+  Number                   = {4},
+  Pages                    = {296--318},
+  Volume                   = {18},
+
+  Owner                    = {Admin},
+  Timestamp                = {2015.07.13}
+}
+
+@Proceedings{DBLP:conf/icde/2004,
+  Title                    = {Proceedings of the 20th International Conference on Data Engineering, {ICDE} 2004, 30 March - 2 April 2004, Boston, MA, {USA}},
+  Year                     = {2004},
+  Editor                   = {Z. Meral {\"{O}}zsoyoglu and Stanley B. Zdonik},
+  Publisher                = {{IEEE} Computer Society},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icde/2004},
+  ISBN                     = {0-7695-2065-0},
+  Timestamp                = {Tue, 24 Jan 2012 13:35:47 +0100}
+}
+
+@Proceedings{DBLP:conf/dis/1999,
+  Title                    = {Discovery Science, Second International Conference, {DS} '99, Tokyo, Japan, December, 1999, Proceedings},
+  Year                     = {1999},
+  Editor                   = {Setsuo Arikawa and Koichi Furukawa},
+  Publisher                = {Springer},
+  Series                   = {Lecture Notes in Computer Science},
+  Volume                   = {1721},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/dis/1999},
+  ISBN                     = {3-540-66713-X},
+  Timestamp                = {Thu, 03 Jan 2002 11:56:34 +0100}
+}
+
+@Proceedings{DBLP:conf/cla/2014,
+  Title                    = {Proceedings of the Eleventh International Conference on Concept Lattices and Their Applications, Ko{\v{s}}ice, Slovakia, October 7-10, 2014},
+  Year                     = {2014},
+  Editor                   = {Karell Bertet and Sebastian Rudolph},
+  Publisher                = {CEUR-WS.org},
+  Series                   = {{CEUR} Workshop Proceedings},
+  Volume                   = {1252},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/cla/2014},
+  Timestamp                = {Mon, 27 Oct 2014 21:19:28 +0100},
+  Url                      = {http://ceur-ws.org/Vol-1252}
+}
+
+@Proceedings{DBLP:conf/icde/2001,
+  Title                    = {Proceedings of the 17th International Conference on Data Engineering, April 2-6, 2001, Heidelberg, Germany},
+  Year                     = {2001},
+  Editor                   = {Dimitrios Georgakopoulos and Alexander Buchmann},
+  Publisher                = {{IEEE} Computer Society},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icde/2001},
+  ISBN                     = {0-7695-1001-9},
+  Timestamp                = {Tue, 24 Jan 2012 13:35:47 +0100}
+}
+
+@Proceedings{DBLP:conf/icfca/2007,
+  Title                    = {Formal Concept Analysis, 5th International Conference, {ICFCA} 2007, Clermont-Ferrand, France, February 12-16, 2007, Proceedings},
+  Year                     = {2007},
+  Editor                   = {Sergei O. Kuznetsov and Stefan Schmidt},
+  Publisher                = {Springer},
+  Series                   = {Lecture Notes in Computer Science},
+  Volume                   = {4390},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icfca/2007},
+  ISBN                     = {3-540-70828-6},
+  Timestamp                = {Mon, 21 May 2007 12:52:44 +0200}
+}
+
+@Proceedings{DBLP:conf/cla/2013,
+  Title                    = {Proceedings of the Tenth International Conference on Concept Lattices and Their Applications, La Rochelle, France, October 15-18, 2013},
+  Year                     = {2013},
+  Editor                   = {Manuel Ojeda{-}Aciego and Jan Outrata},
+  Publisher                = {CEUR-WS.org},
+  Series                   = {{CEUR} Workshop Proceedings},
+  Volume                   = {1062},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/cla/2013},
+  Timestamp                = {Mon, 28 Oct 2013 20:19:33 +0100},
+  Url                      = {http://ceur-ws.org/Vol-1062}
+}
+
+@Proceedings{DBLP:conf/pkdd/2001,
+  Title                    = {Principles of Data Mining and Knowledge Discovery, 5th European Conference, {PKDD} 2001, Freiburg, Germany, September 3-5, 2001, Proceedings},
+  Year                     = {2001},
+  Editor                   = {Luc De Raedt and Arno Siebes},
+  Publisher                = {Springer},
+  Series                   = {Lecture Notes in Computer Science},
+  Volume                   = {2168},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/pkdd/2001},
+  ISBN                     = {3-540-42534-9},
+  Timestamp                = {Mon, 22 Jul 2002 14:00:49 +0200}
+}
+
+@Proceedings{DBLP:conf/icde/95,
+  Title                    = {Proceedings of the Eleventh International Conference on Data Engineering, March 6-10, 1995, Taipei, Taiwan},
+  Year                     = {1995},
+  Editor                   = {Philip S. Yu and Arbee L. P. Chen},
+  Publisher                = {{IEEE} Computer Society},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/icde/95},
+  ISBN                     = {0-8186-6910-1},
+  Timestamp                = {Thu, 03 Jan 2002 12:01:00 +0100}
+}
+
+@Proceedings{DBLP:conf/pkdd/1999,
+  Title                    = {Principles of Data Mining and Knowledge Discovery, Third European Conference, {PKDD} '99, Prague, Czech Republic, September 15-18, 1999, Proceedings},
+  Year                     = {1999},
+  Editor                   = {Jan M. Zytkow and Jan Rauch},
+  Publisher                = {Springer},
+  Series                   = {Lecture Notes in Computer Science},
+  Volume                   = {1704},
+
+  Bibsource                = {dblp computer science bibliography, http://dblp.org},
+  Biburl                   = {http://dblp.uni-trier.de/rec/bib/conf/pkdd/1999},
+  ISBN                     = {3-540-66490-4},
+  Timestamp                = {Thu, 03 Jan 2002 12:07:25 +0100}
+}
+
+@comment{jabref-meta: selector_review:}
+
+@comment{jabref-meta: selector_publisher:}
+
+@comment{jabref-meta: selector_author:}
+
+@comment{jabref-meta: selector_journal:}
+
+@comment{jabref-meta: selector_keywords:}
+
