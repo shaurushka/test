@@ -2,41 +2,6 @@
 % Encoding: UTF8
 
 
-@Article{Han:2004,
-author="Han, Jiawei
-and Pei, Jian
-and Yin, Yiwen
-and Mao, Runying",
-title="Mining Frequent Patterns without Candidate Generation: A Frequent-Pattern Tree Approach",
-journal="Data Mining and Knowledge Discovery",
-year="2004",
-volume="8",
-number="1",
-pages="53--87",
-issn="1573-756X",
-doi="10.1023/B:DAMI.0000005258.31418.83",
-url="http://dx.doi.org/10.1023/B:DAMI.0000005258.31418.83"
-}
-
-@misc{hse_demo_family,
-    author = "HSE",
-    title     = "http://www.hse.ru/en/demo/family/",
-    url       = "http://www.hse.ru/en/demo/family/"
-}
-
-@misc{ggp,
-    author = "GGP",
-    title = "``Parents and Children, 
-Men and Women in Family and in Society`` 
-is an all Russia representative panel sample survey",
-    url = "http://www.ggp-i.org/"
-}
-
-@misc{CSA,
-        author = "DanilGizdatullin",
-        title = "https://github.com/DanilGizdatullin/ContiguousSequencesAnalysis",
-        url = "https://github.com/DanilGizdatullin/ContiguousSequencesAnalysis"
-}
 
 @article{Jensen:2014,
 	Author = {Jensen, Anders Boeck and Moseley, Pope L. and Oprea, Tudor I. and Elles{\o}e, Sabrina Gade and Eriksson, Robert and Schmock, Henriette and Jensen, Peter Bj{\o}dstrup and Jensen, Lars Juhl and Brunak, S{\o}ren},
@@ -222,7 +187,7 @@ Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
   Number                   = {3/4},
   Pages                    = {369--388},
   Volume                   = {23},
-
+  doi = {10.1007/s10680-007-9134-6},
   Owner                    = {Admin},
   Timestamp                = {2015.07.13}
 }
@@ -232,7 +197,10 @@ Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
   Author                   = {Abbott, Andrew and Angela Tsay},
   Journal                  = {Sociological Methods \& Research},
   Year                     = {2000},
-
+  doi = {10.1177/0049124100029001001},
+  pages = {3--33}, 
+  volume = {29}, 
+  number = {1},
   Owner                    = {Admin},
   Timestamp                = {2015.07.13}
 }
@@ -259,7 +227,7 @@ Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
   Number                   = {3},
   Pages                    = {420--462},
   Volume                   = {38},
-
+   doi = {10.1177/0049124109357532},
   Owner                    = {Admin},
   Timestamp                = {2015.07.13}
 }
@@ -285,7 +253,7 @@ Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
   Number                   = {2},
   Pages                    = {439--458.},
   Volume                   = {28},
-
+   doi = {10.25336/p6g30c },
   Owner                    = {Admin},
   Timestamp                = {2015.07.13}
 }
@@ -383,7 +351,7 @@ Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
   Year                     = {2005},
   Number                   = {9},
   Pages                    = {55--90},
-
+  doi = {10.1016/s1040-2608(04)09003-3},
   Owner                    = {Admin},
   Timestamp                = {2015.07.13}
 }
@@ -785,7 +753,7 @@ Broadening the Base, volume 2120 of Lecture Notes in Computer Science},
   Number                   = {4},
   Pages                    = {296--318},
   Volume                   = {18},
-
+  doi = {10.1016/j.alcr.2013.09.003},
   Owner                    = {Admin},
   Timestamp                = {2015.07.13}
 }
