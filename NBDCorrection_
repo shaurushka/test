@@ -1,0 +1,110 @@
+makePoissonPropsOnFreqs <- function(grp, minFreq, maxFreq, propsOnFreqs) {
+  lambda <- lapply(grp, function(x) x / 100)
+
+  poisson <- list(MiddleDay = numeric(maxFreq - minFreq), Published = numeric(maxFreq - minFreq))
+  poisson$MiddleDay[1] <- exp(-lambda$MiddleDay)
+  poisson$Published[1] <- exp(-lambda$Published)
+
+  if (maxFreq > minFreq + 1) {
+    for (freq in (minFreq + 1) : (maxFreq - 1)) {
+      poisson$MiddleDay[freq - minFreq + 1] <- lambda$MiddleDay * poisson$MiddleDay[freq - minFreq] / (freq - minFreq)
+      poisson$Published[freq - minFreq + 1] <- lambda$Published * poisson$Published[freq - minFreq] / (freq - minFreq)
+    }
+  }
+
+  propsOnFreqsPublished <- propsOnFreqs$MiddleDay[(minFreq + 1) : maxFreq] - poisson$MiddleDay + poisson$Published
+  propsOnFreqs$Published[minFreq : maxFreq + 1] <- c(propsOnFreqsPublished, 1 - sum(propsOnFreqsPublished))
+  return (propsOnFreqs)
+}
+
+getPropsOnFreqsFromZeroToMax <- function(propsOnPositiveFreqs, maxFreq) {
+  propsOnFreqsFromOneToMax <- c()
+  if (maxFreq > 1) {
+    propsOnFreqsFromOneToMax <- propsOnPositiveFreqs[1 : (maxFreq - 1)]
+  }
+  propsOnFreqsFromOneToMax <- c(propsOnFreqsFromOneToMax,
+                                sum(propsOnPositiveFreqs[maxFreq : length(propsOnPositiveFreqs)]))
+  propsOnFreqsFromOneToMax[is.na(propsOnFreqsFromOneToMax)] <- 0
+  return (c(1 - sum(propsOnPositiveFreqs), propsOnFreqsFromOneToMax))
+}
+
+makePropsOnFreqsIfOneNonZeroFreq <- function(grp, minFreq, maxFreq, propsOnFreqs) {
+  if ((grp$Published > 0) & (minFreq == maxFreq)) {
+    grp$Published = 0
+  }
+  newProp <- abs(grp$Published) / 100
+  propsOnFreqs$Published[minFreq + 1] <- 1 - newProp
+  if (grp$Published < 0) {
+    propsOnFreqs$Published[minFreq] <- newProp
+  }
+  else {
+    propsOnFreqs$Published[minFreq + 2] <- newProp
+  }
+  return (propsOnFreqs)
+}
+
+makeStepInNBDParameterEstimation <- function(a, c) {
+  return (c * (a - (1 + a) * log(1 + a)) / (1 + a + c))
+}
+
+estimateNBDParameterIteratively <- function(constantInNBD, eps) {
+  aNBD <- -2 * (1 + constantInNBD)
+  b <- aNBD
+  aNBD <- makeStepInNBDParameterEstimation(aNBD, constantInNBD)
+  while (abs(b - aNBD) >= eps) {
+    b <- aNBD
+    aNBD <- makeStepInNBDParameterEstimation(aNBD, constantInNBD)
+  }
+  return (aNBD)
+}
+
+makeNBDPropsOnFreqs <- function(grp, minFreq, maxFreq, propsOnFreqs, constantInNBD, eps = 1e-10) {
+  aNBD <- list(MiddleDay = estimateNBDParameterIteratively(constantInNBD, eps), Published = numeric(0))
+  kNBD <- grp$MiddleDay / (100 * aNBD$MiddleDay)
+  aNBD$Published <- aNBD$MiddleDay * grp$Published / grp$MiddleDay
+
+  NBD <- list(MiddleDay = numeric(maxFreq - minFreq), Published = numeric(maxFreq - minFreq))
+  NBD$MiddleDay[1] <- propsOnFreqs$MiddleDay[minFreq + 1]
+  NBD$Published[1] <- (1 / (1 + aNBD$Published))**kNBD
+
+  propsOnFreqs$Published[minFreq + 1] <- NBD$Published[1]
+
+  aNBD <- lapply(aNBD, function(x) x / (1 + x))
+
+  if (maxFreq > minFreq + 1) {
+    for (freq in (minFreq + 1) : (maxFreq - 1)) {
+      x <- (kNBD + freq - minFreq - 1) / (freq - minFreq)
+      NBD$MiddleDay[freq - minFreq + 1] <- x * aNBD$MiddleDay * NBD$MiddleDay[freq - minFreq]
+      NBD$Published[freq - minFreq + 1] <- x * aNBD$Published * NBD$Published[freq - minFreq]
+      propsOnFreqs$Published[freq + 1] <- NBD$Published[freq - minFreq + 1] +
+        propsOnFreqs$MiddleDay[freq + 1] - NBD$MiddleDay[freq - minFreq + 1]
+    }
+  }
+  propsOnFreqs$Published[maxFreq + 1] <- 1 - sum(propsOnFreqs$Published[(minFreq + 1) : maxFreq])
+
+  return (propsOnFreqs)
+}
+
+makePropsOnFreqsNBDCorrection <- function(grp, propsOnFreqsMiddleDay, maxFreq, eps = 1e-10) {
+  propsOnFreqs <- data.frame(data = matrix(0L, nrow = maxFreq + 1, ncol = 2))
+  colnames(propsOnFreqs) <- c("MiddleDay", "Published")
+
+  propsOnFreqs$MiddleDay <- getPropsOnFreqsFromZeroToMax(propsOnFreqsMiddleDay, maxFreq)
+  minNonZeroFreq <- 0
+  if (maxFreq == 1)  {
+    return (makePoissonPropsOnFreqs(grp, minNonZeroFreq, maxFreq, propsOnFreqs))
+  }
+
+  minNonZeroFreq <- min(which(propsOnFreqs$MiddleDay > 0)) - 1
+  grp <- lapply(grp, FUN = function(x) x - 100 * minNonZeroFreq)
+
+  if (abs(propsOnFreqs$MiddleDay[minNonZeroFreq + 1] - 1) < eps) {
+    return (makePropsOnFreqIfOneNonZeroFreq(grp, minNonZeroFreq, maxFreq, propsOnFreqs))
+  }
+
+  constantInNBD <- grp$MiddleDay / (100 * log(propsOnFreqs$MiddleDay[minNonZeroFreq + 1]))
+  if (constantInNBD >= -1.1) {
+    return (makePoissonPropsOnFreqs(grp, minNonZeroFreq, maxFreq, propsOnFreqs))
+  }
+  return (makeNBDPropsOnFreqs(grp, minNonZeroFreq, maxFreq, propsOnFreqs, constantInNBD, eps))
+}
