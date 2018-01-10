@@ -1,0 +1,175 @@
+getDiffOfSQLAndPM <- function(reachesSQL, reachesPM, maxFreq) {
+  blockIdsReachCOlInd <- 2
+  cumReachColInd <- 3
+  freqsColInds <- 3 + 1:maxFreq 
+  
+  if (ncol(reachesSQL) < max(freqsColInds)) {
+    reachesSQL <- cbind(reachesSQL, data.frame(matrix(0, nrow = nrow(reachesSQL), ncol = max(freqsColInds) - ncol(reachesSQL))))
+  }
+  
+  colIndsWithDiff <- c(blockIdsReachCOlInd, cumReachColInd)
+  diffDF <- cbind(reachesSQL[, 1], reachesSQL[, colIndsWithDiff] - reachesPM[, colIndsWithDiff],
+                  abs(reachesSQL[, freqsColInds] - reachesPM[, freqsColInds]))
+  colnames(diffDF) <- colnames(reachesPM)[c(1, colIndsWithDiff, freqsColInds)]
+  return(diffDF)
+}
+
+addPMResults <- function(pmReaches, outputFilename, sheetNames) {
+  x <- lapply(names(sheetNames), function(x)
+                                   write.xlsx2(pmReaches[[x]], outputFilename,
+                                               sheetName = sheetNames[[x]], row.names = F, append = T))
+}
+
+addDiffOfSQLAndPM <- function(reachesSQL, reachesCumAndOnFreqsPM, maxFreq, outputFilename, sheetNames) {
+  reaches <- getReachesPctOr000sBasedOnSheetName(reachesSQL$stats, sheetNames)
+
+  diffDf <- lapply(names(sheetNames), function(x) {
+    d <- getDiffOfSQLAndPM(cbind(reachesSQL$stats["TNSBlockID"], reaches[[x]],
+                                 reachesSQL$cumReachTopN[[x]],
+                                 reachesSQL$cumReachOnFreqsTopN[[x]][, -1]),
+                           reachesCumAndOnFreqsPM[[x]], maxFreq)
+    write.xlsx2(d, outputFilename, sheetName = sheetNames[[x]], row.names = F, append = T)
+    return (d)
+  })
+  names(diffDf) <- names(sheetNames)
+  return (diffDf)
+}
+
+readPMReaches <- function(inputFilenamesPM) {
+  inputFilesPM <- lapply(inputFilenamesPM, function(x) {
+    df <- read.delim2(x, dec = ",", sep = "\t", skip = 2, header = F, colClasses = NA)
+    firstCols <- c("Group", "TNSBLockID", "Reach '000", "Reach %",  "CumReach", "CumReach %")
+    if (regexpr("NBD %", x) > 0) {
+      to_drop = -c(3, 5)
+    }
+    else {
+      to_drop = -c(4, 6)
+    }
+    colnames(df) <- c(firstCols, paste("Frequency", 1:(ncol(df) - length(firstCols)), sep = " ", collapse = NULL))
+    return (subset(df, select = to_drop))
+  })
+  return (inputFilesPM)
+}
+
+updateDiffOfSQlAndPM <- function(inputFilesPM, blockIDsListInfo, middleDay, updateSQLRawReaches,
+                                 TGSqlDefiniton, maxFreq, outputFilename,
+                                 reachesSQLSheetNames, reachesPMSheetNames, diffSQLAndPMSheetNames) {
+  reachesPM <- lapply(inputFilesPM, function(x) subset(x, Group == TGSqlDefiniton[1], select = -Group))
+  blockIDsreaches <- getFullCumStats(blockIDsListInfo, middleDay,
+                                     readRawCumStatsFlag = !updateSQLRawReaches, 
+                                     outputFilename, reachesSQLSheetNames, 
+                                     TGSqlDefiniton[2])
+  writeFullCumStats(blockIDsreaches, maxFreq, outputFilename, reachesSQLSheetNames)
+  addPMResults(reachesPM, outputFilename, reachesPMSheetNames)
+  return(addDiffOfSQLAndPM(blockIDsreaches, reachesPM, maxFreq, outputFilename, diffSQLAndPMSheetNames))
+}
+
+defineTGInSQLTerms <- function() {
+  TGSqlDef <- matrix(c(
+    "Total", "", 
+    "All18+", "and [Age] between 18 and 99",
+    "All4-45", "and [Age] between 4 and 45", 
+    "All6-54", "and [Age] between 6 and 54", 
+    "All11-34", "and [Age] between 11 and 34",
+    "M18+", "and [Age] between 18 and 99 and [Sex] = '1'",
+    "All25-54", "and [Age] between 25 and 54", 
+    "All14-59", "and [Age] between 14 and 59", 
+    "All25+", "and [Age] between 25 and 99", 
+    "All29+", "and [Age] between 29 and 99", 
+    "All25-59", "and [Age] between 25 and 59", 
+    "All14-44", "and [Age] between 14 and 44",
+    "W14-39", "and [Age] between 14 and 39 and [Sex] = '2'", 
+    "W25-59", "and [Age] between 25 and 59 and [Sex] = '2'", 
+    "M25+", "and [Age] between 25 and 99 and [Sex] = '1'", 
+    "All10-45", "and [Age] between 10 and 45", 
+    "All25-49", "and [Age] between 25 and 49", 
+    "M25-59", "and [Age] between 25 and 59 and [Sex] = '1'",
+    "All18-44", "and [Age] between 18 and 44", 
+    "All25-55", "and [Age] between 25 and 55", 
+    "All20-44", "and [Age] between 20 and 44", 
+    "M18-45", "and [Age] between 18 and 45 and [Sex] = '1'", 
+    "W14-44", "and [Age] between 14 and 44 and [Sex] = '2'", 
+    "W20-45", "and [Age] between 20 and 45 and [Sex] = '2'"
+  ), ncol = 2, nrow = 24, byrow = T)
+  return (TGSqlDef)
+}
+
+compareSQLAndPM <- function(homeDir, blockIDs,
+                            maxFreqToPrint, 
+                            reachesNamedTypes = c(), 
+                            reachesSQLSheetNames = c(), 
+                            updateSQLRawReaches = T, 
+                            updatePMAndSQLDiff = T,
+                            TGSqlDef = c()) {
+  if (length(reachesNamedTypes) == 0 || length(reachesSQLSheetNames) == 0 || updateSQLRawReaches == T) {
+    reachesNamedTypes <- list(MiddleDay = "-NBD", MiddleDayPct = "-NBD %",
+                              Published = "+Std.NBD", PublishedPct = "+Std.NBD %")
+    reachesSQLSheetNames <- lapply(reachesNamedTypes, function(x) paste("SQL", x, sep = " "))
+  }
+  
+  if (length(TGSqlDef) == 0) {
+    TGSqlDef <- defineTGInSQLTerms()
+  }
+  
+  if (updateSQLRawReaches == T) {
+    updatePMAndSQLDiff <- T
+  }
+  
+  reachesPMSheetNames <- lapply(reachesNamedTypes, function(x) paste("PM", x, sep = " "))
+  diffSQLAndPMSheetNames <- lapply(reachesNamedTypes, function(x) paste("(SQL-PM)", x, sep = " "))
+  
+  
+  pmFilenamesPrefix <- paste(homeDir, "PM TG=(Total,All 18+) ", sep = "")
+  inputFilenamesPM <- lapply(reachesNamedTypes, function(x) paste(pmFilenamesPrefix, x, ".txt", sep = ""))
+  inputFilesPM <- readPMReaches(inputFilenamesPM)
+  
+  for (rowInd in 1:nrow(TGSqlDef)) {
+    print(rowInd)
+    outputFilename <- paste(homeDir, TGSqlDef[rowInd, 1], ".xlsx", sep = "")
+    if (updatePMAndSQLDiff == T) {
+      diffDF <- updateDiffOfSQlAndPM(inputFilesPM, blockIDs, middleDayStr, updateSQLRawReaches,
+                                     TGSqlDef[rowInd,], maxFreqToPrint, outputFilename,
+                                     reachesSQLSheetNames, reachesPMSheetNames, diffSQLAndPMSheetNames)
+    }
+    else {
+      diffDF <- lapply(diffSQLAndPMSheetNames, function(x) read.xlsx2(outputFilename, sheetName = x, colClasses = NA))
+    }
+    totalReachesOnFreqsGroup <- lapply(diffDF, function(x) x[nrow(x), 4:ncol(x)])
+    cumReachDiffGroup <- lapply(diffDF, function(x) x[, 3])
+  
+    if (rowInd == 1) {
+      blockIdsCount <- length(cumReachDiffGroup[[1]])
+      blockIds <- diffDF[[1]]$TNSBLockID
+      totalReachesOnFreqsColnames <- colnames(totalReachesOnFreqsGroup[[1]])
+      cumReachDiff <- lapply(reachesNamedTypes, function(x) matrix(ncol = blockIdsCount, nrow = nrow(TGSqlDef)))
+      totalReachesOnFreqs <- lapply(reachesNamedTypes, function(x) data.frame(matrix(ncol = maxFreqToPrint, nrow = nrow(TGSqlDef))))
+    }
+  
+    cumReachDiff <- mapply(function(x, y) {y[rowInd, ] <- x; return (y)}, cumReachDiffGroup, cumReachDiff, SIMPLIFY = F)
+    totalReachesOnFreqs <-
+      mapply(function(x, y) {y[rowInd, ] <- x; return (y)}, totalReachesOnFreqsGroup, totalReachesOnFreqs, SIMPLIFY = F)
+  }
+  
+  Group <- TGSqlDef[, 1]
+  diffOutputFilename <- paste(homeDir, "PM vs SQL.xlsx", sep = "", collapse = "")
+  dummyVar <- mapply(function(x, S) {
+                        colnames(x)  <- totalReachesOnFreqsColnames
+                        MaxAbsDiff <- apply(abs(x), 1, max)
+                        d <- cbind(Group, MaxAbsDiff, x)
+                        write.xlsx2(d, diffOutputFilename,
+                                    sheetName = paste("Tot.Rch On Freqs", S, sep = " "), row.names = F, append = T)
+                        return(d)},
+                     totalReachesOnFreqs,
+                     reachesNamedTypes)
+  
+  dummyVar <- mapply(function(x, S) {
+    x <- as.data.frame(x)
+    colnames(x)  <- paste("Top", 1:length(blockIds), sep = " ")
+    MaxAbsDiff <- apply(abs(x), 1, max)
+    d <- cbind(Group, MaxAbsDiff, x)
+    write.xlsx2(d, diffOutputFilename,
+                sheetName = paste("Cum.Reach", S, sep = " "), row.names = F, append = T)
+    return(d)},
+    cumReachDiff,
+    reachesNamedTypes)
+}
