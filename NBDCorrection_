@@ -81,30 +81,51 @@ makeNBDPropsOnFreqs <- function(grp, minFreq, maxFreq, propsOnFreqs, constantInN
     }
   }
   propsOnFreqs$Published[maxFreq + 1] <- 1 - sum(propsOnFreqs$Published[(minFreq + 1) : maxFreq])
-
   return (propsOnFreqs)
 }
 
-makePropsOnFreqsNBDCorrection <- function(grp, propsOnFreqsMiddleDay, maxFreq, eps = 1e-10) {
-  propsOnFreqs <- data.frame(data = matrix(0L, nrow = maxFreq + 1, ncol = 2))
-  colnames(propsOnFreqs) <- c("MiddleDay", "Published")
-
-  propsOnFreqs$MiddleDay <- getPropsOnFreqsFromZeroToMax(propsOnFreqsMiddleDay, maxFreq)
+getStdNBDCorrection <- function(grp, propsOnFreqs, maxFreq, eps) {
   minNonZeroFreq <- 0
   if (maxFreq == 1)  {
     return (makePoissonPropsOnFreqs(grp, minNonZeroFreq, maxFreq, propsOnFreqs))
   }
-
+  
   minNonZeroFreq <- min(which(propsOnFreqs$MiddleDay > 0)) - 1
   grp <- lapply(grp, FUN = function(x) x - 100 * minNonZeroFreq)
-
+  
   if (abs(propsOnFreqs$MiddleDay[minNonZeroFreq + 1] - 1) < eps) {
     return (makePropsOnFreqIfOneNonZeroFreq(grp, minNonZeroFreq, maxFreq, propsOnFreqs))
   }
-
+  
   constantInNBD <- grp$MiddleDay / (100 * log(propsOnFreqs$MiddleDay[minNonZeroFreq + 1]))
   if (constantInNBD >= -1.1) {
     return (makePoissonPropsOnFreqs(grp, minNonZeroFreq, maxFreq, propsOnFreqs))
   }
+  
   return (makeNBDPropsOnFreqs(grp, minNonZeroFreq, maxFreq, propsOnFreqs, constantInNBD, eps))
 }
+
+makePropsOnFreqsNBDCorrection <- function(grp, propsOnFreqsMiddleDay, maxFreq, blockIDsCount, eps = 1e-15) {
+  # print(maxFreq)
+  # grp <- data.frame(list(Published = c(1.91252610161123), MiddleDay = c(1.39497031645188)))
+  # propsOnFreqsMiddleDay <- c(0.0139497031645188, 0.0000000000000000)
+  propsOnFreqs <- data.frame(data = matrix(0L, nrow = maxFreq + 1, ncol = 3))
+  # maxFreq <- 2
+  # blockIDsCount <- 2
+  colnames(propsOnFreqs) <- c("MiddleDay", "Published", "PublishedExt")
+
+  propsOnFreqs$MiddleDay <- getPropsOnFreqsFromZeroToMax(propsOnFreqsMiddleDay, maxFreq)
+  propsOnFreqs$Published <- getStdNBDCorrection(grp, propsOnFreqs, maxFreq, eps)$Published
+  propsOnFreqs$PublishedExt <- getExtNBDCorrection(grp, propsOnFreqs$Published, blockIDsCount, eps)
+  return (propsOnFreqs)
+}
+
+# вычисляются открытые интервалы, начиная с 0+
+getOpenIntervals <- function(propsOnFreqsCloseIntervals) {
+  openIntervals <- propsOnFreqsCloseIntervals
+  for (i in (length(openIntervals) - 1) : 1) {
+    openIntervals[i] <- openIntervals[i] + openIntervals[i + 1]
+  }
+  return (openIntervals)
+}
+
