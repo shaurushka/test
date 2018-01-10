@@ -101,23 +101,23 @@ compareSQLAndPM <- function(homeDir, blockIDs,
                             updateSQLRawReaches = T, 
                             updatePMAndSQLDiff = T,
                             TGSqlDef = c()) {
-  if (length(reachesNamedTypes) == 0 || length(reachesSQLSheetNames) == 0 || updateSQLRawReaches == T) {
+  if (length(reachesNamedTypes) == 0) {
     reachesNamedTypes <- list(MiddleDay = "-NBD", MiddleDayPct = "-NBD %",
-                              Published = "+Std.NBD", PublishedPct = "+Std.NBD %")
+                              Published = "+Std.NBD", PublishedPct = "+Std.NBD %", 
+                              PublishedExt = "+Ext.NBD", PublishedExtPct = "+Ext.NBD %")
+  }
+  if (length(reachesSQLSheetNames) == 0) {
     reachesSQLSheetNames <- lapply(reachesNamedTypes, function(x) paste("SQL", x, sep = " "))
   }
-  
   if (length(TGSqlDef) == 0) {
     TGSqlDef <- defineTGInSQLTerms()
   }
-  
   if (updateSQLRawReaches == T) {
     updatePMAndSQLDiff <- T
   }
   
   reachesPMSheetNames <- lapply(reachesNamedTypes, function(x) paste("PM", x, sep = " "))
   diffSQLAndPMSheetNames <- lapply(reachesNamedTypes, function(x) paste("(SQL-PM)", x, sep = " "))
-  
   
   pmFilenamesPrefix <- paste(homeDir, "PM TG=(Total,All 18+) ", sep = "")
   inputFilenamesPM <- lapply(reachesNamedTypes, function(x) paste(pmFilenamesPrefix, x, ".txt", sep = ""))
