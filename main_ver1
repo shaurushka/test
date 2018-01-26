@@ -5,11 +5,11 @@ library(reshape)
 library(dplyr)  
 library(data.table)
 
-options(digits=10)
+options(digits=20)
 library(rJava)
 library(xlsx)
 
-# rawCumStats или rawCumStatsFromSQL - статистки, посчитанные по SQL (ричи брейков, tvr, накопленные ричи и 
+# rawCumStats или rawCumStatsFromSQL - статистики, посчитанные по SQL (ричи брейков, tvr, накопленные ричи и 
 # накопленные ричи на частотах, grp для topN брейков на средний день и на день выхода брейков). 
 # Последнее используется для NBD коррекции
 # ричи везде рассчитываются и в тысячах,и в процентах 
@@ -91,10 +91,10 @@ getRawCumStatsFromSQL <- function(dbConn, blockIDsList, blockIDsCount, middleDay
 
   return (list(cumReachOnFreqsMiddleDay = cumReachOnFreqsTopN,
                GRP = data.frame(list(Published = sapply(1 : blockIDsCount, function(x) grpTopN[[x]]$Published),
-								MiddleDay = sapply(1 : blockIDsCount, function(x) grpTopN[[x]]$MiddleDay))),
+                                     MiddleDay = sapply(1 : blockIDsCount, function(x) grpTopN[[x]]$MiddleDay))),
                TGSize000s = middleDayTGSize,
                stats = sqlQuery(dbConn, "
-			     select
+                 select
                    [TNSBlockID]
                    , [TVR]
                    , [Reach '000]
@@ -124,7 +124,7 @@ getRawCumStats <- function(blockIDsList, blockIDsCount, middleDay,
 readRawCumStats <- function(inputFilename, sheetNames) {
   middleDayBlockIdsInfo <- read.xlsx2(inputFilename, sheetName = sheetNames$MiddleDay, colClasses = NA)
   middleDayBlockIdsInfoPct <- read.xlsx2(inputFilename, sheetName = sheetNames$MiddleDayPct, colClasses = NA)[3]
-  
+  print("readRawCumStats")
   blockIDsStatsCum <- list(GRP = read.xlsx2(inputFilename, sheetName = "GRP", colIndex = c(2, 3), colClasses = NA), 
                            stats = cbind(middleDayBlockIdsInfo[, c(1, 2, 3)], middleDayBlockIdsInfoPct), 
                            cumReachOnFreqsMiddleDay = middleDayBlockIdsInfo[, 6:ncol(middleDayBlockIdsInfo)], 
@@ -133,36 +133,44 @@ readRawCumStats <- function(inputFilename, sheetNames) {
   return (blockIDsStatsCum)
 }
 
-cumReachOnFreqsMatrix <- function(propsType, propsOnFreqs, blockIDsCount, multiplier) {
+#ричи на частотах для topN брейков для всех N
+getCumReachOnFreqsMatrix <- function(propsType, propsOnFreqs, blockIDsCount, multiplier) {
   return (matrix(sapply(1 : blockIDsCount, 
                         function (x) c(propsOnFreqs[[x]][[propsType]] * multiplier[x], 
                                        rep(0, blockIDsCount - x))), 
                  byrow = T, nrow = blockIDsCount, ncol = blockIDsCount + 1))
 }
 
+#ричи на частотах + накопленный рич для topN брейков для всех N 
+getCumStatsTopN <- function(propsOnFreqs, reachesNamedTypes000s, blockIDsCount, multiplier) {
+  cumReachOnFreqsTopN <- lapply(reachesNamedTypes000s, 
+                                function(x) getCumReachOnFreqsMatrix(x, propsOnFreqs, blockIDsCount, multiplier))
+  cumReachTopN <- lapply(cumReachOnFreqsTopN, function(x) multiplier - x[, 1])
+  return (list(cumReachOnFreqs = cumReachOnFreqsTopN, cumReach = cumReachTopN))
+}
+
 # здесь проводится NBD коррекция ричей на частотах
-# вычисляются ричи на открытых и закрытых интервалах частот
 getCumStatsWithNBDCorrection <- function(rawCumStats, blockIDsCount) {
   GRP <- rawCumStats$GRP
-
+  
   propsOnFreqsMiddleDay <- as.matrix(rawCumStats$cumReachOnFreqsMiddleDay / rawCumStats$TGSize000s)
   propsOnFreqs <- lapply(1 : nrow(propsOnFreqsMiddleDay),
                          FUN = function(topN) makePropsOnFreqsNBDCorrection(GRP[topN, ], propsOnFreqsMiddleDay[topN, ], topN, topN))
   reachesNamedTypes000s <- names(propsOnFreqs[[1]])
-  cumReachOnFreqsTopN <- lapply(reachesNamedTypes000s, 
-                                function(x) cumReachOnFreqsMatrix(x, propsOnFreqs, blockIDsCount, rawCumStats$TGSize000s))
-  cumReachOnFreqsTopNPct <- lapply(reachesNamedTypes000s, 
-                                   function(x) cumReachOnFreqsMatrix(x, propsOnFreqs, blockIDsCount, rep(100, blockIDsCount)))
   
-  names(cumReachOnFreqsTopN) <- reachesNamedTypes000s
-  names(cumReachOnFreqsTopNPct) <- paste(reachesNamedTypes000s, "Pct", sep = "")
-  cumReachOnFreqsTopNClose <- c(cumReachOnFreqsTopN, cumReachOnFreqsTopNPct)
-  cumReachOnFreqsTopNOpen <- lapply(cumReachOnFreqsTopNClose, function(x) do.call(rbind, lapply(1:nrow(x), 
-                                                                                                function(y) getOpenIntervals(x[y, ]))))
-  cumReachTopN <- lapply(cumReachOnFreqsTopNClose, function(x) rowSums(x[, 2:ncol(x)]))
+  statsTopN000s <- getCumStatsTopN(propsOnFreqs, reachesNamedTypes000s, blockIDsCount, rawCumStats$TGSize000s)
+  statsTopNPct <- getCumStatsTopN(propsOnFreqs, reachesNamedTypes000s, blockIDsCount, rep(100, blockIDsCount))
+  cumReachOnFreqsTopNClose <- c(statsTopN000s$cumReachOnFreqs, statsTopNPct$cumReachOnFreqs)
+  names(cumReachOnFreqsTopNClose) <- c(reachesNamedTypes000s, paste(reachesNamedTypes000s, "Pct", sep = ""))
+  cumReachTopN <- c(statsTopN000s$cumReach, statsTopNPct$cumReach)
+  names(cumReachTopN) <- names(cumReachOnFreqsTopNClose)
+  
+  cumReachOnFreqsTopNOpen <- lapply(cumReachOnFreqsTopNClose,
+                                    function(x) do.call(rbind, lapply(1:nrow(x),
+                                                                      function(y) getOpenIntervals(x[y, ]))))
   return (list(stats = rawCumStats$stats,
                cumReachTopN = cumReachTopN,
-               cumReachOnFreqsTopN = list(Close = cumReachOnFreqsTopNClose, Open = cumReachOnFreqsTopNOpen),
+               cumReachOnFreqsTopN = list(Close = cumReachOnFreqsTopNClose, Open = cumReachOnFreqsTopNOpen), 
                GRP = GRP,
                TGSize000s = rawCumStats["TGSize000s"]))
 }
@@ -177,10 +185,14 @@ getFullCumStats <- function(blockIDsListInfo, middleDay,
   return (getCumStatsWithNBDCorrection(rawCumStats, blockIDsListInfo$Count))
 }
 
+makeCumReachesTopNTable <- function(blockIdsInfo, blockIdsReaches, cumReachesTopN, cumReachesOnFreqsTopN) {
+  return (cbind(blockIdsInfo, blockIdsReaches, data.frame(CumReach = cumReachesTopN), cumReachesOnFreqsTopN))
+}
+
 # выводится в файл табличка в формате как в Total.xlsx, лист SQL -NBD
 writeCumReachesToSheet <- function(blockIdsInfo, blockIdsReaches, cumReachesTopN, cumReachesOnFreqsTopN,
                                    outputFilename, sheetName) {
-  df <- cbind(blockIdsInfo, blockIdsReaches, data.frame(CumReach = cumReachesTopN), cumReachesOnFreqsTopN)
+  df <- makeCumReachesTopNTable(blockIdsInfo, blockIdsReaches, cumReachesTopN, cumReachesOnFreqsTopN)
   write.xlsx2(df, outputFilename, sheetName = sheetName, row.names = F, append = T)
 }
 
@@ -199,27 +211,204 @@ getReachesPctOr000sBasedOnSheetName <- function(reachesPctAnd000s, sheetNames) {
 # вывод в файл полного набора статистик
 # можно вывести либо открытые (0+, 1+, 2+, ...), либо закрытые интервалы (0, 1, 2, ...)
 # minFreq, maxFreq определяют диапазон частот для вывода
-writeFullCumStats <- function(blockIDsFullCumStats, maxFreq, outputFilename, sheetNames, minFreq = 0, intervalType = "Close") {
-  GRP <- blockIDsFullCumStats$GRP
+writeFullCumStats <- function(fullCumStats, maxFreq, outputFilename, sheetNames, minFreq = 0, intervalType = "Close") {
+  GRP <- fullCumStats$GRP
   GRP$"TopN" <- as.numeric(row.names(GRP))
   GRP <- GRP[, c(3, 1, 2)]
   write.xlsx2(GRP, outputFilename, sheetName = "GRP", row.names = F)
-  write.xlsx2(blockIDsFullCumStats$TGSize000s, outputFilename, sheetName = "TGSize000s", row.names = F, append = T)
+  write.xlsx2(fullCumStats$TGSize000s, outputFilename, sheetName = "TGSize000s", row.names = F, append = T)
   
-  cumReachOnFreqsTopN <- blockIDsFullCumStats$cumReachOnFreqsTopN[[intervalType]]
-  maxFreq <- min(c(maxFreq, ncol(cumReachOnFreqsTopN$Published) - 1))
-
-  freqsColnames <- paste("Frequency", minFreq : maxFreq, sep = " ", collapse = NULL)
-  cumReachOnFreqsTopNMaxFreq <- lapply(cumReachOnFreqsTopN,
-                                       function(x) {x <- x[, minFreq:maxFreq + 1]; colnames(x) <- freqsColnames; return(x)})
-  blockIdsInfo <- blockIDsFullCumStats$stats[, c("TNSBlockID", "TVR")]
-  reaches <- getReachesPctOr000sBasedOnSheetName(blockIDsFullCumStats$stats, sheetNames)
+  cumReachOnFreqsTopNMaxFreq <- makeCumReachesTopnMaxFreqTable(fullCumStats, intervalType, minFreq, maxFreq) 
+  
+  blockIdsInfo <- fullCumStats$stats[, c("TNSBlockID", "TVR")]
+  reaches <- getReachesPctOr000sBasedOnSheetName(fullCumStats$stats, sheetNames)
   dumVar <- lapply(names(sheetNames), function(x) writeCumReachesToSheet(blockIdsInfo, reaches[[x]],
-                                                                         blockIDsFullCumStats$cumReachTopN[[x]],
+                                                                         fullCumStats$cumReachTopN[[x]],
                                                                          cumReachOnFreqsTopNMaxFreq[[x]],
                                                                          outputFilename, sheetNames[[x]]))
 }
 
+writeTGStatsToTxt <- function(TGStatsTable, TGNameColumn, filenamePrefix, filenameMainPart, append = F) {
+  write.table(cbind(TGNameColumn, TGStatsTable), 
+             file = paste(filenamePrefix, filenameMainPart, ".txt", sep = ""), 
+             sep = "\t", dec = ",", row.names = F, col.names = (!append), append = append)
+}
+
+makeCumReachesTopnMaxFreqTable <- function(fullCumStats, intervalType, minFreq, maxFreq) {
+  cumReachOnFreqsTopN <- fullCumStats$cumReachOnFreqsTopN[[intervalType]]
+  
+  maxFreq <- min(c(maxFreq, ncol(cumReachOnFreqsTopN$Published) - 1))
+  
+  freqsColnames <- paste("Freq", minFreq : maxFreq, sep = " ", collapse = NULL)
+  return(lapply(cumReachOnFreqsTopN,
+                function(x) {x <- x[, minFreq:maxFreq + 1]; colnames(x) <- freqsColnames; return(x)}))
+}
+
+writeFullCumStatsByTGToTxt <- function(fullCumStats, maxFreq, TGName, sheetNames, 
+                                       minFreq = 0, intervalType = "Close", filenamePrefix = "", append = F) {
+  TGColumn <- data.frame(TG = rep(TGName, nrow(fullCumStats$stats)))
+  
+  GRP <- fullCumStats$GRP
+  GRP$"TopN" <- as.numeric(row.names(GRP))
+  statsTables <- list(GRP = GRP[, c(3, 1, 2)], TGSize000s = fullCumStats$TGSize000s)
+  dumVar <- lapply(names(statsTables), 
+                   function(x) writeTGStatsToTxt(statsTables[[x]], TGColumn, filenamePrefix, x, append = append))
+  
+  blockIdsInfo <- fullCumStats$stats[, c("TNSBlockID", "TVR")]
+  reaches <- getReachesPctOr000sBasedOnSheetName(fullCumStats$stats, sheetNames)
+  cumReachOnFreqsTopNMaxFreq <- makeCumReachesTopnMaxFreqTable(fullCumStats, intervalType, minFreq, maxFreq) 
+  dumVar <- lapply(names(sheetNames), 
+                   function(x) writeTGStatsToTxt(
+                     makeCumReachesTopNTable(blockIdsInfo, 
+                                             reaches[[x]],
+                                             fullCumStats$cumReachTopN[[x]],
+                                             cumReachOnFreqsTopNMaxFreq[[x]]),
+                     TGColumn, 
+                     filenamePrefix, 
+                     sheetNames[[x]], 
+                     append = append))
+  
+}
+
+writeFullCumStatsByTGToXlsx <- function(fullCumStatsByTG, statsSheetNames, outputDir, filename = "all.xlsx") {
+  sheetNames <- append(list(GRP = "GRP", TGSize000s = "TGSize000s"), statsSheetNames)
+  
+  dumVar <- lapply(names(sheetNames), function (x) write.xlsx2(fullCumStatsByTG[[x]], 
+                                                               paste(outputDir, filename, sep = ""), 
+                                                               sheetName = sheetNames[[x]], append = T, row.names = F))
+}
+
+appendStatsTG <- function(statsFull, statsTG, TGName, sheetNames, minFreq, maxFreq, intervalType = "Close", append = T) {
+  TGColumn <- data.frame(TG = rep(TGName, nrow(statsTG$stats)))
+  GRP <- statsTG$GRP
+  GRP$"TopN" <- as.numeric(row.names(GRP))
+  GRP <- cbind(TGColumn, GRP[, c(3, 1, 2)])
+  TGSize000s <- cbind(TGColumn, statsTG$TGSize000s)
+  blockIdsInfo <- statsTG$stats[, c("TNSBlockID", "TVR")]
+  reaches <- getReachesPctOr000sBasedOnSheetName(statsTG$stats, sheetNames)
+  
+  cumReachOnFreqsTopNMaxFreq <- makeCumReachesTopnMaxFreqTable(statsTG, intervalType, minFreq, maxFreq) 
+  cumReachesTopNTable <- lapply(names(sheetNames), 
+                                function(x) cbind(TGColumn, 
+                                                  makeCumReachesTopNTable(blockIdsInfo, 
+                                                                          reaches[[x]],
+                                                                          statsTG$cumReachTopN[[x]],
+                                                                          cumReachOnFreqsTopNMaxFreq[[x]])))
+  statsTGdfs <- append(list(GRP, TGSize000s), cumReachesTopNTable)
+  names(statsTGdfs) <- append(c("GRP", "TGSize000s"), names(sheetNames))
+  statsNames <- names(statsFull)
+  if (append == F) {
+    statsFull <- statsTGdfs[statsNames]
+  }
+  else {
+    statsFull <- lapply(1 : length(statsNames), 
+                        function(ind) rbind(statsFull[[statsNames[ind]]], 
+                                            statsTGdfs[[statsNames[ind]]]))
+  }
+  names(statsFull) <- statsNames
+  return (statsFull)
+}
+
+getBlockStats <- function(homeDir, filesDir, middleDayStr) {
+  outputDir <- paste(filesDir, "/", sep = "")
+  if (!dir.exists(outputDir)) {
+    dir.create(outputDir)
+  }
+  # директория, где лежат подключаемые скрипты
+  scriptsDir <- homeDir
+  
+  # SQL запросы, вычисляющие RawCumStats
+  source(paste(scriptsDir, "blockIDsStatsSQL.R", sep = ""))
+  # NBD коррекция
+  source(paste(scriptsDir, "NBDExt.R", sep = ""))
+  source(paste(scriptsDir, "NBDCorrection.R", sep = ""))
+  
+  # считывается список брейков
+  blockIDsFilename <- paste(filesDir, ".txt", sep = "")
+  blockIDs <- getOrderedBlockIDsList(blockIDsFilename)
+  
+  # # задается средний день
+  # middleDayStr <- "2017-08-15"
+  # 
+  # вообще ричи на частотах посчитаны до частоты, равной количеству брейков, но выводить в xlsx файл столько информации
+  # бывает тяжело для ОС, поэтому можно ограничить максимальную частоту (в итоге она не превосходит числа брейков)
+  maxFreqToPrint <- 150
+  # 
+  # определяются названия листов
+  # для однообразия большинство структур имеют вид список с индексами MiddleDay - отвечает накопленным ричам на частотах,
+  # посчитанным на средний день в тыс.чел, MiddleDayPct - то же, только для ричей в %,
+  # Published, PublishedPct - то же, только со стандартной NBD коррекцией
+  # PublishedExt, PublishedExtPct - расширенная NBD коррекция 
+  reachesNamedTypes <- list(MiddleDay = "-NBD", MiddleDayPct = "-NBD %",
+                            Published = "+Std.NBD", PublishedPct = "+Std.NBD %",
+                            PublishedExt = "+Ext.NBD", PublishedExtPct = "+Ext.NBD %")
+  sheetNames <- lapply(reachesNamedTypes, function(x) paste("SQL", x, sep = " "))
+  
+  
+  # blockIDsFullCumStats <- getFullCumStats(blockIDs, middleDayStr, 
+  #                                         readRawCumStatsFlag = F,
+  #                                         statsFilename = paste(filesDir, "PM(prec=10) vs SQL(prec = 8). 662 (every 3rd)/", "Total.xlsx", sep = ""),
+  #                                         statsSheetNames = sheetNames)
+  # source(paste(scriptsDir, "PMandSQLStatsComparison.R", sep = ""))
+  # 
+  # TGSqlGroup <- defineTGInSQLTerms()[1, ]
+  # writeFullCumStatsByTGToTxt(blockIDsFullCumStats, 
+  #                            maxFreqToPrint, 
+  #                            TGSqlGroup[1],
+  #                            sheetNames,
+  #                            minFreq = 0, intervalType = "Close",
+  #                            filenamePrefix = paste(filesDir, "SQL(prec=8) Std, Ext. NBD. (every 2nd)/", sep = ""),
+  #                            append = F)
+  # результаты записываются в файл "FullCumStats.xlsx"
+  # writeFullCumStats(blockIDsFullCumStats,
+  #                   maxFreqToPrint,
+  #                   paste(filesDir, "FullCumStatsClose.xlsx", sep = ""),
+  #                   sheetNames,
+  #                   intervalType = "Close")
+  # writeFullCumStats(blockIDsFullCumStats,
+  #                   maxFreqToPrint,
+  #                   paste(filesDir, "FullCumStatsOpen.xlsx", sep = ""),
+  #                   sheetNames,
+  #                   minFreq = 1,
+  #                   intervalType = "Open")
+  
+  # здесь лежат методы для сравнения результатов Palomars и SQL и определения целевых групп
+  source(paste(scriptsDir, "PMandSQLStatsComparison.R", sep = ""))
+  TGSQL <- defineTGInSQLTerms()
+  groupsInOneFile <- nrow(TGSQL)
+  if (blockIDs$Count > 2000) {
+    groupsInOneFile <- 5
+  }
+  
+  startFromTGInd <- 15
+
+  # statsDFs <- c("GRP","TGSize000s", names(sheetNames))
+  # blockIDsFullCumStats <- setNames(vector("list", length(statsDFs)), statsDFs)
+  
+  for (i in startFromTGInd : nrow(TGSQL)) {
+    print(i)
+    TGSqlGroup <- TGSQL[i, ]
+    prefix <- ""
+    if (groupsInOneFile < nrow(TGSQL)) {
+      prefix <- paste((i - 1) %/% groupsInOneFile + 1   , "_", sep = "")
+    }
+    
+    f <- paste(TGSqlGroup[1], ".xlsx", sep = "")
+    blockIDsFullCumStatsTG <- getFullCumStats(blockIDs, middleDayStr,
+                                            readRawCumStatsFlag = F,
+                                            statsFilename = paste(filesDir, "PM(prec=10) vs SQL(prec = 8). 662 (every 3rd)/", f, sep = ""),
+                                            statsSheetNames = sheetNames,
+                                            TGDef = TGSqlGroup[2])
+    writeFullCumStatsByTGToTxt(blockIDsFullCumStatsTG, maxFreqToPrint, TGSqlGroup[1],
+                               sheetNames,
+                               minFreq = 0, intervalType = "Close",
+                               filenamePrefix = paste(outputDir, prefix, sep = ""),
+                               append = ((i - 1) %% groupsInOneFile > 0))
+    # blockIDsFullCumStats <- appendStatsTG(blockIDsFullCumStats, blockIDsFullCumStatsTG, TGSqlGroup[1], 
+    #                                       sheetNames, minFreq = 0, maxFreq = maxFreqToPrint, append = (i > 1))
+  }
+  # writeFullCumStatsByTGToXlsx(blockIDsFullCumStats, sheetNames, outputDir)
+}
 
 # путь к директории NBD correction
 homeDir <- "C:/Users/sishki01/Documents/RStudioScripts/NBD Correction/"
@@ -228,51 +417,18 @@ homeDir <- "C:/Users/sishki01/Documents/RStudioScripts/NBD Correction/"
 # здесь должен лежать файл со списком брейков. 
 # если rawCumStats считываются из файла, этот файл тоже должен здесь
 # сюда же записываются выходные файлы
-filesDir <- paste(homeDir, "files/",  sep = "")
+for (l in c("all")) { #"10_1", "10_2", "10_3", "10_4", "20_1", "20_2", "20_3", "20_4", "30_1", "30_2", "30_3", "30_4" "every3rd", "every2nd", 
+  l <- "all"
+  filesDir <- "C:/Users/sishki01/Documents/RStudioScripts/TNSBlockIDsList#2000/break_lists (base day = 2017-08-15)/"
+  middleDay <- "2017-08-15" 
+  getBlockStats(homeDir, paste(filesDir, l, sep = ""), middleDay)
+}
 
-# директория, где лежат подключаемые скрипты
-scriptsDir <- homeDir
-
-# SQL запросы, вычисляющие RawCumStats
-source(paste(scriptsDir, "blockIDsStatsSQL.R", sep = ""))
-# NBD коррекция
-source(paste(scriptsDir, "NBDCorrection.R", sep = ""))
-
-# считывается список брейков
-blockIDsFilename <- paste(filesDir, "TNSBlockIDsList.txt", sep = "")
-blockIDs <- getOrderedBlockIDsList(blockIDsFilename)
-
-# задается средний день
-middleDayStr <- "2017-08-15"
-blockIDsFullCumStats <- getFullCumStats(blockIDs, middleDayStr)
-
-# вообще ричи на частотах посчитаны до частоты, равной количеству брейков, но выводить в xlsx файл столько информации 
-# бывает тяжело для ОС, поэтому можно ограничить максимальную частоту
-maxFreqToPrint <- 150
-
-# определяются названия листов
-# для однообразия большинство структур имеют вид список с индексами MiddleDay - отвечает накопленным ричам на частотах, 
-# посчитанным на средний день в тыс.чел, MiddleDayPct - то же, только для ричей в %, 
-# Published и PublishedPct - то же, только с NBD коррекцией
-reachesNamedTypes <- list(MiddleDay = "-NBD", MiddleDayPct = "-NBD %",
-                          Published = "+Std.NBD", PublishedPct = "+Std.NBD %")
-sheetNames <- lapply(reachesNamedTypes, function(x) paste("SQL", x, sep = " "))
-# результаты записываются в файл "FullCumStatsClose.xlsx" или "FullCumStatsOpen.xlsx" в зависимости от выбранного типа интервалов
-writeFullCumStats(blockIDsFullCumStats,
-                  maxFreqToPrint,
-                  paste(filesDir, "FullCumStatsClose.xlsx", sep = ""),
-                  sheetNames, 
-                  intervalType = "Close")
-writeFullCumStats(blockIDsFullCumStats,
-                  maxFreqToPrint,
-                  paste(filesDir, "FullCumStatsOpen.xlsx", sep = ""),
-                  sheetNames, 
-                  minFreq = 1,
-                  intervalType = "Open")
-
-# здесь лежат методы для сравнения результатов Palomars и SQL
-source(paste(scriptsDir, "PMandSQLStatsComparison.R", sep = "", collapse = ""))
-
+# for (l in c("30_2")) {
+#   filesDir <- "C:/Users/sishki01/Documents/RStudioScripts/TNSBlockIDsList#3000/test_lists (base day 2017-04-01)/"
+#   middleDay <- " 2017-04-01"
+#   getBlockStats(homeDir, paste(filesDir, l, sep = ""), middleDay)
+# }
 # выдает для каждой целевой группы результаты вычисления по описанным выше методам (листы SQL<...>),
 # по PM (листы PM<...>,  просто копирует информацию из файлов "PM TG=(Total,All 18+)<...>.txt")
 # и разности этих вычислений (листы (SQL-PM)<...>)
@@ -280,7 +436,7 @@ source(paste(scriptsDir, "PMandSQLStatsComparison.R", sep = "", collapse = ""))
 # целевая группа задается параметром TGSqlDef
 # также выдает сводную таблицу для всех рассмотренных групп - файл "PM vs SQL.xlsx" - разность накопленных ричей cumReachTopN 
 # и разность ричей на частотах для полного списка брейков (то есть последних строк таблиц)
-compareSQLAndPM(filesDir, blockIDs, maxFreqToPrint, updateSQLRawReaches = F, updatePMAndSQLDiff = T, 
-                TGSqlDef = matrix(c("Total", "", 
-                                    "All18+", "and [Age] between 18 and 99"), 
-                                  nrow = 2, ncol = 2, byrow = T))
+# compareSQLAndPM(filesDir, blockIDs, maxFreqToPrint, updateSQLRawReaches = F, updatePMAndSQLDiff = T, 
+#                 TGSqlDef = matrix(c("Total", "", 
+#                                     "All18+", "and [Age] between 18 and 99"), 
+#                                   nrow = 2, ncol = 2, byrow = T))
