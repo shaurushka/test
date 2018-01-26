@@ -57,10 +57,11 @@ estimateNBDParameterIteratively <- function(constantInNBD, prec) {
     b <- aNBD
     aNBD <- makeStepInNBDParameterEstimation(aNBD, constantInNBD)
   }
-  # output is not necessary. i've added it just in case to detect that the algorithm has not converged. 
-  # if (it == maxIt) {
-    # print("In estimateNBDParameterIteratively. Process has not converged")
-  # }
+  # это на всякий случай, можно и не проверять. не сошелся - ну и ладно, значит,
+  # метод колеблется возле решения, то есть текущее значение aNBD близко к истинному решению
+  if (it == maxIt) {
+    print("In estimateNBDParameterIteratively. Process has not converged")
+  }
   return (aNBD)
 }
 
@@ -125,22 +126,22 @@ makeStdNBDCorrection <- function(grp, propsOnFreqsRaw, maxFreq, prec = 1e-10) {
   return (result)
 }
 
-# makeExtNBDCorrection <- function(stdCorrection, propsOnFreqsRaw, maxFreq, prec) {
-  # propsOnFreqsModelledStd <- stdCorrection$Modelled
+makeExtNBDCorrection <- function(stdCorrection, propsOnFreqsRaw, maxFreq, prec) {
+  propsOnFreqsModelledStd <- stdCorrection$Modelled
   
-  # if (length(propsOnFreqsModelledStd) > 0) {
-    # types <- names(stdCorrection$Modelled)
-    # propsOnFreqsModelledExt <- lapply(types, 
-                                      # function(type) makeExtNBDCorrectionFromStd(stdCorrection$Modelled[[type]], 
-                                                                                 # stdCorrection$GRPModelled[[type]], 
-                                                                                 # prec))
-    # names(propsOnFreqsModelledExt) <- types
-    # return (getPropsOnFreqsCorrected(propsOnFreqsRaw, propsOnFreqsModelledExt, maxFreq))
-  # }
-  # return (makeExtNBDCorrectionFromStd(stdCorrection$Corrected, stdCorrection$GRPModelled, prec))
-# }
+  if (length(propsOnFreqsModelledStd) > 0) {
+    types <- names(stdCorrection$Modelled)
+    propsOnFreqsModelledExt <- lapply(types, 
+                                      function(type) makeExtNBDCorrectionFromStd(stdCorrection$Modelled[[type]], 
+                                                                                 stdCorrection$GRPModelled[[type]], 
+                                                                                 prec))
+    names(propsOnFreqsModelledExt) <- types
+    return (getPropsOnFreqsCorrected(propsOnFreqsRaw, propsOnFreqsModelledExt, maxFreq))
+  }
+  return (makeExtNBDCorrectionFromStd(stdCorrection$Corrected, stdCorrection$GRPModelled$Published, prec))
+}
 
-makePropsOnFreqsNBDCorrection <- function(grp, propsOnFreqsMiddleDay, maxFreq, blockIDsCount, type = "Std") {
+makePropsOnFreqsNBDCorrection <- function(grp, propsOnFreqsMiddleDay, maxFreq, blockIDsCount, type = "Ext") {
   propsOnFreqs <- data.frame(data = matrix(0L, nrow = maxFreq + 1, ncol = 3))
   colnames(propsOnFreqs) <- c("MiddleDay", "Published", "PublishedExt")
 
@@ -148,15 +149,14 @@ makePropsOnFreqsNBDCorrection <- function(grp, propsOnFreqsMiddleDay, maxFreq, b
   
   stdCorrection <- makeStdNBDCorrection(grp, propsOnFreqs$MiddleDay, maxFreq, prec = 1e-10)
   propsOnFreqs$Published <- stdCorrection$Corrected  
-  #extended nbd will be added later
-  # if (type == "Ext") {
-    # if (blockIDsCount == 1) {
-      # propsOnFreqs$PublishedExt <- propsOnFreqs$Published
-    # }
-    # else {
-      # propsOnFreqs$PublishedExt <- makeExtNBDCorrection(stdCorrection, propsOnFreqs$MiddleDay, maxFreq, prec = 1e-15)
-    # }
-  # } 
+  if (type == "Ext") {
+    if (blockIDsCount == 1) {
+      propsOnFreqs$PublishedExt <- propsOnFreqs$Published
+    }
+    else {
+      propsOnFreqs$PublishedExt <- makeExtNBDCorrection(stdCorrection, propsOnFreqs$MiddleDay, maxFreq, prec = 1e-15)
+    }
+  } 
   return (propsOnFreqs)
 }
 
