@@ -1,0 +1,252 @@
+getDateInfo <- function(dbconnection, minDay, maxDay) {
+  Query <- paste("
+    select
+      [Date]
+      , round([PF], 10) as [PF]
+    from [TNS].[dbo].[DateInfo]
+    where [Date] between '", minDay, "' and '", maxDay, "'", sep = "")
+  df <- sqlQuery(dbconnection, Query)
+  df$Date <- as.Date(as.character(df$Date))
+  return (df)
+}
+
+
+getDemographyNational <- function(dbconnection, day) {
+  df <- sqlQuery(dbconnection, paste("
+    select
+      *
+      , round([Weight], 10) as [WeightRounded]
+    from [TNS].[dbo].[Demography]
+    where [Date] = '", day, "'
+  ", sep = ""))
+  df$Date <- as.Date(as.character(df$Date))
+  return (df)
+}
+
+getDemography <- function(dbConnTNS, dbConnReg, day, PF, demType) {
+  nationalDem <- getDemographyNational(dbConnTNS, day)
+  if (demType == "Nat") {
+    print (PF)
+    return (nationalDem %>% mutate(Weight000 = WeightRounded * PF))
+  } else {
+    regWeights <- getRegionalDemographyWeights(dbConnReg, day)
+    return (merge(nationalDem, regWeights, by = c("Date", "MemberNumber")))
+  }
+}
+
+
+getRegionalDemographyWeights <- function(dbconnection, day) {
+  df <- sqlQuery(dbconnection, paste("
+    select
+      t1.[Date]
+      , t1.[MemberNumber]
+      , t1.[Weight] * round(t2.[PF], 10) as [Weight000]
+    from (
+      select
+        *
+      from [TNS_REG].[dbo].[Demography]
+      where [Date] = '", day, "'
+    ) as t1
+    join [TNS_REG].[dbo].[DateInfo] as t2
+    on t1.[Date] = t2.[Date]
+  ", sep = ""))
+  df$Date <- as.Date(as.character(df$Date))
+  return (df)
+}
+
+addCCSConnectTVGroup <- function(ccsdata) {
+  ccsdata <- ccsdata[order(ccsdata$R1_7), ] 
+  rownames(ccsdata) <- 1 : nrow(ccsdata)
+  ccsdata$R1_7_NoNA <- ccsdata$R1_7
+  ccsdata$R1_7_NoNA[is.na(ccsdata$R1_7)] <- 0
+  ccsdata$R1_7_CumSum <- cumsum(ccsdata$R1_7_NoNA)
+  ccsdata$CCSConnectHML <- cut(ccsdata$R1_7_CumSum, c(0, 4155.9, 10389.75, Inf), c(1, 2, 3), right = F)
+  ccsdata$CCSConnectHML <- as.integer(as.character(ccsdata$CCSConnectHML))
+  ccsdata$CCSConnectHML[is.na(ccsdata$R1_7)] <- 0  #1 - light, 2 - medium, 3 - heavy, 0 - з\о
+  ccsdata$R1_7_CumSum <- NULL
+  ccsdata$R1_7_NoNA <- NULL
+  return (ccsdata)
+}
+
+readCCSDataFromFilename <- function(spssFilename) {
+  ccsdata <- read.spss(spssFilename, 
+                       use.value.labels = F, 
+                       add.undeclared.levels="no", 
+                       to.data.frame = T, 
+                       stringsAsFactors  = F, 
+                       use.missings = T)
+  ccsdata[is.na(ccsdata$Category_last_purchase),]$Category_last_purchase <- 999
+  cellCols <- c("Financial_situation_in_household", "R4_7")
+  ccsdata[is.na(ccsdata[cellCols]), cellCols] <- 0
+  
+  # CCS Connect TVGroup
+  ccsdata <- addCCSConnectTVGroup(ccsdata)
+  
+  ccsdata$GLOBAL_ID <- apply(ccsdata["GLOBAL_ID"], 1, FUN = function(x) {return(as.integer(str_sub(x, -9, -1)))})
+  return (ccsdata)
+}
+
+filterByAgeGroupBasedOnDemType <- function(df, demographyType) {
+  if (demographyType == "Nat") {
+    return (filter(df, ageGroup > 0 & ageGroup < 6))  
+  } else {
+    return (df)
+  }
+}
+
+prepareDFForFusionFromCCS <- function(rawDF, demographyType) {
+  type <- 'CCS'
+  nonTV <- rawDF %>% filter(R4_7 == 0) %>% select(GLOBAL_ID)
+  rawDF <- rawDF %>% filter(R4_7 > 0)
+  
+  newDF <- data.frame(id = as.character(rawDF$GLOBAL_ID),
+                      type = type,
+                      sex = cut(rawDF$D2, c(0, 1, 2), c(2, 1), right = F), #2 - женский, 1 - мужской
+                      age = rawDF$D1,
+                      ageGroup = cut(rawDF$D1, c(16, 18, 25, 35, 45, 55, 65, 66), c(0, 1, 2, 3, 4, 5, 6), right = F),
+                      region = cut(rawDF$D3, c(275, 276, 277, 300), c(1, 2, 0), right = F),  # 0 - Россия без Мск и СпБ, 1 - Москва (большая), 2 - СпБ
+                      educationRaw = cut(as.integer(rawDF$Education == 6 | rawDF$Education == 5), c(0, 1, 2), labels = c(1, 2), right = F), #1 - не высшее, 2 - высшее
+                      education = as.integer((rawDF$D1 >= 21) & (rawDF$Education %in% c(5, 6))), # 0 - нет высшего или 16-20, 1 - 21+ высшее
+                      workRaw = cut(as.integer(rawDF$Employment != 3), c(0, 1, 2), labels = c(2, 1), right = F), # 1 - работает, 2 - не работает
+                      work = (as.integer(rawDF$D1 >= 18)), # 0 - 16-17, 1 - 18+ не работает, 2 - 18+ работает
+                      marital = cut(as.integer(rawDF$Family_status == 1), c(0, 1, 2), labels = c(2, 1), right = F), #2 - не женат\не замужем, 1 - замужем\женат
+                      hhSize = cut(rawDF$Household_size, c(1, 3, 4, 100), labels = c(1, 2, 3), right = F), #1 - 1-2, 2 - 3, 3 - 4+
+                      incomeLevel = cut(rawDF$Financial_situation_in_household, c(0, 1, 2, 3, 4, 6, 100), c(6, 1, 2, 3, 4, 5), right = F), #значение 6 - это з\о
+                      tvGroup = as.integer(rawDF$D1 >= 18) * rawDF$R4_7, #1 - light, 2 - medium, 3 - heavy, 0 - [16-17]
+                      magnitude = rawDF$weight)
+  for (colInd in 1 : ncol(newDF)) {
+    newDF[, colInd] <- as.character(newDF[, colInd])
+  }
+  for (colInd in 3 : ncol(newDF)) {
+    newDF[, colInd] <- as.numeric(newDF[, colInd])
+  }
+  newDF[newDF$workRaw == 1 & newDF$age >= 18, ]$work <- 2
+  # newDF <- filterByAgeGroupBasedOnDemType(newDF, demographyType)
+  return (list(TV = newDF, nonTV = nonTV))
+}
+
+
+prepareDFForFusionFromTNS <- function(rawDF, demographyType) {
+  type <- 'TV'
+  rawDF <- filter(rawDF, Age >= 16 & Age <= 65)
+  newDF <- data.frame(id = as.character(rawDF$MemberNumber),
+                      type = type,
+                      sex = rawDF$Sex, #1 - мужской, 2 - женский
+                      age = rawDF$Age,
+                      ageGroup = cut(rawDF$Age, c(16, 18, 25, 35, 45, 55, 65, 66), c(0, 1, 2, 3, 4, 5, 6), right = F),
+                      region = cut(rawDF$CubeBeginning2016, c(1, 2, 3, 99), c(1, 2, 0), right = F), # 0 - Россия без Мск и СпБ, 1 - Москва (большая), 2 - СпБ
+                      educationRaw = cut(rawDF$Education, c(0, 2, 5), c(1, 2)), #1 - не высшее, 2 - высшее
+                      education = as.integer(rawDF$Age >= 21 & rawDF$Education == 3), # 0 - нет высшего или 16-20, 1 - 21+ высшее
+                      workRaw = cut(rawDF$Work, c(1, 3, 4), c(1, 2), right = F), # 1 - работает, 2 - не работает
+                      work = (as.integer(rawDF$Age >= 18)), # 0 - 16-17, 1 - 18+ не работает, 2 - 18+ работает
+                      marital = rawDF$MartialStatus, # 1 - замужем\женат, 2 - не женат\не замужем
+                      hhSize = rawDF$HholdZdk, #1 - 1-2; 2 - 3, 3 - 4+
+                      incomeLevel = rawDF$IncomeLevel,  #значение 6 - это з\о
+                      tvGroup = replace(rawDF$WHmlCCS, which(rawDF$WHmlCCS == 0 & rawDF$Age >= 18), c(1)), #1 - light, 2 - medium, 3 - heavy, 0 - з\о
+                      magnitude = rawDF$Weight000)
+  for (colInd in 1 : ncol(newDF)) {
+    newDF[, colInd] <- as.character(newDF[, colInd])
+  }
+  for (colInd in 3 : ncol(newDF)) {
+    newDF[, colInd] <- as.numeric(newDF[, colInd])
+  }
+  newDF[newDF$workRaw == 1 & newDF$age >= 18, ]$work <- 2
+  # newDF <- filterByAgeGroupBasedOnDemType(newDF, demographyType)
+  return (newDF)
+}
+
+
+
+prepareFusedDB <- function(readFromFile = F, fusedDBFilename  = NULL, fusionType = NULL, demographyType = NULL, 
+                           ccsdata = NULL, credentials = NULL, minDate = NULL, maxDate = NULL, calculateFreqSums = NULL, freqSumsFilename = NULL) {
+  
+  if (readFromFile) {
+    fusedDB <- readFusedDB(fusedDBFilename)
+  } else {
+    varsGroups <- list(varsList = c("region", "sex", "age", "education", "tvGroup", "work", "hhSize", "marital", "incomeLevel"),
+                       maxCellColsCount = 6, 
+                       groupNames = c("Sex+AgeGroup", "Sex+Age", "Sex+Age+Edu", "SAE+HML", "SAE+HML+Work", "Full"))
+    
+    fusionResults <- calculateFusedDB(ccsdata, credentials, minDate, maxDate, varsGroups, fusionType = fusionType,
+                                      demographyType = demographyType, calculateFreqSums = calculateFreqSums)
+    write.table(fusionResults$fusedDB, fusedDBFilename, sep = "\t", row.names = FALSE, dec = ",")
+    if (!is.null(calculateFreqSums) && calculateFreqSums)  {
+      outputFreqSums(fusionResults$cellSizes, freqSumsFilename, varsGroups)
+    }
+    fusedDB <- fusionResults$fusedDB
+  }
+  return (fusedDB)
+}
+
+prepareNonTVFusionPart <- function(CCSNonViewers) {
+  df <- CCSNonViewers %>% 
+    mutate(idTV = "0", idCCS = as.character(GLOBAL_ID), mass = 0.0, adjCoeff = 1.0) %>% 
+    select(idTV, idCCS, mass, adjCoeff)
+  return (df)
+}
+
+
+# ccsdata <- ccsData
+calculateFusedDB <- function(ccsdata, credentials, minDate, maxDate, varsGroups, demographyType = "Nat", 
+                             fusionType = NULL, calculateFreqSums = NULL) {
+  dbConnTNS <- odbcDriverConnect(credentials$TNS)
+  dbConnTNSReg <- odbcDriverConnect(credentials$TNSReg)
+  
+  ccsTvViewersAndNonViewers <- prepareDFForFusionFromCCS(ccsdata, demographyType)
+  CCScl <- ccsTvViewersAndNonViewers$TV
+  CCSNonTVFusionPart <- prepareNonTVFusionPart(ccsTvViewersAndNonViewers$nonTV)
+  
+  dateInfo <- getDateInfo(dbConnTNS, minDate, maxDate)
+  
+  periodLength <- as.numeric(maxDate - minDate)
+  fusedDB <- NULL
+  firstDBNameInFused <- "TV"
+  freqTableCheckSumByDays <- NULL
+  dayInd <- 0
+  for (dayInd in 0 : periodLength) {
+    day <- minDate + dayInd
+    print(day)
+    PF <- dateInfo[dateInfo$Date == day, ]$PF
+    
+    TVDem <- getDemography(dbConnTNS, dbConnTNSReg, day, PF, demographyType)
+    TVDemcl <- prepareDFForFusionFromTNS(TVDem, demographyType)
+    
+    fullDB <- rbind(CCScl, TVDemcl)
+    fusionForDay <- makeFusionOnAllVars(fullDB, varsGroups$varsList, varsGroups$maxCellColsCount, day, firstDBNameInFused)
+     
+    freqTablesCheckSum <- checkFreqTablesFusionInputVSOutput(fusionForDay, fullDB, varsGroups$varsList, 
+                                                             varsGroups$maxCellColsCount, firstDBNameInFused, day)
+    if (!freqTablesCheckSum$checkSumOverall) {
+      print (paste("CheckSumError On day", day, sep = " "))
+    }
+    if (!is.null(calculateFreqSums) && calculateFreqSums)  {
+      freqTableCheckSumByDays <- collectFreqSumsByDays(freqTablesCheckSum$freqTables, freqTableCheckSumByDays, day)  
+    }
+    if (!is.null(fusionForDay)) {
+      fusionForDay <- rbind(fusionForDay, CCSNonTVFusionPart)
+      fusionForDay$Date <- day
+      fusedDB <- appendToTableByRow(fusionForDay, fusedDB)  
+    }
+  }
+  fusedDB$idF <- paste(fusedDB$idTV, fusedDB$idCCS, sep = "_")
+  fusedDB <- fusedDB[with(fusedDB, order(Date, idTV, idCCS)), ] 
+  fusedDB <- fusedDB[, c("Date", "idF", "idTV", "idCCS", "mass", "adjCoeff")]
+  rownames(fusedDB) <- 1 : nrow(fusedDB)
+  
+  odbcClose(dbConnTNS)
+  return (list(fusedDB = fusedDB, cellSizes = freqTableCheckSumByDays))
+}
+
+getRegionFromCCS <- function(ccsdata) {
+  df <- ccsdata %>% select(GLOBAL_ID, D3) 
+  df$region <- cut(df$D3, c(275, 276, 277, 300), c(1, 2, 0), right = F)
+  df$region <- as.integer(as.character(df$region))
+  df$D3 <- NULL
+  return (df)
+}
+
+addRegionColumnToFusedDB <- function(regionOfIdTV, fusionDB) {
+  fusionDBWithRegion <- merge(fusionDB, regionOfIdTV,  by.x = "idCCS", by.y = "GLOBAL_ID")
+  return (fusionDBWithRegion)
+}
+
