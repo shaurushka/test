@@ -62,7 +62,7 @@ makeFusionOnNewVarBasedOnOldVars <- function(dbsConcatenation, oldCellCols, newC
     tableFreq <- data.frame(table(dbsConcatenationGroup[c("type", "newCellCol")]))
     
     if (min(tableFreq$Freq) > 0) {
-      newCellGroupValue <- dbsConcatenationGroup$newCellCol[1]
+      # newCellGroupValue <- dbsConcatenationGroup$newCellCol[1]
       for (newCellGroupValue in unique(dbsConcatenationGroup$newCellCol)) {
         Cell <- dbsConcatenationGroup[dbsConcatenationGroup$newCellCol == newCellGroupValue, ]
         firstDBCell <- Cell %>% filter(type == firstDBNameInFusionDB)
@@ -95,12 +95,24 @@ addUnmatchedOnCurrentLevelIDsToFusionDB <- function(unmatchedDBOnCurrentLevel, f
   return (appendToTableByRow(unmatchedIDsFusionOld, fusionDB))
 } 
 
+selectNextCellColInd <- function(db, cellCols, newCellColsCandidates) {
+  maxCellSize <- -1 
+  nextCellColInd <- NULL
+  for (ind in 1: length(newCellColsCandidates)) {
+    tableFreq <- data.frame(table(db[c("type", cellCols, newCellColsCandidates[ind])]))
+    
+    if (min(tableFreq$Freq) > maxCellSize) { 
+      nextCellColInd <- ind
+    }
+  }
+  return (nextCellColInd)
+}
+
 # fullCellColsListSize <- varsGroups$maxCellColsCount
 # varsList <-  varsGroups$varsList
 # dbsConcatenation <- fullDB
 # firstDBNameInFusionDB <- firstDBNameInFused
 makeFusionOnAllVars <- function(dbsConcatenation, varsList, fullCellColsListSize, day, firstDBNameInFusionDB) {
-  
   fusionDB <- NULL
   fusionDBFromPrevLevel <- NULL
   matchedDB <- dbsConcatenation
@@ -109,16 +121,31 @@ makeFusionOnAllVars <- function(dbsConcatenation, varsList, fullCellColsListSize
   if (length(regionInd) > 0) {
     varsList <- varsList[-regionInd]
   }
+  baseColsCount <- 4
+  cellCollsFullList <- varsList[(baseColsCount + 1) : (fullCellColsListSize - 1)]
+  
   varsCount <- length(varsList)
-  for (cellColsListSize in 1 : fullCellColsListSize) {
+  pureDistCols <- NULL
+  if (varsCount > fullCellColsListSize) {
+    pureDistCols <- varsList[fullCellColsListSize : varsCount]
+  }
+  for (cellColsListSize in 1 : (fullCellColsListSize - 1)) {
     print (paste("Level:", cellColsListSize, "; Objects to split = ", nrow(matchedDB), sep = " "))
     if (cellColsListSize == 1) {
       cellCols <- c(regionCellCol, "sex", "ageGroup")
       distCols <- varsList[3 : varsCount]
       levelFusion <- makeFusionOnGroupOfVars(matchedDB, cellCols, distCols, firstDBNameInFusionDB)
     } else {
-      cellCols <- c(regionCellCol, varsList[1 : cellColsListSize])
-      distCols <- varsList[(cellColsListSize + 1) : varsCount]
+      if (cellColsListSize <= baseColsCount) {
+        cellCols <- c(regionCellCol, varsList[1 : cellColsListSize])
+        distCols <- varsList[(cellColsListSize + 1) : varsCount]
+      } else {
+        newCellColInd <- selectNextCellColInd(matchedDB, cellCols, cellCollsFullList)
+        cellCols <- c(cellCols, cellCollsFullList[newCellColInd])
+        cellCollsFullList <- cellCollsFullList[-newCellColInd]
+        # print (cellCollsFullList)
+        distCols <- c(cellCollsFullList, pureDistCols)
+      }
       levelFusion <- makeFusionOnNewVarBasedOnOldVars(matchedDB, 
                                                       head(cellCols, -1), 
                                                       tail(cellCols, 1), 
@@ -131,7 +158,7 @@ makeFusionOnAllVars <- function(dbsConcatenation, varsList, fullCellColsListSize
                                                           fusionDB = fusionDB)
     } 
     if (is.null(levelFusion$matched) || (nrow(levelFusion$matched) == 0)) {
-      return (fusionDB)
+      return (list(cellCols = head(cellCols, -1), db = fusionDB))
     }
     fusionDBFromPrevLevel <- levelFusion$matched
     firstDB <- merge(dbsConcatenation %>% filter(type == firstDBNameInFusionDB), 
@@ -144,6 +171,6 @@ makeFusionOnAllVars <- function(dbsConcatenation, varsList, fullCellColsListSize
   if (!is.null(fusionDBFromPrevLevel)) {
     fusionDB <- appendToTableByRow(fusionDBFromPrevLevel, fusionDB)
   }
-  return (fusionDB)
+  return (list(cellCols = cellCols, db = fusionDB))
 }
 
