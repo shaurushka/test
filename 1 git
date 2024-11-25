@@ -1,104 +1,4 @@
 version: 1
-relations:
-matte_fuzzy_controller:
-outputs: matte_fuzzy_controller
-slag_fuzzy_controller:
-outputs: slag_fuzzy_controller
-conc_fuzzy_controller:
-outputs: conc_fuzzy_controller
-read_signals:
-outputs: out0
-split_df_1:
-inputs: out0
-outputs:
-- out0_1
-- out0_2
-subscription:
-outputs: out1
-merge_df_1:
-inputs:
-- out0
-- out1
-outputs: out1_1
-rename_input:
-inputs: out1_1
-outputs: out2
-preprocessing_pipeline:
-inputs: out2
-outputs: out3
-execute_matte_fuzzy_controller:
-inputs:
-- matte_fuzzy_controller
-- out3
-outputs:
-- matte_controller_out
-- control_explanation_matte
-- success_flag1
-execute_slag_fuzzy_controller:
-inputs:
-- slag_fuzzy_controller
-- out3
-outputs:
-- slag_controller_out
-- control_explanation_slag
-- success_flag2
-execute_conc_fuzzy_controller:
-inputs:
-- conc_fuzzy_controller
-- out3
-outputs:
-- conc_controller_out
-- control_explanation_conc
-- success_flag3
-df_update:
-inputs:
-- out3
-- matte_controller_out
-- slag_controller_out
-- conc_controller_out
-- control_explanation_matte
-- control_explanation_slag
-- control_explanation_conc
-outputs: out5
-postprocessing_pipeline:
-inputs: out5
-outputs: out6
-rename_output:
-inputs: out6
-outputs: out7
-merge_df_2:
-inputs:
-- out0_1
-- out7
-outputs: out8
-process_nans_last:
-inputs: out8
-outputs: out9
-write_last:
-inputs: out9
-write_blob:
-inputs: out9
-split_df_2:
-inputs: out7
-outputs:
-- out9_1
-- out9_2
-- out9_3
-process_nans_matte:
-inputs: out9_1
-outputs: out10
-write_column_matte:
-inputs: out10
-process_nans_slag:
-inputs: out9_2
-outputs: out11
-write_column_slag:
-inputs: out11
-process_nans_conc:
-inputs: out9_3
-outputs: out12
-write_column_conc:
-inputs: out12
 nodes:
 matte_fuzzy_controller:
 type: mdk_fuzzy_controller
@@ -107,7 +7,7 @@ controller:
 __instance__: BaseFuzzyController
 params:
 name: Контроллер Штейна
-n_rules_to_show: 2
+n_rules_to_show: 1
 consequent_multiplier: 1
 strict: true
 rules_container:
@@ -316,7 +216,7 @@ controller:
 __instance__: BaseFuzzyController
 params:
 name: Контроллер Шлака
-n_rules_to_show: 2
+n_rules_to_show: 1
 consequent_multiplier: 1
 rules_container:
 __instance__: RulesContainer
@@ -444,7 +344,7 @@ controller:
 __instance__: BaseFuzzyController
 params:
 name: Контроллер Концентрата
-n_rules_to_show: 3
+n_rules_to_show: 2
 consequent_multiplier: 1
 rules_container:
 __instance__: RulesContainer
@@ -465,7 +365,8 @@ consequent:
 term: ps
 factor: 1
 - name: rule_2
-label: Сумма ЦМ в отношении к Fe в концентрате падает и cумма ЦМ в
+label: >-
+Сумма ЦМ в отношении к Fe в концентрате падает и cумма ЦМ в
 штейне высокая
 antecedent: metal_sum__Fe_conc_trend-ns & metal_sum_matte_error1-high
 consequent:
@@ -487,7 +388,8 @@ consequent:
 term: ns
 factor: 1
 - name: rule_5
-label: Сумма ЦМ в отношении к Fe в концентрате растет и cумма ЦМ в
+label: >-
+Сумма ЦМ в отношении к Fe в концентрате растет и cумма ЦМ в
 штейне низкая
 antecedent: metal_sum__Fe_conc_trend-ps & metal_sum_matte_error1-low
 consequent:
@@ -502,7 +404,8 @@ consequent:
 term: ps
 factor: 1
 - name: rule_7
-label: Магнетит в отношении к Fe в концентрате падает и cумма ЦМ в
+label: >-
+Магнетит в отношении к Fe в концентрате падает и cумма ЦМ в
 штейне высокая
 antecedent: Fe3O4__Fe_conc_trend-ns & metal_sum_matte_error1-high
 consequent:
@@ -524,7 +427,8 @@ consequent:
 term: ns
 factor: 1
 - name: rule_10
-label: Магнетит в отношении к Fe в концентрате растет и cумма ЦМ в
+label: >-
+Магнетит в отношении к Fe в концентрате растет и cумма ЦМ в
 штейне низкая
 antecedent: Fe3O4__Fe_conc_trend-ps & metal_sum_matte_error1-low
 consequent:
@@ -539,24 +443,24 @@ terms:
 - term_label: ns
 bounds_type: trapmf
 bounds_params:
-a: -0.009
-b: -0.009
-c: -0.006
+a: -0.004
+b: -0.004
+c: -0.002
 d: -0.001
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
-a: -0.006
+a: -0.002
 b: -0.001
 c: 0.001
-d: 0.006
+d: 0.002
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
 a: 0.001
-b: 0.006
-c: 0.009
-d: 0.009
+b: 0.002
+c: 0.004
+d: 0.004
 - __instance__: Type1AntecedentVariableConfig
 params:
 name: Fe3O4__Fe_conc_trend
@@ -566,20 +470,20 @@ bounds_type: trapmf
 bounds_params:
 a: -0.006
 b: -0.006
-c: -0.004
-d: -0.001
+c: -0.001
+d: -0.0005
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
-a: -0.004
-b: -0.001
-c: 0.001
-d: 0.004
+a: -0.001
+b: -0.0005
+c: 0.0005
+d: 0.001
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
-a: 0.001
-b: 0.004
+a: 0.0005
+b: 0.001
 c: 0.006
 d: 0.006
 - __instance__: Type1AntecedentVariableConfig
@@ -744,15 +648,19 @@ params:
 silence_rewrite_warning: true
 expressions:
 - - SiO2_matte
-- SiO2_matte_1.fillna(SiO2_matte_2).fillna(SiO2_matte_3).fillna(SiO2_matte_4).ffill()
+- >-
+SiO2_matte_1.fillna(SiO2_matte_2).fillna(SiO2_matte_3).fillna(SiO2_matte_4).ffill()
 - - contaminated_matte
 - SiO2_matte > 0.8
 - - Ni_matte
-- Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4).ffill()
+- >-
+Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4).ffill()
 - - Cu_matte
-- Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4).ffill()
+- >-
+Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4).ffill()
 - - Co_matte
-- Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4).ffill()
+- >-
+Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4).ffill()
 - - metal_sum_matte_true
 - Ni_matte + Cu_matte + Co_matte
 - - Ni_matte_1
@@ -764,22 +672,27 @@ expressions:
 - - Ni_matte_4
 - Ni_matte_4 - 0.5
 - - Ni_matte
-- Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4)
+- >-
+Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4)
 - - Cu_matte
-- Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4)
+- >-
+Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4)
 - - Co_matte
-- Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4)
+- >-
+Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4)
 - - metal_sum_matte_nofill
 - Ni_matte + Cu_matte + Co_matte
 - - new_data_flag_matte
-- metal_sum_matte_nofill.shift(-1).isna().ne(metal_sum_matte_nofill_prev.shift(-1).isna(),
+- >-
+metal_sum_matte_nofill.shift(-1).isna().ne(metal_sum_matte_nofill_prev.shift(-1).isna(),
 axis=0)
 - - new_data_flag_matte
 - new_data_flag_matte.max()
 - - metal_sum_matte
 - metal_sum_matte_nofill[~contaminated_matte].ffill(limit=2)
 - - metal_sum_matte_prev
-- metal_sum_matte_prev.ffill(limit=3).fillna(metal_sum_matte)
+- >-
+metal_sum_matte_prev.ffill(limit=3).fillna(metal_sum_matte)
 - - metal_sum_matte_diff
 - metal_sum_matte - metal_sum_matte_prev
 - - metal_sum_matte_diff
@@ -787,11 +700,15 @@ axis=0)
 - - metal_sum_matte
 - metal_sum_matte_prev + metal_sum_matte_diff
 - - metal_sum_matte_trend
-- metal_sum_matte.ffill().diff().fillna(0).rolling(4).mean() * 2
+- >-
+metal_sum_matte.ffill().diff().fillna(0).rolling(4).mean()
+* 2
 - - metal_sum_matte_trend
 - metal_sum_matte_trend * new_data_flag_matte
 - - metal_sum_matte_target
-- (metal_sum_matte_lower_bound + metal_sum_matte_upper_bound) / 2
+- >-
+(metal_sum_matte_lower_bound +
+metal_sum_matte_upper_bound) / 2
 - - metal_sum_matte_error
 - metal_sum_matte - metal_sum_matte_target.ffill()
 - - metal_sum_matte_error
@@ -809,12 +726,14 @@ axis=0)
 - - Co_slag_nofill
 - Co_slag_1.fillna(Co_slag_2)
 - - new_data_flag_slag
-- Co_slag_nofill.shift(-1).isna().ne(Co_slag_nofill_prev.shift(-1).isna(),
+- >-
+Co_slag_nofill.shift(-1).isna().ne(Co_slag_nofill_prev.shift(-1).isna(),
 axis=0)
 - - new_data_flag_slag
 - new_data_flag_slag.max()
 - - Co_slag_trend
-- Co_slag_nofill[~contaminated_slag].ffill().diff().fillna(0).rolling(3).mean()
+- >-
+Co_slag_nofill[~contaminated_slag].ffill().diff().fillna(0).rolling(3).mean()
 - - Co_slag_trend
 - Co_slag_trend * new_data_flag_slag
 - - Co_slag
@@ -824,18 +743,20 @@ axis=0)
 - - metal_sum__Fe_conc_nofill
 - metal_sum_conc / Fe_conc
 - - new_data_flag_conc
-- metal_sum__Fe_conc_nofill.shift(-1).isna().ne(metal_sum__Fe_conc_nofill_prev.shift(-1).isna(),
+- >-
+metal_sum__Fe_conc_nofill.shift(-1).isna().ne(metal_sum__Fe_conc_nofill_prev.shift(-1).isna(),
 axis=0)
 - - new_data_flag_conc
 - new_data_flag_conc.max()
 - - metal_sum__Fe_conc_trend
-- metal_sum__Fe_conc_nofill.ffill().diff().fillna(0).rolling(4).mean()
+- >-
+metal_sum__Fe_conc_nofill.ffill().diff().fillna(0).rolling(3).mean()
 - - metal_sum__Fe_conc_trend
 - metal_sum__Fe_conc_trend * new_data_flag_conc
 - - Fe3O4__Fe_conc
 - Fe3O4_conc / Fe_conc
 - - Fe3O4__Fe_conc_trend
-- Fe3O4__Fe_conc.ffill().diff().fillna(0).rolling(4).mean()
+- Fe3O4__Fe_conc.ffill().diff().fillna(0).rolling(3).mean()
 - - Fe3O4__Fe_conc_trend
 - Fe3O4__Fe_conc_trend * new_data_flag_conc
 - - Fe3O4__Fe_conc
@@ -843,11 +764,11 @@ axis=0)
 - - metal_sum__Fe_conc
 - metal_sum__Fe_conc_nofill.ffill()
 - - oxygen_u_matte
-- 0
+- '0'
 - - oxygen_u_slag
-- 0
+- '0'
 - - oxygen_u_conc
-- 0
+- '0'
 execute_matte_fuzzy_controller:
 type: mdk_controller_execute
 params:
@@ -892,9 +813,13 @@ expressions:
 - - oxygen_delta_cumulative_new
 - oxygen_delta_cumulative - oxygen_sp_diff
 - - oxygen_delta_cumulative
-- deltas_codirected_pos * oxygen_delta_cumulative_new.clip(lower=0)
-+ deltas_codirected_neg * oxygen_delta_cumulative_new.clip(upper=0)
-+ (~deltas_codirected_pos & ~deltas_codirected_neg) * oxygen_delta_cumulative
+- >-
+deltas_codirected_pos *
+oxygen_delta_cumulative_new.clip(lower=0) +
+deltas_codirected_neg *
+oxygen_delta_cumulative_new.clip(upper=0) +
+(~deltas_codirected_pos & ~deltas_codirected_neg) *
+oxygen_delta_cumulative
 - - threshold_condition
 - oxygen_delta_cumulative.abs().ge(0.7).max()
 - - oxygen_u
@@ -1073,6 +998,147 @@ type: platform_write
 params:
 signals_ids:
 - nmz_fsf1_metal_sum__Fe_conc_nofill
+relations:
+matte_fuzzy_controller:
+inputs: []
+outputs:
+- matte_fuzzy_controller
+slag_fuzzy_controller:
+inputs: []
+outputs:
+- slag_fuzzy_controller
+conc_fuzzy_controller:
+inputs: []
+outputs:
+- conc_fuzzy_controller
+read_signals:
+inputs: []
+outputs:
+- out0
+split_df_1:
+inputs:
+- out0
+outputs:
+- out0_1
+- out0_2
+subscription:
+inputs: []
+outputs:
+- out1
+merge_df_1:
+inputs:
+- out0
+- out1
+outputs:
+- out1_1
+rename_input:
+inputs:
+- out1_1
+outputs:
+- out2
+preprocessing_pipeline:
+inputs:
+- out2
+outputs:
+- out3
+execute_matte_fuzzy_controller:
+inputs:
+- matte_fuzzy_controller
+- out3
+outputs:
+- matte_controller_out
+- control_explanation_matte
+- success_flag1
+execute_slag_fuzzy_controller:
+inputs:
+- slag_fuzzy_controller
+- out3
+outputs:
+- slag_controller_out
+- control_explanation_slag
+- success_flag2
+execute_conc_fuzzy_controller:
+inputs:
+- conc_fuzzy_controller
+- out3
+outputs:
+- conc_controller_out
+- control_explanation_conc
+- success_flag3
+df_update:
+inputs:
+- out3
+- matte_controller_out
+- slag_controller_out
+- conc_controller_out
+- control_explanation_matte
+- control_explanation_slag
+- control_explanation_conc
+outputs:
+- out5
+postprocessing_pipeline:
+inputs:
+- out5
+outputs:
+- out6
+rename_output:
+inputs:
+- out6
+outputs:
+- out7
+merge_df_2:
+inputs:
+- out0_1
+- out7
+outputs:
+- out8
+process_nans_last:
+inputs:
+- out8
+outputs:
+- out9
+write_last:
+inputs:
+- out9
+outputs: []
+write_blob:
+inputs:
+- out9
+outputs: []
+split_df_2:
+inputs:
+- out7
+outputs:
+- out9_1
+- out9_2
+- out9_3
+process_nans_matte:
+inputs:
+- out9_1
+outputs:
+- out10
+write_column_matte:
+inputs:
+- out10
+outputs: []
+process_nans_slag:
+inputs:
+- out9_2
+outputs:
+- out11
+write_column_slag:
+inputs:
+- out11
+outputs: []
+process_nans_conc:
+inputs:
+- out9_3
+outputs:
+- out12
+write_column_conc:
+inputs:
+- out12
+outputs: []
 runner:
 type: scheduled
 params:
@@ -1089,3 +1155,85 @@ signal_public_ids:
 - LIMS_41-1.25_Выборка_Co
 - LIMS_41-1.25a_Выборка_Co
 - LIMS_41-1.1_Двачаса_Ni
+metadata:
+mdk_version: 0.56.0
+pf_version: 0.34.0
+frontend:
+matte_fuzzy_controller:
+x: 1114
+'y': 4490.5
+slag_fuzzy_controller:
+x: 1132
+'y': 4870.5
+conc_fuzzy_controller:
+x: 1132
+'y': 5088.5
+read_signals:
+x: -444
+'y': 4280
+split_df_1:
+x: 2228
+'y': 4137.5
+subscription:
+x: -444
+'y': 4505.5
+merge_df_1:
+x: -186
+'y': 4363.5
+rename_input:
+x: 100
+'y': 4589.5
+preprocessing_pipeline:
+x: 444
+'y': 4856.5
+execute_matte_fuzzy_controller:
+x: 1388
+'y': 4505.5
+execute_slag_fuzzy_controller:
+x: 1388
+'y': 4850.5
+execute_conc_fuzzy_controller:
+x: 1388
+'y': 5079.5
+df_update:
+x: 1668
+'y': 4685.5
+postprocessing_pipeline:
+x: 1948
+'y': 4685.5
+rename_output:
+x: 2228
+'y': 4595.5
+merge_df_2:
+x: 2508
+'y': 4325.5
+process_nans_last:
+x: 2788
+'y': 4055.5
+write_last:
+x: 3186
+'y': 3977.5
+write_blob:
+x: 3186
+'y': 4157.5
+split_df_2:
+x: 2508
+'y': 4505.5
+process_nans_matte:
+x: 2788
+'y': 4678.5
+write_column_matte:
+x: 3186
+'y': 4627.5
+process_nans_slag:
+x: 2788
+'y': 4526.5
+write_column_slag:
+x: 3186
+'y': 4517.5
+process_nans_conc:
+x: 2788
+'y': 4383.5
+write_column_conc:
+x: 3186
+'y': 4370.5
