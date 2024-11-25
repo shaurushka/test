@@ -273,20 +273,20 @@ bounds_type: trapmf
 bounds_params:
 a: -0.03
 b: -0.03
-c: -0.02
+c: -0.006
 d: -0.001
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
-a: -0.02
+a: -0.006
 b: -0.001
 c: 0.001
-d: 0.02
+d: 0.006
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
 a: 0.001
-b: 0.02
+b: 0.006
 c: 0.03
 d: 0.03
 - __instance__: Type1AntecedentVariableConfig
@@ -443,24 +443,24 @@ terms:
 - term_label: ns
 bounds_type: trapmf
 bounds_params:
-a: -0.004
-b: -0.004
-c: -0.002
-d: -0.001
+a: -0.01
+b: -0.01
+c: -0.007
+d: -0.0015
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
-a: -0.002
-b: -0.001
-c: 0.001
-d: 0.002
+a: -0.007
+b: -0.0015
+c: 0.0015
+d: 0.007
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
-a: 0.001
-b: 0.002
-c: 0.004
-d: 0.004
+a: 0.0015
+b: 0.007
+c: 0.01
+d: 0.01
 - __instance__: Type1AntecedentVariableConfig
 params:
 name: Fe3O4__Fe_conc_trend
@@ -470,20 +470,20 @@ bounds_type: trapmf
 bounds_params:
 a: -0.006
 b: -0.006
-c: -0.001
-d: -0.0005
+c: -0.003
+d: -0.0007
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
-a: -0.001
-b: -0.0005
-c: 0.0005
-d: 0.001
+a: -0.003
+b: -0.0007
+c: 0.0007
+d: 0.003
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
-a: 0.0005
-b: 0.001
+a: 0.0007
+b: 0.003
 c: 0.006
 d: 0.006
 - __instance__: Type1AntecedentVariableConfig
