@@ -446,18 +446,18 @@ bounds_params:
 a: -0.01
 b: -0.01
 c: -0.007
-d: -0.0015
+d: -0.001
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
 a: -0.007
-b: -0.0015
-c: 0.0015
+b: -0.001
+c: 0.001
 d: 0.007
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
-a: 0.0015
+a: 0.001
 b: 0.007
 c: 0.01
 d: 0.01
@@ -470,20 +470,20 @@ bounds_type: trapmf
 bounds_params:
 a: -0.006
 b: -0.006
-c: -0.003
-d: -0.0007
+c: -0.0025
+d: -0.0005
 - term_label: ze
 bounds_type: trapmf
 bounds_params:
-a: -0.003
-b: -0.0007
-c: 0.0007
-d: 0.003
+a: -0.0025
+b: -0.0005
+c: 0.0005
+d: 0.0025
 - term_label: ps
 bounds_type: trapmf
 bounds_params:
-a: 0.0007
-b: 0.003
+a: 0.0005
+b: 0.0025
 c: 0.006
 d: 0.006
 - __instance__: Type1AntecedentVariableConfig
@@ -732,8 +732,9 @@ axis=0)
 - - new_data_flag_slag
 - new_data_flag_slag.max()
 - - Co_slag_trend
-- >-
-Co_slag_nofill[~contaminated_slag].ffill().diff().fillna(0).rolling(3).mean()
+- Co_slag_nofill[~contaminated_slag]
+- - Co_slag_trend
+- Co_slag_trend.ffill().diff().fillna(0).rolling(3).mean()
 - - Co_slag_trend
 - Co_slag_trend * new_data_flag_slag
 - - Co_slag
