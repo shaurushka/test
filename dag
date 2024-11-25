@@ -1,0 +1,1239 @@
+version: 1
+nodes:
+  matte_fuzzy_controller:
+    type: mdk_fuzzy_controller
+    params:
+      controller:
+        __instance__: BaseFuzzyController
+        params:
+          name: Контроллер Штейна
+          n_rules_to_show: 1
+          consequent_multiplier: 1
+          strict: true
+          rules_container:
+            __instance__: RulesContainer
+            params:
+              antecedent_names:
+                - metal_sum_matte_error
+                - metal_sum_matte_trend
+              consequent_names:
+                - oxygen_u_matte
+              granularity: 1000
+              rules:
+                - name: rule_0
+                  label: Сумма ЦМ в штейне критически низкая
+                  antecedent: metal_sum_matte_error-crit_low
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: pc
+                      factor: 1
+                - name: rule_1
+                  label: Сумма ЦМ в штейне низкая, тренд на обеднение
+                  antecedent: metal_sum_matte_error-low & metal_sum_matte_trend-ns
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: pb
+                      factor: 1
+                - name: rule_2
+                  label: Сумма ЦМ в штейне низкая и не меняется
+                  antecedent: metal_sum_matte_error-low & metal_sum_matte_trend-ze
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ps
+                      factor: 1
+                - name: rule_3
+                  label: Сумма ЦМ в штейне низкая, тренд на обогащение
+                  antecedent: metal_sum_matte_error-low & metal_sum_matte_trend-ps
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ze
+                      factor: 1
+                - name: rule_4
+                  label: Сумма ЦМ в штейне в норме, тренд на обеднение
+                  antecedent: metal_sum_matte_error-ok & metal_sum_matte_trend-ns
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ps
+                      factor: 1
+                - name: rule_5
+                  label: Сумма ЦМ в штейне в норме и не меняется
+                  antecedent: metal_sum_matte_error-ok & metal_sum_matte_trend-ze
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ze
+                      factor: 1
+                - name: rule_6
+                  label: Сумма ЦМ в штейне в норме, тренд на обогащение
+                  antecedent: metal_sum_matte_error-ok & metal_sum_matte_trend-ps
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ns
+                      factor: 1
+                - name: rule_7
+                  label: Сумма ЦМ в штейне высокая, тренд на обеднение
+                  antecedent: metal_sum_matte_error-high & metal_sum_matte_trend-ns
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ze
+                      factor: 1
+                - name: rule_8
+                  label: Сумма ЦМ в штейне высокая и не меняется
+                  antecedent: metal_sum_matte_error-high & metal_sum_matte_trend-ze
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: ns
+                      factor: 1
+                - name: rule_9
+                  label: Сумма ЦМ в штейне высокая, тренд на обогащение
+                  antecedent: metal_sum_matte_error-high & metal_sum_matte_trend-ps
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: nb
+                      factor: 1
+                - name: rule_10
+                  label: Сумма ЦМ в штейне критически высокая
+                  antecedent: metal_sum_matte_error-crit_high
+                  consequent:
+                    - name: oxygen_u_matte
+                      term: nc
+                      factor: 1
+          antecedent_fuzzy_params:
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: metal_sum_matte_error
+                terms:
+                  - term_label: crit_low
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -5
+                      b: -5
+                      c: -4
+                      d: -3
+                  - term_label: low
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -4
+                      b: -3
+                      c: -2
+                      d: -1
+                  - term_label: ok
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -2
+                      b: -1
+                      c: 1
+                      d: 2
+                  - term_label: high
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 1
+                      b: 2
+                      c: 3
+                      d: 4
+                  - term_label: crit_high
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 3
+                      b: 4
+                      c: 5
+                      d: 5
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: metal_sum_matte_trend
+                terms:
+                  - term_label: ns
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -2.2
+                      b: -2.2
+                      c: -1.5
+                      d: -0.2
+                  - term_label: ze
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -1.5
+                      b: -0.2
+                      c: 0.2
+                      d: 1.5
+                  - term_label: ps
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 0.2
+                      b: 1.5
+                      c: 2.2
+                      d: 2.2
+          consequent_fuzzy_params:
+            - __instance__: Type1ConsequentVariableConfig
+              params:
+                name: oxygen_u_matte
+                terms:
+                  - term_label: nc
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -3
+                      b: -2
+                      c: -1
+                  - term_label: nb
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -2
+                      b: -1
+                      c: -0.5
+                  - term_label: ns
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -1
+                      b: -0.5
+                      c: 0
+                  - term_label: ze
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -0.5
+                      b: 0
+                      c: 0.5
+                  - term_label: ps
+                    bounds_type: trimf
+                    bounds_params:
+                      a: 0
+                      b: 0.5
+                      c: 1
+                  - term_label: pb
+                    bounds_type: trimf
+                    bounds_params:
+                      a: 0.5
+                      b: 1
+                      c: 2
+                  - term_label: pc
+                    bounds_type: trimf
+                    bounds_params:
+                      a: 1
+                      b: 2
+                      c: 3
+  slag_fuzzy_controller:
+    type: mdk_fuzzy_controller
+    params:
+      controller:
+        __instance__: BaseFuzzyController
+        params:
+          name: Контроллер Шлака
+          n_rules_to_show: 1
+          consequent_multiplier: 1
+          rules_container:
+            __instance__: RulesContainer
+            params:
+              antecedent_names:
+                - Co_slag_trend
+                - metal_sum_matte_error1
+              consequent_names:
+                - oxygen_u_slag
+              granularity: 1000
+              rules:
+                - name: rule_1
+                  label: Со в шлаке падает
+                  antecedent: Co_slag_trend-ns & ~metal_sum_matte_error1-high
+                  consequent:
+                    - name: oxygen_u_slag
+                      term: ps
+                      factor: 1
+                - name: rule_2
+                  label: Со в шлаке падает и cумма ЦМ в штейне высокая
+                  antecedent: Co_slag_trend-ns & metal_sum_matte_error1-high
+                  consequent:
+                    - name: oxygen_u_slag
+                      term: ze
+                      factor: 1
+                - name: rule_3
+                  label: Со в шлаке не меняется
+                  antecedent: Co_slag_trend-ze
+                  consequent:
+                    - name: oxygen_u_slag
+                      term: ze
+                      factor: 1
+                - name: rule_4
+                  label: Со в шлаке растет
+                  antecedent: Co_slag_trend-ps & ~metal_sum_matte_error1-low
+                  consequent:
+                    - name: oxygen_u_slag
+                      term: ns
+                      factor: 1
+                - name: rule_5
+                  label: Со в шлаке растет и cумма ЦМ в штейне низкая
+                  antecedent: Co_slag_trend-ps & metal_sum_matte_error1-low
+                  consequent:
+                    - name: oxygen_u_slag
+                      term: ze
+                      factor: 1
+          antecedent_fuzzy_params:
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: Co_slag_trend
+                terms:
+                  - term_label: ns
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -0.03
+                      b: -0.03
+                      c: -0.02
+                      d: -0.001
+                  - term_label: ze
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -0.02
+                      b: -0.001
+                      c: 0.001
+                      d: 0.02
+                  - term_label: ps
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 0.001
+                      b: 0.02
+                      c: 0.03
+                      d: 0.03
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: metal_sum_matte_error1
+                terms:
+                  - term_label: low
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -3
+                      b: -3
+                      c: -2
+                      d: -1
+                  - term_label: ok
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -2
+                      b: -1
+                      c: 1
+                      d: 2
+                  - term_label: high
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 1
+                      b: 2
+                      c: 3
+                      d: 3
+          consequent_fuzzy_params:
+            - __instance__: Type1ConsequentVariableConfig
+              params:
+                name: oxygen_u_slag
+                terms:
+                  - term_label: ns
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -4
+                      b: -2
+                      c: 0
+                  - term_label: ze
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -2
+                      b: 0
+                      c: 2
+                  - term_label: ps
+                    bounds_type: trimf
+                    bounds_params:
+                      a: 0
+                      b: 2
+                      c: 4
+  conc_fuzzy_controller:
+    type: mdk_fuzzy_controller
+    params:
+      controller:
+        __instance__: BaseFuzzyController
+        params:
+          name: Контроллер Концентрата
+          n_rules_to_show: 2
+          consequent_multiplier: 1
+          rules_container:
+            __instance__: RulesContainer
+            params:
+              antecedent_names:
+                - metal_sum__Fe_conc_trend
+                - Fe3O4__Fe_conc_trend
+                - metal_sum_matte_error1
+              consequent_names:
+                - oxygen_u_conc
+              granularity: 1000
+              rules:
+                - name: rule_1
+                  label: Сумма ЦМ в отношении к Fe в концентрате падает
+                  antecedent: metal_sum__Fe_conc_trend-ns & ~metal_sum_matte_error1-high
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ps
+                      factor: 1
+                - name: rule_2
+                  label: >-
+                    Сумма ЦМ в отношении к Fe в концентрате падает и cумма ЦМ в
+                    штейне высокая
+                  antecedent: metal_sum__Fe_conc_trend-ns & metal_sum_matte_error1-high
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ze
+                      factor: 1
+                - name: rule_3
+                  label: Сумма ЦМ в отношении к Fe в концентрате не меняется
+                  antecedent: metal_sum__Fe_conc_trend-ze
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ze
+                      factor: 1
+                - name: rule_4
+                  label: Сумма ЦМ в отношении к Fe в концентрате растет
+                  antecedent: metal_sum__Fe_conc_trend-ps & ~metal_sum_matte_error1-low
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ns
+                      factor: 1
+                - name: rule_5
+                  label: >-
+                    Сумма ЦМ в отношении к Fe в концентрате растет и cумма ЦМ в
+                    штейне низкая
+                  antecedent: metal_sum__Fe_conc_trend-ps & metal_sum_matte_error1-low
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ze
+                      factor: 1
+                - name: rule_6
+                  label: Магнетит в отношении к Fe в концентрате падает
+                  antecedent: Fe3O4__Fe_conc_trend-ns & ~metal_sum_matte_error1-high
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ps
+                      factor: 1
+                - name: rule_7
+                  label: >-
+                    Магнетит в отношении к Fe в концентрате падает и cумма ЦМ в
+                    штейне высокая
+                  antecedent: Fe3O4__Fe_conc_trend-ns & metal_sum_matte_error1-high
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ze
+                      factor: 1
+                - name: rule_8
+                  label: Магнетит в отношении к Fe в концентрате не меняется
+                  antecedent: Fe3O4__Fe_conc_trend-ze
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ze
+                      factor: 1
+                - name: rule_9
+                  label: Магнетит в отношении к Fe в концентрате растет
+                  antecedent: Fe3O4__Fe_conc_trend-ps & ~metal_sum_matte_error1-low
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ns
+                      factor: 1
+                - name: rule_10
+                  label: >-
+                    Магнетит в отношении к Fe в концентрате растет и cумма ЦМ в
+                    штейне низкая
+                  antecedent: Fe3O4__Fe_conc_trend-ps & metal_sum_matte_error1-low
+                  consequent:
+                    - name: oxygen_u_conc
+                      term: ze
+                      factor: 1
+          antecedent_fuzzy_params:
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: metal_sum__Fe_conc_trend
+                terms:
+                  - term_label: ns
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -0.015
+                      b: -0.015
+                      c: -0.01
+                      d: -0.002
+                  - term_label: ze
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -0.01
+                      b: -0.002
+                      c: 0.002
+                      d: 0.01
+                  - term_label: ps
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 0.002
+                      b: 0.01
+                      c: 0.015
+                      d: 0.015
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: Fe3O4__Fe_conc_trend
+                terms:
+                  - term_label: ns
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -0.006
+                      b: -0.006
+                      c: -0.004
+                      d: -0.001
+                  - term_label: ze
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -0.004
+                      b: -0.001
+                      c: 0.001
+                      d: 0.004
+                  - term_label: ps
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 0.001
+                      b: 0.004
+                      c: 0.006
+                      d: 0.006
+            - __instance__: Type1AntecedentVariableConfig
+              params:
+                name: metal_sum_matte_error1
+                terms:
+                  - term_label: low
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -3
+                      b: -3
+                      c: -2
+                      d: -1
+                  - term_label: ok
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: -2
+                      b: -1
+                      c: 1
+                      d: 2
+                  - term_label: high
+                    bounds_type: trapmf
+                    bounds_params:
+                      a: 1
+                      b: 2
+                      c: 3
+                      d: 3
+          consequent_fuzzy_params:
+            - __instance__: Type1ConsequentVariableConfig
+              params:
+                name: oxygen_u_conc
+                terms:
+                  - term_label: ns
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -4
+                      b: -2
+                      c: 0
+                  - term_label: ze
+                    bounds_type: trimf
+                    bounds_params:
+                      a: -2
+                      b: 0
+                      c: 2
+                  - term_label: ps
+                    bounds_type: trimf
+                    bounds_params:
+                      a: 0
+                      b: 2
+                      c: 4
+  read_signals:
+    type: platform_read_latest
+    params:
+      signals_ids:
+        - NiCuCo_matte_true_fsf_1_low_bound
+        - NiCuCo_matte_true_fsf_1_high_bound
+        - nmz_fsf1_metal_sum_matte
+        - PIMS_Flow_000483.PV
+        - nmz_fsf1_oxygen_u
+        - nmz_fsf1_oxygen_delta_cumulative
+        - nmz_fsf1_oxygen_max
+        - nmz_fsf1_oxygen_min
+        - PIMS_Flow_000035.PV
+  split_df_1:
+    type: df_split
+    params:
+      column_groups:
+        - - PIMS_Flow_000035.PV
+        - - PIMS_Flow_000035.PV
+  subscription:
+    type: platform_raw_subscription
+    params:
+      history_size: 10min
+      freeze_warning_every: 2
+      listen_signals:
+        - LIMS_41-1.24_Выборка_Ni
+        - LIMS_41-1.24a_Выборка_Ni
+        - LIMS_41-1.24b_Выборка_Ni
+        - LIMS_41-1.24c_Выборка_Ni
+        - LIMS_41-1.24_Выборка_Cu
+        - LIMS_41-1.24a_Выборка_Cu
+        - LIMS_41-1.24b_Выборка_Cu
+        - LIMS_41-1.24c_Выборка_Cu
+        - LIMS_41-1.24_Выборка_Co
+        - LIMS_41-1.24a_Выборка_Co
+        - LIMS_41-1.24b_Выборка_Co
+        - LIMS_41-1.24c_Выборка_Co
+        - LIMS_41-1.24_Выборка_SiO2
+        - LIMS_41-1.24a_Выборка_SiO2
+        - LIMS_41-1.24b_Выборка_SiO2
+        - LIMS_41-1.24c_Выборка_SiO2
+        - LIMS_41-1.25_Выборка_Co
+        - LIMS_41-1.25a_Выборка_Co
+        - LIMS_41-1.25_Выборка_S
+        - LIMS_41-1.25a_Выборка_S
+        - LIMS_41-1.1_Двачаса_Ni
+        - LIMS_41-1.1_Двачаса_Cu
+        - LIMS_41-1.1_Двачаса_Co
+        - LIMS_41-1.1_Двачаса_Fe
+        - LIMS_41-1.1_Двачаса_Fe3O4
+        - PIMS_Flow_000034.PV
+        - nmz_fsf1_metal_sum_matte_nofill
+        - nmz_fsf1_Co_slag_nofill
+        - nmz_fsf1_metal_sum__Fe_conc_nofill
+  merge_df_1:
+    type: df_merge
+  rename_input:
+    type: df_rename
+    params:
+      rename_dict:
+        LIMS_41-1.24_Выборка_Ni: Ni_matte_1
+        LIMS_41-1.24a_Выборка_Ni: Ni_matte_2
+        LIMS_41-1.24b_Выборка_Ni: Ni_matte_3
+        LIMS_41-1.24c_Выборка_Ni: Ni_matte_4
+        LIMS_41-1.24_Выборка_Cu: Cu_matte_1
+        LIMS_41-1.24a_Выборка_Cu: Cu_matte_2
+        LIMS_41-1.24b_Выборка_Cu: Cu_matte_3
+        LIMS_41-1.24c_Выборка_Cu: Cu_matte_4
+        LIMS_41-1.24_Выборка_Co: Co_matte_1
+        LIMS_41-1.24a_Выборка_Co: Co_matte_2
+        LIMS_41-1.24b_Выборка_Co: Co_matte_3
+        LIMS_41-1.24c_Выборка_Co: Co_matte_4
+        LIMS_41-1.24_Выборка_SiO2: SiO2_matte_1
+        LIMS_41-1.24a_Выборка_SiO2: SiO2_matte_2
+        LIMS_41-1.24b_Выборка_SiO2: SiO2_matte_3
+        LIMS_41-1.24c_Выборка_SiO2: SiO2_matte_4
+        LIMS_41-1.25_Выборка_Co: Co_slag_1
+        LIMS_41-1.25a_Выборка_Co: Co_slag_2
+        LIMS_41-1.25_Выборка_S: S_slag_1
+        LIMS_41-1.25a_Выборка_S: S_slag_2
+        LIMS_41-1.1_Двачаса_Ni: Ni_conc
+        LIMS_41-1.1_Двачаса_Cu: Cu_conc
+        LIMS_41-1.1_Двачаса_Co: Co_conc
+        LIMS_41-1.1_Двачаса_Fe: Fe_conc
+        LIMS_41-1.1_Двачаса_Fe3O4: Fe3O4_conc
+        PIMS_Flow_000483.PV: oxygen_sp
+        PIMS_Flow_000035.PV: fsf_conc_feedrate_2
+        nmz_fsf1_oxygen_u: oxygen_u_prev
+        nmz_fsf1_metal_sum_matte: metal_sum_matte_prev
+        nmz_fsf1_metal_sum_matte_nofill: metal_sum_matte_nofill_prev
+        nmz_fsf1_Co_slag_nofill: Co_slag_nofill_prev
+        nmz_fsf1_metal_sum__Fe_conc_nofill: metal_sum__Fe_conc_nofill_prev
+        NiCuCo_matte_true_fsf_1_low_bound: metal_sum_matte_lower_bound
+        NiCuCo_matte_true_fsf_1_high_bound: metal_sum_matte_upper_bound
+        nmz_fsf1_oxygen_delta_cumulative: oxygen_delta_cumulative
+        nmz_fsf1_oxygen_max: oxygen_max
+        nmz_fsf1_oxygen_min: oxygen_min
+  preprocessing_pipeline:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: ColumnsResample
+              params:
+                interval: 1min
+                label: left
+                method: mean
+            - __instance__: PandasEval
+              params:
+                silence_rewrite_warning: true
+                expressions:
+                  - - SiO2_matte
+                    - >-
+                      SiO2_matte_1.fillna(SiO2_matte_2).fillna(SiO2_matte_3).fillna(SiO2_matte_4).ffill()
+                  - - contaminated_matte
+                    - SiO2_matte > 0.8
+                  - - Ni_matte
+                    - >-
+                      Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4).ffill()
+                  - - Cu_matte
+                    - >-
+                      Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4).ffill()
+                  - - Co_matte
+                    - >-
+                      Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4).ffill()
+                  - - metal_sum_matte_true
+                    - Ni_matte + Cu_matte + Co_matte
+                  - - Ni_matte_1
+                    - Ni_matte_1 - 0.6
+                  - - Ni_matte_2
+                    - Ni_matte_2 + 0.5
+                  - - Ni_matte_3
+                    - Ni_matte_3 + 0.4
+                  - - Ni_matte_4
+                    - Ni_matte_4 - 0.5
+                  - - Ni_matte
+                    - >-
+                      Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4)
+                  - - Cu_matte
+                    - >-
+                      Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4)
+                  - - Co_matte
+                    - >-
+                      Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4)
+                  - - metal_sum_matte_nofill
+                    - Ni_matte + Cu_matte + Co_matte
+                  - - new_data_flag_matte
+                    - >-
+                      metal_sum_matte_nofill.shift(-1).isna().ne(metal_sum_matte_nofill_prev.shift(-1).isna(),
+                      axis=0)
+                  - - new_data_flag_matte
+                    - new_data_flag_matte.max()
+                  - - metal_sum_matte
+                    - metal_sum_matte_nofill[~contaminated_matte].ffill(limit=2)
+                  - - metal_sum_matte_prev
+                    - >-
+                      metal_sum_matte_prev.ffill(limit=3).fillna(metal_sum_matte)
+                  - - metal_sum_matte_diff
+                    - metal_sum_matte - metal_sum_matte_prev
+                  - - metal_sum_matte_diff
+                    - metal_sum_matte_diff.clip(-2, 2)
+                  - - metal_sum_matte
+                    - metal_sum_matte_prev + metal_sum_matte_diff
+                  - - metal_sum_matte_trend
+                    - >-
+                      metal_sum_matte.ffill().diff().fillna(0).rolling(4).mean()
+                      * 2
+                  - - metal_sum_matte_trend
+                    - metal_sum_matte_trend * new_data_flag_matte
+                  - - metal_sum_matte_target
+                    - >-
+                      (metal_sum_matte_lower_bound +
+                      metal_sum_matte_upper_bound) / 2
+                  - - metal_sum_matte_error
+                    - metal_sum_matte - metal_sum_matte_target.ffill()
+                  - - metal_sum_matte_error
+                    - metal_sum_matte_error.fillna(0)
+                  - - metal_sum_matte_error1
+                    - metal_sum_matte_error
+                  - - metal_sum_matte_error
+                    - metal_sum_matte_error * new_data_flag_matte
+                  - - metal_sum_matte
+                    - metal_sum_matte.ffill()
+                  - - S_slag
+                    - S_slag_1.fillna(S_slag_2).ffill()
+                  - - contaminated_slag
+                    - S_slag > 0.9
+                  - - Co_slag_nofill
+                    - Co_slag_1.fillna(Co_slag_2)
+                  - - new_data_flag_slag
+                    - >-
+                      Co_slag_nofill.shift(-1).isna().ne(Co_slag_nofill_prev.shift(-1).isna(),
+                      axis=0)
+                  - - new_data_flag_slag
+                    - new_data_flag_slag.max()
+                  - - Co_slag_trend
+                    - >-
+                      Co_slag_nofill[~contaminated_slag].ffill().diff().fillna(0).rolling(3).mean()
+                  - - Co_slag_trend
+                    - Co_slag_trend * new_data_flag_slag
+                  - - Co_slag
+                    - Co_slag_nofill.ffill()
+                  - - metal_sum_conc
+                    - Ni_conc + Cu_conc + Co_conc
+                  - - metal_sum__Fe_conc_nofill
+                    - metal_sum_conc / Fe_conc
+                  - - new_data_flag_conc
+                    - >-
+                      metal_sum__Fe_conc_nofill.shift(-1).isna().ne(metal_sum__Fe_conc_nofill_prev.shift(-1).isna(),
+                      axis=0)
+                  - - new_data_flag_conc
+                    - new_data_flag_conc.max()
+                  - - metal_sum__Fe_conc_trend
+                    - >-
+                      metal_sum__Fe_conc_nofill.ffill().diff().fillna(0).rolling(3).mean()
+                  - - metal_sum__Fe_conc_trend
+                    - metal_sum__Fe_conc_trend * new_data_flag_conc
+                  - - Fe3O4__Fe_conc
+                    - Fe3O4_conc / Fe_conc
+                  - - Fe3O4__Fe_conc_trend
+                    - Fe3O4__Fe_conc.ffill().diff().fillna(0).rolling(3).mean()
+                  - - Fe3O4__Fe_conc_trend
+                    - Fe3O4__Fe_conc_trend * new_data_flag_conc
+                  - - Fe3O4__Fe_conc
+                    - Fe3O4__Fe_conc.ffill()
+                  - - metal_sum__Fe_conc
+                    - metal_sum__Fe_conc_nofill.ffill()
+                  - - oxygen_u_matte
+                    - '0'
+                  - - oxygen_u_slag
+                    - '0'
+                  - - oxygen_u_conc
+                    - '0'
+  execute_matte_fuzzy_controller:
+    type: mdk_controller_execute
+    params:
+      return_deltas: true
+      explanation_signal_name: control_explanation_matte
+  execute_slag_fuzzy_controller:
+    type: mdk_controller_execute
+    params:
+      return_deltas: true
+      explanation_signal_name: control_explanation_slag
+  execute_conc_fuzzy_controller:
+    type: mdk_controller_execute
+    params:
+      return_deltas: true
+      explanation_signal_name: control_explanation_conc
+  df_update:
+    type: df_update
+  postprocessing_pipeline:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: PandasEval
+              params:
+                silence_rewrite_warning: true
+                eval_engine: python
+                expressions:
+                  - - oxygen_delta
+                    - oxygen_u_matte + oxygen_u_slag + oxygen_u_conc
+                  - - oxygen_delta
+                    - oxygen_delta.round(3)
+                  - - oxygen_delta_cumulative
+                    - oxygen_delta_cumulative + oxygen_delta
+                  - - oxygen_sp_diff
+                    - oxygen_sp - oxygen_u_prev
+                  - - deltas_codirected_pos
+                    - (oxygen_delta_cumulative > 0) & (oxygen_sp_diff > 0)
+                  - - deltas_codirected_neg
+                    - (oxygen_delta_cumulative < 0) & (oxygen_sp_diff < 0)
+                  - - oxygen_delta_cumulative_new
+                    - oxygen_delta_cumulative - oxygen_sp_diff
+                  - - oxygen_delta_cumulative
+                    - >-
+                      deltas_codirected_pos *
+                      oxygen_delta_cumulative_new.clip(lower=0) +
+                      deltas_codirected_neg *
+                      oxygen_delta_cumulative_new.clip(upper=0) +
+                      (~deltas_codirected_pos & ~deltas_codirected_neg) *
+                      oxygen_delta_cumulative
+                  - - threshold_condition
+                    - oxygen_delta_cumulative.abs().ge(0.7).max()
+                  - - oxygen_u
+                    - threshold_condition * oxygen_delta_cumulative.round()
+                  - - oxygen_delta_cumulative
+                    - oxygen_delta_cumulative - oxygen_u
+                  - - oxygen_u
+                    - oxygen_sp + oxygen_u
+                  - - oxygen_u
+                    - oxygen_u.fillna(0)
+                  - - oxygen_u
+                    - oxygen_u.clip(oxygen_min, oxygen_max)
+                  - - oxygen_u_rec
+                    - oxygen_u[threshold_condition]
+                  - - control_explanation_matte
+                    - control_explanation_matte[new_data_flag_matte]
+                  - - control_explanation_slag
+                    - control_explanation_slag[new_data_flag_slag]
+                  - - control_explanation_conc
+                    - control_explanation_conc[new_data_flag_conc]
+            - __instance__: DropAxisItemByValues
+              params:
+                axis: 1
+                columns:
+                  - oxygen_u_rec
+                values:
+                  - NAN
+  rename_output:
+    type: df_rename
+    params:
+      rename_dict:
+        metal_sum_matte_true: nmz_fsf1_metal_sum_matte_true
+        metal_sum_matte_nofill: nmz_fsf1_metal_sum_matte_nofill
+        metal_sum_matte: nmz_fsf1_metal_sum_matte
+        metal_sum_matte_trend: nmz_fsf1_metal_sum_matte_trend
+        metal_sum_matte_error: nmz_fsf1_metal_sum_matte_error
+        Co_slag_trend: nmz_fsf1_Co_slag_trend
+        Co_slag_nofill: nmz_fsf1_Co_slag_nofill
+        contaminated_slag: nmz_fsf1_contaminated_slag
+        contaminated_matte: nmz_fsf1_contaminated_matte
+        metal_sum__Fe_conc_trend: nmz_fsf1_metal_sum__Fe_conc_trend
+        Fe3O4__Fe_conc: nmz_fsf1_Fe3O4__Fe_conc
+        Fe3O4__Fe_conc_trend: nmz_fsf1_Fe3O4__Fe_conc_trend
+        metal_sum__Fe_conc_nofill: nmz_fsf1_metal_sum__Fe_conc_nofill
+        metal_sum__Fe_conc: nmz_fsf1_metal_sum__Fe_conc
+        oxygen_delta: nmz_fsf1_oxygen_delta
+        control_explanation_matte: nmz_fsf1_control_explanation_matte
+        control_explanation_slag: nmz_fsf1_control_explanation_slag
+        control_explanation_conc: nmz_fsf1_control_explanation_conc
+        metal_sum_matte_target: nmz_fsf1_metal_sum_matte_target
+        oxygen_delta_cumulative: nmz_fsf1_oxygen_delta_cumulative
+        oxygen_u_matte: nmz_fsf1_oxygen_u_matte
+        oxygen_u_slag: nmz_fsf1_oxygen_u_slag
+        oxygen_u_conc: nmz_fsf1_oxygen_u_conc
+        oxygen_u: nmz_fsf1_oxygen_u
+        oxygen_u_rec: nmz_fsf1_oxygen_u_rec
+        oxygen_sp: nmz_fsf1_oxygen_sp_prev
+        new_data_flag_matte: nmz_fsf1_new_data_flag_matte
+        new_data_flag_slag: nmz_fsf1_new_data_flag_slag
+        new_data_flag_conc: nmz_fsf1_new_data_flag_conc
+  merge_df_2:
+    type: df_merge
+    params:
+      kind: ASOF
+  process_nans_last:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: DropAxisItemByValues
+              params:
+                axis: 1
+                how: all
+                values:
+                  - NAN
+  write_last:
+    type: platform_write_last
+    params:
+      strict: false
+      signals_ids:
+        - nmz_fsf1_metal_sum_matte_true
+        - nmz_fsf1_metal_sum_matte
+        - nmz_fsf1_metal_sum_matte_trend
+        - nmz_fsf1_metal_sum_matte_error
+        - nmz_fsf1_metal_sum_matte_target
+        - nmz_fsf1_Co_slag_trend
+        - nmz_fsf1_contaminated_slag
+        - nmz_fsf1_contaminated_matte
+        - nmz_fsf1_metal_sum__Fe_conc
+        - nmz_fsf1_metal_sum__Fe_conc_trend
+        - nmz_fsf1_Fe3O4__Fe_conc
+        - nmz_fsf1_Fe3O4__Fe_conc_trend
+        - nmz_fsf1_oxygen_delta
+        - nmz_fsf1_oxygen_delta_cumulative
+        - nmz_fsf1_oxygen_u_matte
+        - nmz_fsf1_oxygen_u_slag
+        - nmz_fsf1_oxygen_u_conc
+        - nmz_fsf1_oxygen_u
+        - nmz_fsf1_oxygen_u_rec
+        - nmz_fsf1_oxygen_sp_prev
+        - nmz_fsf1_new_data_flag_matte
+        - nmz_fsf1_new_data_flag_slag
+        - nmz_fsf1_new_data_flag_conc
+  write_blob:
+    type: platform_write_blob
+    params:
+      strict: false
+      is_dropna: true
+      signals_ids:
+        - nmz_fsf1_control_explanation_matte
+        - nmz_fsf1_control_explanation_slag
+        - nmz_fsf1_control_explanation_conc
+  split_df_2:
+    type: df_split
+    params:
+      column_groups:
+        - - nmz_fsf1_metal_sum_matte_nofill
+        - - nmz_fsf1_Co_slag_nofill
+        - - nmz_fsf1_metal_sum__Fe_conc_nofill
+  process_nans_matte:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: DropAxisItemByValues
+              params:
+                axis: 0
+                columns:
+                  - nmz_fsf1_metal_sum_matte_nofill
+                values:
+                  - NAN
+  write_column_matte:
+    type: platform_write
+    params:
+      signals_ids:
+        - nmz_fsf1_metal_sum_matte_nofill
+  process_nans_slag:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: DropAxisItemByValues
+              params:
+                axis: 0
+                columns:
+                  - nmz_fsf1_Co_slag_nofill
+                values:
+                  - NAN
+  write_column_slag:
+    type: platform_write
+    params:
+      signals_ids:
+        - nmz_fsf1_Co_slag_nofill
+  process_nans_conc:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: DropAxisItemByValues
+              params:
+                axis: 0
+                columns:
+                  - nmz_fsf1_metal_sum__Fe_conc_nofill
+                values:
+                  - NAN
+  write_column_conc:
+    type: platform_write
+    params:
+      signals_ids:
+        - nmz_fsf1_metal_sum__Fe_conc_nofill
+relations:
+  matte_fuzzy_controller:
+    inputs: []
+    outputs:
+      - matte_fuzzy_controller
+  slag_fuzzy_controller:
+    inputs: []
+    outputs:
+      - slag_fuzzy_controller
+  conc_fuzzy_controller:
+    inputs: []
+    outputs:
+      - conc_fuzzy_controller
+  read_signals:
+    inputs: []
+    outputs:
+      - out0
+  split_df_1:
+    inputs:
+      - out0
+    outputs:
+      - out0_1
+      - out0_2
+  subscription:
+    inputs: []
+    outputs:
+      - out1
+  merge_df_1:
+    inputs:
+      - out0
+      - out1
+    outputs:
+      - out1_1
+  rename_input:
+    inputs:
+      - out1_1
+    outputs:
+      - out2
+  preprocessing_pipeline:
+    inputs:
+      - out2
+    outputs:
+      - out3
+  execute_matte_fuzzy_controller:
+    inputs:
+      - matte_fuzzy_controller
+      - out3
+    outputs:
+      - matte_controller_out
+      - control_explanation_matte
+      - success_flag1
+  execute_slag_fuzzy_controller:
+    inputs:
+      - slag_fuzzy_controller
+      - out3
+    outputs:
+      - slag_controller_out
+      - control_explanation_slag
+      - success_flag2
+  execute_conc_fuzzy_controller:
+    inputs:
+      - conc_fuzzy_controller
+      - out3
+    outputs:
+      - conc_controller_out
+      - control_explanation_conc
+      - success_flag3
+  df_update:
+    inputs:
+      - out3
+      - matte_controller_out
+      - slag_controller_out
+      - conc_controller_out
+      - control_explanation_matte
+      - control_explanation_slag
+      - control_explanation_conc
+    outputs:
+      - out5
+  postprocessing_pipeline:
+    inputs:
+      - out5
+    outputs:
+      - out6
+  rename_output:
+    inputs:
+      - out6
+    outputs:
+      - out7
+  merge_df_2:
+    inputs:
+      - out0_1
+      - out7
+    outputs:
+      - out8
+  process_nans_last:
+    inputs:
+      - out8
+    outputs:
+      - out9
+  write_last:
+    inputs:
+      - out9
+    outputs: []
+  write_blob:
+    inputs:
+      - out9
+    outputs: []
+  split_df_2:
+    inputs:
+      - out7
+    outputs:
+      - out9_1
+      - out9_2
+      - out9_3
+  process_nans_matte:
+    inputs:
+      - out9_1
+    outputs:
+      - out10
+  write_column_matte:
+    inputs:
+      - out10
+    outputs: []
+  process_nans_slag:
+    inputs:
+      - out9_2
+    outputs:
+      - out11
+  write_column_slag:
+    inputs:
+      - out11
+    outputs: []
+  process_nans_conc:
+    inputs:
+      - out9_3
+    outputs:
+      - out12
+  write_column_conc:
+    inputs:
+      - out12
+    outputs: []
+runner:
+  type: scheduled
+  params:
+    n_retries: 1
+    heartbeat_signal: nmz_fsf1_controller_heartbeat
+    triggers:
+      - type: on_signal_update
+        params:
+          signal_public_ids:
+            - LIMS_41-1.24_Выборка_Ni
+            - LIMS_41-1.24a_Выборка_Ni
+            - LIMS_41-1.24b_Выборка_Ni
+            - LIMS_41-1.24c_Выборка_Ni
+            - LIMS_41-1.25_Выборка_Co
+            - LIMS_41-1.25a_Выборка_Co
+            - LIMS_41-1.1_Двачаса_Ni
+metadata:
+  mdk_version: 0.56.0
+  pf_version: 0.34.0
+  frontend:
+    matte_fuzzy_controller:
+      x: 1114
+      'y': 4490.5
+    slag_fuzzy_controller:
+      x: 1132
+      'y': 4870.5
+    conc_fuzzy_controller:
+      x: 1132
+      'y': 5088.5
+    read_signals:
+      x: -444
+      'y': 4280
+    split_df_1:
+      x: 2228
+      'y': 4137.5
+    subscription:
+      x: -444
+      'y': 4505.5
+    merge_df_1:
+      x: -186
+      'y': 4363.5
+    rename_input:
+      x: 100
+      'y': 4589.5
+    preprocessing_pipeline:
+      x: 444
+      'y': 4856.5
+    execute_matte_fuzzy_controller:
+      x: 1388
+      'y': 4505.5
+    execute_slag_fuzzy_controller:
+      x: 1388
+      'y': 4850.5
+    execute_conc_fuzzy_controller:
+      x: 1388
+      'y': 5079.5
+    df_update:
+      x: 1668
+      'y': 4685.5
+    postprocessing_pipeline:
+      x: 1948
+      'y': 4685.5
+    rename_output:
+      x: 2228
+      'y': 4595.5
+    merge_df_2:
+      x: 2508
+      'y': 4325.5
+    process_nans_last:
+      x: 2788
+      'y': 4055.5
+    write_last:
+      x: 3186
+      'y': 3977.5
+    write_blob:
+      x: 3186
+      'y': 4157.5
+    split_df_2:
+      x: 2508
+      'y': 4505.5
+    process_nans_matte:
+      x: 2788
+      'y': 4678.5
+    write_column_matte:
+      x: 3186
+      'y': 4627.5
+    process_nans_slag:
+      x: 2788
+      'y': 4526.5
+    write_column_slag:
+      x: 3186
+      'y': 4517.5
+    process_nans_conc:
+      x: 2788
+      'y': 4383.5
+    write_column_conc:
+      x: 3186
+      'y': 4370.5
