@@ -1,4 +1,12 @@
 version: 1
+hooks:
+- type: log_node_output
+  params:
+    df_log_method: last_row
+    nodes:
+    - rename_input
+    - preprocessing_pipeline
+    - postprocessing_pipeline
 relations:
   matte_fuzzy_controller:
     outputs: matte_fuzzy_controller
@@ -107,7 +115,7 @@ nodes:
         __instance__: BaseFuzzyController
         params:
           name: Контроллер Штейна
-          n_rules_to_show: 2
+          n_rules_to_show: 1
           consequent_multiplier: 1
           strict: true
           rules_container:
@@ -316,7 +324,7 @@ nodes:
         __instance__: BaseFuzzyController
         params:
           name: Контроллер Шлака
-          n_rules_to_show: 2
+          n_rules_to_show: 1
           consequent_multiplier: 1
           rules_container:
             __instance__: RulesContainer
@@ -444,7 +452,7 @@ nodes:
         __instance__: BaseFuzzyController
         params:
           name: Контроллер Концентрата
-          n_rules_to_show: 3
+          n_rules_to_show: 2
           consequent_multiplier: 1
           rules_container:
             __instance__: RulesContainer
