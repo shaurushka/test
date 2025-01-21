@@ -1,12 +1,4 @@
 version: 1
-hooks:
-- type: log_node_output
-  params:
-    df_log_method: last_row
-    nodes:
-    - rename_input
-    - preprocessing_pipeline
-    - postprocessing_pipeline
 relations:
   matte_fuzzy_controller:
     outputs: matte_fuzzy_controller
