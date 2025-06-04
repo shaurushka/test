@@ -50,9 +50,8 @@ nodes:
     type: platform_read_latest
     params:
       signals_ids:
-        - NiCuCo_matte_true_fsf_1_target_rel_ub
-        - NiCuCo_matte_true_fsf_1_target_rel_lb
-        - NiCuCo_matte_true_fsf_1_set_target
+        - NiCuCo_matte_true_fsf_1_high_bound
+        - NiCuCo_matte_true_fsf_1_low_bound
         - nmz_fsf1_oxygen_max
         - nmz_fsf1_oxygen_min
         - PIMS_Flow_000035.PV
@@ -141,6 +140,10 @@ nodes:
                     - conc_S / metal_sum_conc
                   - - metal_sum_matte__conc
                     - metal_sum_matte / metal_sum_conc.shift(8).ffill()
+                  - - metal_sum_matte_target
+                    - >-
+                      (metal_sum_matte_lower_bound +
+                      metal_sum_matte_upper_bound) / 2
                   - - delta_penalty
                     - '20'
                   - - input_oxygen_sp_control_low
@@ -252,9 +255,8 @@ nodes:
         PIMS_Temp_Air_000001.PV: temp_tech_air_react_sh
         PIMS_Flow_000483.PV: oxygen_sp
         nmz_fsf1_metal_sum_matte_pred_fillna_ver5: metal_sum_matte_pred
-        NiCuCo_matte_true_fsf_1_target_rel_lb: metal_sum_matte_lower_bound
-        NiCuCo_matte_true_fsf_1_target_rel_ub: metal_sum_matte_upper_bound
-        NiCuCo_matte_true_fsf_1_set_target: metal_sum_matte_target
+        NiCuCo_matte_true_fsf_1_low_bound: metal_sum_matte_lower_bound
+        NiCuCo_matte_true_fsf_1_high_bound: metal_sum_matte_upper_bound
         nmz_fsf1_oxygen_max: oxygen_max
         nmz_fsf1_oxygen_min: oxygen_min
         nmz_fsf1_mpc_delta_penalty: delta_penalty
@@ -282,7 +284,7 @@ nodes:
   mdk_extract_mpc_interpretation_image_1:
     type: mdk_extract_mpc_interpretation_image
     params:
-      artifact_name: nmz_fsf1_ver5_fillna_trajectory
+      artifact_name: ver5_fillna_trajectory
   platform_upload_artifacts_1:
     type: platform_upload_artifacts
     params:
@@ -301,8 +303,6 @@ nodes:
                     - metal_sum_matte_pred.shift(1) - metal_sum_matte
                   - - calibration_coef
                     - calibration_coef.mean()
-                  - - calibration_coef
-                    - '0'
                   - - metal_sum_matte_pred
                     - metal_sum_matte_pred - calibration_coef.fillna(0)
                   - - metal_sum_matte
