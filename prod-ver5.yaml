@@ -16,13 +16,13 @@ nodes:
             metal_sum_matte:
               optimal_value:
                 name: metal_sum_matte_target
-                penalty: 1
+                penalty: target_penalty
               soft_lower_bounds:
                 - name: metal_sum_matte_lower_bound
-                  penalty: 120
+                  penalty: lower_bound_penalty
               soft_upper_bounds:
                 - name: metal_sum_matte_upper_bound
-                  penalty: 120
+                  penalty: upper_bound_penalty
           manipulated_vars:
             oxygen_sp:
               lower_bound:
@@ -50,13 +50,16 @@ nodes:
     type: platform_read_latest
     params:
       signals_ids:
-        - NiCuCo_matte_true_fsf_1_target_rel_ub
-        - NiCuCo_matte_true_fsf_1_target_rel_lb
-        - NiCuCo_matte_true_fsf_1_set_target
+        - NiCuCo_matte_true_fsf_1_high_bound
+        - NiCuCo_matte_true_fsf_1_low_bound
         - nmz_fsf1_oxygen_max
         - nmz_fsf1_oxygen_min
         - PIMS_Flow_000035.PV
         - nmz_fsf1_mpc_delta_penalty
+        - nmz_fsf1_target_penalty
+        - nmz_fsf1_lower_bound_penalty
+        - nmz_fsf1_upper_bound_penalty
+        - nmz_fsf1_oxygen_sp_control_delta
   df_merge_1:
     type: df_merge
   mdk_sequential_pipeline_1:
@@ -141,12 +144,14 @@ nodes:
                     - conc_S / metal_sum_conc
                   - - metal_sum_matte__conc
                     - metal_sum_matte / metal_sum_conc.shift(8).ffill()
-                  - - delta_penalty
-                    - '20'
+                  - - metal_sum_matte_target
+                    - >-
+                      (metal_sum_matte_lower_bound +
+                      metal_sum_matte_upper_bound) / 2
                   - - input_oxygen_sp_control_low
-                    - '-5'
+                    - oxygen_sp_control_delta * (-1)
                   - - input_oxygen_sp_control_high
-                    - '5'
+                    - oxygen_sp_control_delta
             - __instance__: FillColumns
               params:
                 columns:
@@ -195,12 +200,12 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        oxygen_sp: nmz_fsf1_oxygen_u_rec_mpc_fillna_ver5
+        oxygen_sp: nmz_fsf1_oxygen_u_rec_mpc_fillna_modif_ver5
   platform_write_last_1:
     type: platform_write_last
     params:
       signals_ids:
-        - nmz_fsf1_oxygen_u_rec_mpc_fillna_ver5
+        - nmz_fsf1_oxygen_u_rec_mpc_fillna_modif_ver5
   df_rename_3:
     type: df_rename
     params:
@@ -252,12 +257,15 @@ nodes:
         PIMS_Temp_Air_000001.PV: temp_tech_air_react_sh
         PIMS_Flow_000483.PV: oxygen_sp
         nmz_fsf1_metal_sum_matte_pred_fillna_ver5: metal_sum_matte_pred
-        NiCuCo_matte_true_fsf_1_target_rel_lb: metal_sum_matte_lower_bound
-        NiCuCo_matte_true_fsf_1_target_rel_ub: metal_sum_matte_upper_bound
-        NiCuCo_matte_true_fsf_1_set_target: metal_sum_matte_target
+        NiCuCo_matte_true_fsf_1_low_bound: metal_sum_matte_lower_bound
+        NiCuCo_matte_true_fsf_1_high_bound: metal_sum_matte_upper_bound
         nmz_fsf1_oxygen_max: oxygen_max
         nmz_fsf1_oxygen_min: oxygen_min
         nmz_fsf1_mpc_delta_penalty: delta_penalty
+        nmz_fsf1_target_penalty: target_penalty
+        nmz_fsf1_lower_bound_penalty: lower_bound_penalty
+        nmz_fsf1_upper_bound_penalty: upper_bound_penalty
+        nmz_fsf1_oxygen_sp_control_delta: oxygen_sp_control_delta
   df_merge_2:
     type: df_merge
   mdk_sequential_pipeline_2:
@@ -279,14 +287,6 @@ nodes:
                   - PIMS_Flow_000035.PV
                 values:
                   - NAN
-  mdk_extract_mpc_interpretation_image_1:
-    type: mdk_extract_mpc_interpretation_image
-    params:
-      artifact_name: nmz_fsf1_ver5_fillna_trajectory
-  platform_upload_artifacts_1:
-    type: platform_upload_artifacts
-    params:
-      ttl_hours: 1
   mdk_sequential_pipeline_3:
     type: mdk_sequential_pipeline
     params:
@@ -301,8 +301,6 @@ nodes:
                     - metal_sum_matte_pred.shift(1) - metal_sum_matte
                   - - calibration_coef
                     - calibration_coef.mean()
-                  - - calibration_coef
-                    - '0'
                   - - metal_sum_matte_pred
                     - metal_sum_matte_pred - calibration_coef.fillna(0)
                   - - metal_sum_matte
@@ -424,17 +422,6 @@ relations:
       - df_merge_2_out_0
     outputs:
       - mdk_sequential_pipeline_2_out_0
-  mdk_extract_mpc_interpretation_image_1:
-    inputs:
-      - platform_get_sysid_pipeline_1_out_0
-      - mdk_mpc_1_out_0
-      - mdk_sequential_pipeline_1_out_0
-    outputs:
-      - mdk_extract_mpc_interpretation_image_1_out_0
-  platform_upload_artifacts_1:
-    inputs:
-      - mdk_extract_mpc_interpretation_image_1_out_0
-    outputs: []
   mdk_sequential_pipeline_3:
     inputs:
       - mdk_sequential_pipeline_1_out_0
@@ -448,7 +435,7 @@ runner:
   type: scheduled
   params:
     n_retries: 1
-    heartbeat_signal: nmz_fsf1_controller_heartbeat_fillna_ver5
+    heartbeat_signal: nmz_fsf1_controller_heartbeat_fillna_modif_ver5
     fail_allowed: true
     triggers:
       - type: on_signal_update
@@ -501,12 +488,6 @@ metadata:
     mdk_sequential_pipeline_2:
       x: 3114.4285714285716
       'y': 298.8571428571429
-    mdk_extract_mpc_interpretation_image_1:
-      x: 2178.73046875
-      'y': -93
-    platform_upload_artifacts_1:
-      x: 2506.73046875
-      'y': -94.052734375
     mdk_sequential_pipeline_3:
       x: 1787.73046875
       'y': 377
