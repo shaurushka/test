@@ -1,4 +1,4 @@
-﻿version: 1
+version: 1
 nodes:
   subscription:
     type: platform_raw_subscription
@@ -50,6 +50,7 @@ nodes:
         - PIMS_Flow_000072.PV
         - PIMS_Temp_000403.PV
         - PIMS_Flow_000484.PV
+        - PIMS_Flow_000077.PV
         - nmz.vttl_hour_x.2129
         - nmz.vttl_hour_x.430
         - LIMS_41-1.24d_Выборка_S
@@ -151,8 +152,6 @@ nodes:
                     - conc_S / metal_sum_conc
                   - - metal_sum_matte__conc
                     - metal_sum_matte / metal_sum_conc.shift(8).ffill()
-                  - - temp_tech_air_react_sh
-                    - '0'
             - __instance__: FillColumns
               params:
                 columns:
@@ -160,15 +159,15 @@ nodes:
                   - slag_Fe
                   - slag_Fe3O4
                   - slag_SiO2
+                  - conc_Co
+                  - conc_S
+                  - conc_Fe
+                  - metal_sum_conc
                   - temp_uptake
                   - temp_after_boiler_1
                   - temp_tech_air_react_sh
-                  - conc_Fe
-                  - metal_sum_conc
-                  - conc_S
                   - dust_flow
                   - sand_flow_total
-                  - conc_Co
                   - S_matte
                   - SiO2_matte
                   - conc_Ni_Fe
@@ -181,12 +180,12 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        metal_sum_matte_pred: nmz_fsf2_metal_sum_matte_pred_fillna_ver8
+        metal_sum_matte_pred: nmz_fsf2_metal_sum_matte_pred_ver8
   write_predictions:
     type: platform_write_last
     params:
       signals_ids:
-        - nmz_fsf2_metal_sum_matte_pred_fillna_ver8
+        - nmz_fsf2_metal_sum_matte_pred_ver8
   df_rename_2:
     type: df_rename
     params:
@@ -239,6 +238,7 @@ nodes:
         PIMS_Temp_000376.PV: temp_uptake
         PIMS_Flow_000072.PV: sand_flow_total
         PIMS_Temp_000403.PV: temp_after_boiler_1
+        PIMS_Flow_000077.PV: temp_tech_air_react_sh
         PIMS_Flow_000484.PV: oxygen_sp
         nmz_fsf2_metal_sum_matte_pred_fillna_ver8: metal_sum_matte_pred
 relations:
@@ -279,14 +279,14 @@ runner:
   type: scheduled
   params:
     n_retries: 0
-    heartbeat_signal: nmz_fsf2_inference_heartbeat_fillna_ver8
+    heartbeat_signal: nmz_fsf2_inference_heartbeat_ver8
     triggers:
       - type: interval_trigger
         params:
           interval: 30min
 metadata:
-  mdk_version: 0.58.5
-  pf_version: 1.0.1
+  mdk_version: 0.58.6
+  pf_version: 1.1.1
   frontend:
     subscription:
       x: 200
