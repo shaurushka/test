@@ -249,12 +249,12 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        oxygen_sp: nmz_fsf1_oxygen_u_rec_mpc_fillna_ver7
+        oxygen_sp: nmz_fsf1_oxygen_u_rec_mpc_ver7_1
   platform_write_last_1:
     type: platform_write_last
     params:
       signals_ids:
-        - nmz_fsf1_oxygen_u_rec_mpc_fillna_ver7
+        - nmz_fsf1_oxygen_u_rec_mpc_ver7_1
   df_rename_3:
     type: df_rename
     params:
@@ -335,7 +335,7 @@ nodes:
   mdk_extract_mpc_interpretation_image_1:
     type: mdk_extract_mpc_interpretation_image
     params:
-      artifact_name: ver7_fillna_trajectory
+      artifact_name: ver7_fillna_trajectory_1
   platform_upload_artifacts_1:
     type: platform_upload_artifacts
     params:
@@ -501,7 +501,7 @@ runner:
   type: scheduled
   params:
     n_retries: 1
-    heartbeat_signal: nmz_fsf1_controller_heartbeat_fillna_ver5
+    heartbeat_signal: nmz_fsf1_controller_heartbeat_fillna_ver7_1
     fail_allowed: true
     triggers:
       - type: on_signal_update
