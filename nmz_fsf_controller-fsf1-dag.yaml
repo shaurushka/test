@@ -1,4 +1,4 @@
-﻿version: 1
+version: 1
 hooks:
 - type: log_node_output
   params:
@@ -642,8 +642,6 @@ nodes:
     type: platform_read_latest
     params:
       signals_ids:
-      - NiCuCo_matte_true_fsf_1_low_bound
-      - NiCuCo_matte_true_fsf_1_high_bound
       - nmz_fsf1_metal_sum_matte
       - PIMS_Flow_000483.PV
       - nmz_fsf1_oxygen_u
@@ -651,6 +649,9 @@ nodes:
       - nmz_fsf1_oxygen_max
       - nmz_fsf1_oxygen_min
       - PIMS_Flow_000035.PV
+      - NiCuCo_matte_true_fsf_1_target_rel_ub
+      - NiCuCo_matte_true_fsf_1_target_rel_lb
+      - NiCuCo_matte_true_fsf_1_set_target
   split_df_1:
     type: df_split
     params:
@@ -730,11 +731,12 @@ nodes:
         nmz_fsf1_metal_sum_matte_nofill: metal_sum_matte_nofill_prev
         nmz_fsf1_Co_slag_nofill: Co_slag_nofill_prev
         nmz_fsf1_metal_sum__Fe_conc_nofill: metal_sum__Fe_conc_nofill_prev
-        NiCuCo_matte_true_fsf_1_low_bound: metal_sum_matte_lower_bound
-        NiCuCo_matte_true_fsf_1_high_bound: metal_sum_matte_upper_bound
         nmz_fsf1_oxygen_delta_cumulative: oxygen_delta_cumulative
         nmz_fsf1_oxygen_max: oxygen_max
         nmz_fsf1_oxygen_min: oxygen_min
+        NiCuCo_matte_true_fsf_1_target_rel_ub: metal_sum_matte_upper_bound
+        NiCuCo_matte_true_fsf_1_target_rel_lb: metal_sum_matte_lower_bound
+        NiCuCo_matte_true_fsf_1_set_target: metal_sum_matte_target
   preprocessing_pipeline:
     type: mdk_sequential_pipeline
     params:
@@ -800,8 +802,6 @@ nodes:
                 - metal_sum_matte.ffill().diff().fillna(0).rolling(4).mean() * 2
               - - metal_sum_matte_trend
                 - metal_sum_matte_trend * new_data_flag_matte
-              - - metal_sum_matte_target
-                - (metal_sum_matte_lower_bound + metal_sum_matte_upper_bound) / 2
               - - metal_sum_matte_error
                 - metal_sum_matte - metal_sum_matte_target.ffill()
               - - metal_sum_matte_error
