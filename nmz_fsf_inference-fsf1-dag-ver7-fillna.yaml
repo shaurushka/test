@@ -226,12 +226,12 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        metal_sum_matte_pred: nmz_fsf1_metal_sum_matte_pred_fillna_ver7
+        metal_sum_matte_pred: nmz_fsf1_metal_sum_matte_pred_ver7
   write_predictions:
     type: platform_write_last
     params:
       signals_ids:
-        - nmz_fsf1_metal_sum_matte_pred_fillna_ver7
+        - nmz_fsf1_metal_sum_matte_pred_ver7
 relations:
   subscription:
     inputs: []
@@ -270,14 +270,14 @@ runner:
   type: scheduled
   params:
     n_retries: 0
-    heartbeat_signal: nmz_fsf1_inference_heartbeat_fillna_ver7
+    heartbeat_signal: nmz_fsf1_inference_heartbeat_ver7
     triggers:
       - type: interval_trigger
         params:
           interval: 30min
 metadata:
-  mdk_version: 0.58.5
-  pf_version: 1.0.1
+  mdk_version: 0.58.6
+  pf_version: 1.1.1
   frontend:
     subscription:
       x: 200
