@@ -249,12 +249,12 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        oxygen_sp: nmz_fsf1_oxygen_u_rec_mpc_ver7_1
+        oxygen_sp: nmz_fsf1_oxygen_u_rec_mpc_ver7_upd
   platform_write_last_1:
     type: platform_write_last
     params:
       signals_ids:
-        - nmz_fsf1_oxygen_u_rec_mpc_ver7_1
+        - nmz_fsf1_oxygen_u_rec_mpc_ver7_upd
   df_rename_3:
     type: df_rename
     params:
@@ -335,7 +335,7 @@ nodes:
   mdk_extract_mpc_interpretation_image_1:
     type: mdk_extract_mpc_interpretation_image
     params:
-      artifact_name: ver7_fillna_trajectory_1
+      artifact_name: ver7_fillna_trajectory_upd
   platform_upload_artifacts_1:
     type: platform_upload_artifacts
     params:
@@ -501,7 +501,7 @@ runner:
   type: scheduled
   params:
     n_retries: 1
-    heartbeat_signal: nmz_fsf1_controller_heartbeat_fillna_ver7_1
+    heartbeat_signal: nmz_fsf1_controller_heartbeat_fillna_ver7_upd
     fail_allowed: true
     triggers:
       - type: on_signal_update
@@ -515,8 +515,8 @@ runner:
             - LIMS_41-1.25a_Выборка_Co
             - LIMS_41-1.1_Двачаса_Ni
 metadata:
-  mdk_version: 0.58.5
-  pf_version: 1.0.1
+  mdk_version: 0.58.6
+  pf_version: 1.1.1
   frontend:
     platform_get_sysid_pipeline_1:
       x: 415
