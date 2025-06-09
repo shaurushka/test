@@ -1,0 +1,302 @@
+version: 1
+nodes:
+  subscription:
+    type: platform_raw_subscription
+    params:
+      history_size: 45min
+      listen_signals:
+        - LIMS_41-1.24_Выборка_Ni
+        - LIMS_41-1.24a_Выборка_Ni
+        - LIMS_41-1.24b_Выборка_Ni
+        - LIMS_41-1.24c_Выборка_Ni
+        - LIMS_41-1.24_Выборка_Cu
+        - LIMS_41-1.24a_Выборка_Cu
+        - LIMS_41-1.24b_Выборка_Cu
+        - LIMS_41-1.24c_Выборка_Cu
+        - LIMS_41-1.24_Выборка_Co
+        - LIMS_41-1.24a_Выборка_Co
+        - LIMS_41-1.24b_Выборка_Co
+        - LIMS_41-1.24c_Выборка_Co
+        - LIMS_41-1.24_Выборка_Fe
+        - LIMS_41-1.24a_Выборка_Fe
+        - LIMS_41-1.24b_Выборка_Fe
+        - LIMS_41-1.24c_Выборка_Fe
+        - LIMS_41-1.24_Выборка_SiO2
+        - LIMS_41-1.24a_Выборка_SiO2
+        - LIMS_41-1.24b_Выборка_SiO2
+        - LIMS_41-1.24c_Выборка_SiO2
+        - LIMS_41-1.24_Выборка_S
+        - LIMS_41-1.24a_Выборка_S
+        - LIMS_41-1.24b_Выборка_S
+        - LIMS_41-1.24c_Выборка_S
+        - LIMS_41-1.25_Выборка_Co
+        - LIMS_41-1.25a_Выборка_Co
+        - LIMS_41-1.25_Выборка_Fe
+        - LIMS_41-1.25a_Выборка_Fe
+        - LIMS_41-1.25_Выборка_Fe3O4
+        - LIMS_41-1.25a_Выборка_Fe3O4
+        - LIMS_41-1.25_Выборка_SiO2
+        - LIMS_41-1.25a_Выборка_SiO2
+        - LIMS_41-1.25_Выборка_S
+        - LIMS_41-1.25a_Выборка_S
+        - LIMS_41-1.1_Двачаса_Ni
+        - LIMS_41-1.1_Двачаса_Cu
+        - LIMS_41-1.1_Двачаса_Co
+        - LIMS_41-1.1_Двачаса_Fe
+        - LIMS_41-1.1_Двачаса_S
+        - LIMS_41-1.1_Двачаса_Fe3O4
+        - PIMS_Flow_000049.PV
+        - PIMS_Temp_000030.PV
+        - PIMS_Flow_000097.PV
+        - PIMS_Temp_000054.PV
+        - PIMS_Temp_Air_000001.PV
+        - PIMS_Flow_000483.PV
+        - nmz_fsf1_metal_sum_matte_pred_fillna_ver7
+        - nmz.vttl_hour_x.426
+  rename_input:
+    type: df_rename
+    params:
+      rename_dict:
+        LIMS_41-1.25_Выборка_Co: slag_Co_0
+        LIMS_41-1.25a_Выборка_Co: slag_Co_1
+        LIMS_41-1.25_Выборка_Fe: slag_Fe_0
+        LIMS_41-1.25a_Выборка_Fe: slag_Fe_1
+        LIMS_41-1.25_Выборка_Fe3O4: slag_Fe3O4_0
+        LIMS_41-1.25a_Выборка_Fe3O4: slag_Fe3O4_1
+        LIMS_41-1.25_Выборка_SiO2: slag_SiO2_0
+        LIMS_41-1.25a_Выборка_SiO2: slag_SiO2_1
+        LIMS_41-1.25_Выборка_S: slag_S_0
+        LIMS_41-1.25a_Выборка_S: slag_S_1
+        LIMS_41-1.24_Выборка_Ni: matte_Ni_0
+        LIMS_41-1.24a_Выборка_Ni: matte_Ni_1
+        LIMS_41-1.24b_Выборка_Ni: matte_Ni_2
+        LIMS_41-1.24c_Выборка_Ni: matte_Ni_3
+        LIMS_41-1.24_Выборка_Cu: matte_Cu_0
+        LIMS_41-1.24a_Выборка_Cu: matte_Cu_1
+        LIMS_41-1.24b_Выборка_Cu: matte_Cu_2
+        LIMS_41-1.24c_Выборка_Cu: matte_Cu_3
+        LIMS_41-1.24_Выборка_Co: matte_Co_0
+        LIMS_41-1.24a_Выборка_Co: matte_Co_1
+        LIMS_41-1.24b_Выборка_Co: matte_Co_2
+        LIMS_41-1.24c_Выборка_Co: matte_Co_3
+        LIMS_41-1.24_Выборка_Fe: matte_Fe_0
+        LIMS_41-1.24a_Выборка_Fe: matte_Fe_1
+        LIMS_41-1.24b_Выборка_Fe: matte_Fe_2
+        LIMS_41-1.24c_Выборка_Fe: matte_Fe_3
+        LIMS_41-1.24_Выборка_SiO2: matte_SiO2_0
+        LIMS_41-1.24a_Выборка_SiO2: matte_SiO2_1
+        LIMS_41-1.24b_Выборка_SiO2: matte_SiO2_2
+        LIMS_41-1.24c_Выборка_SiO2: matte_SiO2_3
+        LIMS_41-1.24_Выборка_S: matte_S_0
+        LIMS_41-1.24a_Выборка_S: matte_S_1
+        LIMS_41-1.24b_Выборка_S: matte_S_2
+        LIMS_41-1.24c_Выборка_S: matte_S_3
+        LIMS_41-1.1_Двачаса_Ni: conc_Ni
+        LIMS_41-1.1_Двачаса_Cu: conc_Cu
+        LIMS_41-1.1_Двачаса_Co: conc_Co
+        LIMS_41-1.1_Двачаса_Fe: conc_Fe
+        LIMS_41-1.1_Двачаса_Fe3O4: conc_Fe3O4
+        LIMS_41-1.1_Двачаса_S: conc_S
+        PIMS_Flow_000049.PV: dust_flow
+        PIMS_Temp_000030.PV: temp_uptake
+        PIMS_Flow_000097.PV: sand_flow_total
+        PIMS_Temp_000054.PV: temp_after_boiler_1
+        PIMS_Temp_Air_000001.PV: temp_tech_air_react_sh
+        PIMS_Flow_000483.PV: oxygen_sp
+        nmz_fsf1_metal_sum_matte_pred_fillna_ver7: metal_sum_matte_pred
+  load_inferences:
+    type: platform_get_sysid_pipeline
+    params:
+      encrypted: true
+      artifacts_names:
+        - '[MODEL][FSF1]lsi_model_high_freq_ver7'
+  execute_inference:
+    type: mdk_make_inference
+    params:
+      target_suffix: _pred
+  data_preparation:
+    type: mdk_sequential_pipeline
+    params:
+      pipeline:
+        __instance__: SequentialPipeline
+        params:
+          steps:
+            - __instance__: ColumnsResample
+              params:
+                interval: 30s
+                label: right
+                method: last
+                closed: right
+            - __instance__: PandasEval
+              params:
+                expressions:
+                  - - slag_S
+                    - slag_S_0.fillna(slag_S_1).ffill()
+                  - - contaminated_slag
+                    - slag_S > 0.9
+                  - - slag_S
+                    - slag_S[~contaminated_slag]
+                  - - slag_Co
+                    - slag_Co_0.fillna(slag_Co_1)
+                  - - slag_Co
+                    - slag_Co[~contaminated_slag]
+                  - - slag_Fe
+                    - slag_Fe_0.fillna(slag_Fe_1)
+                  - - slag_Fe
+                    - slag_Fe[~contaminated_slag]
+                  - - slag_Fe3O4
+                    - slag_Fe3O4_0.fillna(slag_Fe3O4_1)
+                  - - slag_Fe3O4
+                    - slag_Fe3O4[~contaminated_slag]
+                  - - slag_SiO2
+                    - slag_SiO2_0.fillna(slag_SiO2_1)
+                  - - slag_SiO2
+                    - slag_SiO2[~contaminated_slag]
+                  - - SiO2_matte
+                    - >-
+                      matte_SiO2_0.fillna(matte_SiO2_1).fillna(matte_SiO2_2).fillna(matte_SiO2_3).ffill()
+                  - - contaminated_matte
+                    - SiO2_matte > 0.8
+                  - - matte_Ni_0
+                    - matte_Ni_0 - 0.6
+                  - - matte_Ni_1
+                    - matte_Ni_1 + 0.5
+                  - - matte_Ni_2
+                    - matte_Ni_2 + 0.4
+                  - - matte_Ni_3
+                    - matte_Ni_3 - 0.5
+                  - - Ni_matte
+                    - >-
+                      matte_Ni_0.fillna(matte_Ni_1).fillna(matte_Ni_2).fillna(matte_Ni_3)
+                  - - Cu_matte
+                    - >-
+                      matte_Cu_0.fillna(matte_Cu_1).fillna(matte_Cu_2).fillna(matte_Cu_3)
+                  - - Co_matte
+                    - >-
+                      matte_Co_0.fillna(matte_Co_1).fillna(matte_Co_2).fillna(matte_Co_3)
+                  - - Fe_matte
+                    - >-
+                      matte_Fe_0.fillna(matte_Fe_1).fillna(matte_Fe_2).fillna(matte_Fe_3)
+                  - - metal_sum_matte
+                    - Ni_matte + Cu_matte + Co_matte
+                  - - metal_sum_matte
+                    - metal_sum_matte[~contaminated_matte]
+                  - - metal_sum_matte
+                    - metal_sum_matte.fillna(metal_sum_matte_pred.shift(1))
+                  - - S_matte
+                    - >-
+                      matte_S_0.fillna(matte_S_1).fillna(matte_S_2).fillna(matte_S_3)
+                  - - S_matte
+                    - S_matte[~contaminated_matte]
+                  - - slag_Co__conc_Co
+                    - slag_Co / conc_Co.shift(4).ffill()
+                  - - conc_Ni_Fe
+                    - conc_Ni / conc_Fe
+                  - - metal_sum_conc
+                    - conc_Ni + conc_Cu + conc_Co
+                  - - conc_S__metal_sum
+                    - conc_S / metal_sum_conc
+                  - - metal_sum_matte__conc
+                    - metal_sum_matte / metal_sum_conc.shift(8).ffill()
+            - __instance__: FillColumns
+              params:
+                columns:
+                  - slag_Co
+                  - slag_Fe
+                  - slag_Fe3O4
+                  - slag_SiO2
+                  - temp_uptake
+                  - temp_after_boiler_1
+                  - temp_tech_air_react_sh
+                  - conc_Fe
+                  - metal_sum_conc
+                  - conc_S
+                  - dust_flow
+                  - sand_flow_total
+                  - conc_Co
+                  - S_matte
+                  - SiO2_matte
+                  - conc_Ni_Fe
+                  - conc_S__metal_sum
+                  - metal_sum_matte__conc
+                  - slag_Co__conc_Co
+                  - nmz.vttl_hour_x.426
+                fill_with: ffill
+  rename_output:
+    type: df_rename
+    params:
+      rename_dict:
+        metal_sum_matte_pred: nmz_fsf1_metal_sum_matte_pred_fillna_ver7
+  write_predictions:
+    type: platform_write_last
+    params:
+      signals_ids:
+        - nmz_fsf1_metal_sum_matte_pred_fillna_ver7
+relations:
+  subscription:
+    inputs: []
+    outputs:
+      - raw_batch
+  rename_input:
+    inputs:
+      - raw_batch
+    outputs:
+      - renamed_raw_batch
+  load_inferences:
+    inputs: []
+    outputs:
+      - sysid_model
+  execute_inference:
+    inputs:
+      - sysid_model
+      - batch
+    outputs:
+      - predictions
+  data_preparation:
+    inputs:
+      - renamed_raw_batch
+    outputs:
+      - batch
+  rename_output:
+    inputs:
+      - predictions
+    outputs:
+      - renamed_predictions
+  write_predictions:
+    inputs:
+      - renamed_predictions
+    outputs: []
+runner:
+  type: scheduled
+  params:
+    n_retries: 0
+    heartbeat_signal: nmz_fsf1_inference_heartbeat_fillna_ver5
+    triggers:
+      - type: interval_trigger
+        params:
+          interval: 30s
+metadata:
+  mdk_version: 0.58.5
+  pf_version: 1.0.1
+  frontend:
+    subscription:
+      x: 200
+      'y': 492.5
+    rename_input:
+      x: 480
+      'y': 492.5
+    load_inferences:
+      x: 480
+      'y': 985
+    execute_inference:
+      x: 760
+      'y': 985
+    data_preparation:
+      x: 760
+      'y': 492.5
+    rename_output:
+      x: 1040
+      'y': 985
+    write_predictions:
+      x: 1320
+      'y': 985
