@@ -3,7 +3,7 @@ nodes:
   subscription:
     type: platform_raw_subscription
     params:
-      history_size: 45h
+      history_size: 45min
       listen_signals:
         - LIMS_41-1.24_Выборка_Ni
         - LIMS_41-1.24a_Выборка_Ni
@@ -109,7 +109,7 @@ nodes:
     params:
       encrypted: true
       artifacts_names:
-        - '[MODEL][FSF1]lsi_model_ver7'
+        - '[MODEL][FSF1]lsi_model_high_freq_ver7'
   execute_inference:
     type: mdk_make_inference
     params:
@@ -123,7 +123,7 @@ nodes:
           steps:
             - __instance__: ColumnsResample
               params:
-                interval: 30min
+                interval: 30s
                 label: right
                 method: last
                 closed: right
@@ -226,12 +226,12 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        metal_sum_matte_pred: nmz_fsf1_metal_sum_matte_pred_ver7
+        metal_sum_matte_pred: nmz_fsf1_metal_sum_matte_pred_fillna_ver7
   write_predictions:
     type: platform_write_last
     params:
       signals_ids:
-        - nmz_fsf1_metal_sum_matte_pred_ver7
+        - nmz_fsf1_metal_sum_matte_pred_fillna_ver7
 relations:
   subscription:
     inputs: []
@@ -270,14 +270,14 @@ runner:
   type: scheduled
   params:
     n_retries: 0
-    heartbeat_signal: nmz_fsf1_inference_heartbeat_ver7
+    heartbeat_signal: nmz_fsf1_inference_heartbeat_fillna_ver5
     triggers:
       - type: interval_trigger
         params:
-          interval: 30min
+          interval: 30s
 metadata:
-  mdk_version: 0.58.6
-  pf_version: 1.1.1
+  mdk_version: 0.58.5
+  pf_version: 1.0.1
   frontend:
     subscription:
       x: 200
