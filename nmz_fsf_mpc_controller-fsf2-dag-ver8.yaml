@@ -163,6 +163,7 @@ nodes:
       - nmz_fsf2_lower_bound_penalty
       - nmz_fsf2_upper_bound_penalty
       - nmz_fsf2_oxygen_sp_control_delta
+      - nmz_fsf2_mpc_is_selected_flag
   df_merge_1:
     type: df_merge
   rename_input:
@@ -241,7 +242,7 @@ nodes:
             params:
               interval: 30min
               label: right
-              method: mean
+              method: last
               closed: right
           - __instance__: PandasEval
             params:
@@ -497,7 +498,15 @@ nodes:
             params:
               columns:
               - oxygen_sp
+              - nmz_fsf2_mpc_is_selected_flag
               fill_with: bfill
+          - __instance__: PandasEval
+            params:
+              expressions:
+              - - oxygen_sp
+                - oxygen_sp.round(2)
+              - - oxygen_sp_merged
+                - oxygen_sp * nmz_fsf2_mpc_is_selected_flag + (-999) * (1 - nmz_fsf2_mpc_is_selected_flag)
           - __instance__: DropAxisItemByValues
             params:
               axis: 0
@@ -505,21 +514,30 @@ nodes:
               - PIMS_Flow_000066.PV
               values:
               - NAN
+          - __instance__: DropAxisItemByValues
+            params:
+              axis: 1
+              columns:
+              - oxygen_sp_merged
+              values:
+              - -999
   rename_output:
     type: df_rename
     params:
       rename_dict:
-        oxygen_sp: nmz_fsf2_oxygen_u_rec_mpc_ver8
+        oxygen_sp: nmz_fsf2_oxygen_u_rec_mpc_ver8_
+        oxygen_sp_merged: nmz_fsf2_oxygen_u_merged
   write_output:
     type: platform_write_last
     params:
       strict: false
       signals_ids:
-      - nmz_fsf2_oxygen_u_rec_mpc_ver8
+      - nmz_fsf2_oxygen_u_rec_mpc_ver8_
+      - nmz_fsf2_oxygen_u_merged
   extract_mpc_trajectory_image:
     type: mdk_extract_mpc_interpretation_image
     params:
-      artifact_name: nmz_fsf2_mpc_trajectory_ver8
+      artifact_name: nmz_fsf2_mpc_trajectory_ver8_
       factory_timezone: Asia/Krasnoyarsk
   upload_trajectory_image:
     type: platform_upload_artifacts
@@ -529,7 +547,7 @@ runner:
   type: scheduled
   params:
     n_retries: 5
-    heartbeat_signal: nmz_fsf2_mpc_controller_heartbeat_ver8
+    heartbeat_signal: nmz_fsf2_mpc_controller_heartbeat_ver8_
     triggers:
     - type: on_signal_update
       params:
