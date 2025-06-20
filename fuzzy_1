@@ -1,12 +1,4 @@
 version: 1
-hooks:
-- type: log_node_output
-  params:
-    df_log_method: last_row
-    nodes:
-    - rename_input
-    - preprocessing_pipeline
-    - postprocessing_pipeline
 relations:
   matte_fuzzy_controller:
     outputs: matte_fuzzy_controller
@@ -652,6 +644,7 @@ nodes:
       - NiCuCo_matte_true_fsf_1_target_rel_ub
       - NiCuCo_matte_true_fsf_1_target_rel_lb
       - NiCuCo_matte_true_fsf_1_set_target
+      - nmz_fsf1_mpc_is_selected_flag_tumbler
   split_df_1:
     type: df_split
     params:
@@ -737,6 +730,7 @@ nodes:
         NiCuCo_matte_true_fsf_1_target_rel_ub: metal_sum_matte_upper_bound
         NiCuCo_matte_true_fsf_1_target_rel_lb: metal_sum_matte_lower_bound
         NiCuCo_matte_true_fsf_1_set_target: metal_sum_matte_target
+        nmz_fsf1_mpc_is_selected_flag_tumbler: mpc_is_selected_flag
   preprocessing_pipeline:
     type: mdk_sequential_pipeline
     params:
@@ -860,6 +854,8 @@ nodes:
                 - '0'
               - - oxygen_u_conc
                 - '0'
+              - - mpc_is_selected_flag
+                - mpc_is_selected_flag.bfill().ffill()
   execute_matte_fuzzy_controller:
     type: mdk_controller_execute
     params:
@@ -964,7 +960,7 @@ nodes:
         oxygen_u_matte: nmz_fsf1_oxygen_u_matte
         oxygen_u_slag: nmz_fsf1_oxygen_u_slag
         oxygen_u_conc: nmz_fsf1_oxygen_u_conc
-        oxygen_u: nmz_fsf1_oxygen_u
+        oxygen_u: nmz_fsf1_oxygen_u_new
         oxygen_u_rec: nmz_fsf1_oxygen_u_rec
         oxygen_sp: nmz_fsf1_oxygen_sp_prev
         new_data_flag_matte: nmz_fsf1_new_data_flag_matte
@@ -981,12 +977,24 @@ nodes:
         __instance__: SequentialPipeline
         params:
           steps:
+          - __instance__: PandasEval
+            params:
+              expressions:
+              - - nmz_fsf1_oxygen_u_merged_tumbler
+                - nmz_fsf1_oxygen_u_new * (1 - mpc_is_selected_flag) + (-999) * mpc_is_selected_flag
           - __instance__: DropAxisItemByValues
             params:
               axis: 1
               how: all
               values:
               - NAN
+          - __instance__: DropAxisItemByValues
+            params:
+              axis: 1
+              columns:
+              - nmz_fsf1_oxygen_u_merged_tumbler
+              values:
+              - -999
   write_last:
     type: platform_write_last
     params:
@@ -1009,12 +1017,13 @@ nodes:
       - nmz_fsf1_oxygen_u_matte
       - nmz_fsf1_oxygen_u_slag
       - nmz_fsf1_oxygen_u_conc
-      - nmz_fsf1_oxygen_u
+      - nmz_fsf1_oxygen_u_new
       - nmz_fsf1_oxygen_u_rec
       - nmz_fsf1_oxygen_sp_prev
       - nmz_fsf1_new_data_flag_matte
       - nmz_fsf1_new_data_flag_slag
       - nmz_fsf1_new_data_flag_conc
+      - nmz_fsf1_oxygen_u_merged_tumbler
   write_blob:
     type: platform_write_blob
     params:
