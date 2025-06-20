@@ -652,7 +652,6 @@ nodes:
       - NiCuCo_matte_true_fsf_2_target_rel_ub
       - NiCuCo_matte_true_fsf_2_target_rel_lb
       - NiCuCo_matte_true_fsf_2_set_target
-      - nmz_fsf2_mpc_is_selected_flag
   split_df_1:
     type: df_split
     params:
@@ -738,7 +737,6 @@ nodes:
         NiCuCo_matte_true_fsf_2_target_rel_ub: metal_sum_matte_upper_bound
         NiCuCo_matte_true_fsf_2_target_rel_lb: metal_sum_matte_lower_bound
         NiCuCo_matte_true_fsf_2_set_target: metal_sum_matte_target
-        nmz_fsf2_mpc_is_selected_flag: mpc_is_selected_flag
   preprocessing_pipeline:
     type: mdk_sequential_pipeline
     params:
@@ -862,8 +860,6 @@ nodes:
                 - '0'
               - - oxygen_u_conc
                 - '0'
-              - - mpc_is_selected_flag
-                - mpc_is_selected_flag.bfill().ffill()
   execute_matte_fuzzy_controller:
     type: mdk_controller_execute
     params:
@@ -985,24 +981,12 @@ nodes:
         __instance__: SequentialPipeline
         params:
           steps:
-          - __instance__: PandasEval
-            params:
-              expressions:
-              - - nmz_fsf2_oxygen_u_merged
-                - nmz_fsf2_oxygen_u * (1 - mpc_is_selected_flag) + (-999) * mpc_is_selected_flag
           - __instance__: DropAxisItemByValues
             params:
               axis: 1
               how: all
               values:
               - NAN
-          - __instance__: DropAxisItemByValues
-            params:
-              axis: 1
-              columns:
-              - nmz_fsf2_oxygen_u_merged
-              values:
-              - -999
   write_last:
     type: platform_write_last
     params:
@@ -1031,7 +1015,6 @@ nodes:
       - nmz_fsf2_new_data_flag_matte
       - nmz_fsf2_new_data_flag_slag
       - nmz_fsf2_new_data_flag_conc
-      - nmz_fsf2_oxygen_u_merged
   write_blob:
     type: platform_write_blob
     params:
