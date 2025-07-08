@@ -125,84 +125,84 @@ nodes:
               - metal_sum_matte_error
               - metal_sum_matte_trend
               consequent_names:
-              - oxygen_u_matte
+              - oxygen_delta_matte
               granularity: 1000
               rules:
               - name: rule_0
                 label: Сумма ЦМ в штейне критически низкая
                 antecedent: metal_sum_matte_error-crit_low
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: pc
                   factor: 1
               - name: rule_1
                 label: Сумма ЦМ в штейне низкая, тренд на обеднение
                 antecedent: metal_sum_matte_error-low & metal_sum_matte_trend-ns
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: pb
                   factor: 1
               - name: rule_2
                 label: Сумма ЦМ в штейне низкая и не меняется
                 antecedent: metal_sum_matte_error-low & metal_sum_matte_trend-ze
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ps
                   factor: 1
               - name: rule_3
                 label: Сумма ЦМ в штейне низкая, тренд на обогащение
                 antecedent: metal_sum_matte_error-low & metal_sum_matte_trend-ps
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ze
                   factor: 1
               - name: rule_4
                 label: Сумма ЦМ в штейне в норме, тренд на обеднение
                 antecedent: metal_sum_matte_error-ok & metal_sum_matte_trend-ns
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ps
                   factor: 1
               - name: rule_5
                 label: Сумма ЦМ в штейне в норме и не меняется
                 antecedent: metal_sum_matte_error-ok & metal_sum_matte_trend-ze
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ze
                   factor: 1
               - name: rule_6
                 label: Сумма ЦМ в штейне в норме, тренд на обогащение
                 antecedent: metal_sum_matte_error-ok & metal_sum_matte_trend-ps
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ns
                   factor: 1
               - name: rule_7
                 label: Сумма ЦМ в штейне высокая, тренд на обеднение
                 antecedent: metal_sum_matte_error-high & metal_sum_matte_trend-ns
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ze
                   factor: 1
               - name: rule_8
                 label: Сумма ЦМ в штейне высокая и не меняется
                 antecedent: metal_sum_matte_error-high & metal_sum_matte_trend-ze
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: ns
                   factor: 1
               - name: rule_9
                 label: Сумма ЦМ в штейне высокая, тренд на обогащение
                 antecedent: metal_sum_matte_error-high & metal_sum_matte_trend-ps
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: nb
                   factor: 1
               - name: rule_10
                 label: Сумма ЦМ в штейне критически высокая
                 antecedent: metal_sum_matte_error-crit_high
                 consequent:
-                - name: oxygen_u_matte
+                - name: oxygen_delta_matte
                   term: nc
                   factor: 1
           antecedent_fuzzy_params:
@@ -273,7 +273,7 @@ nodes:
           consequent_fuzzy_params:
           - __instance__: Type1ConsequentVariableConfig
             params:
-              name: oxygen_u_matte
+              name: oxygen_delta_matte
               terms:
               - term_label: nc
                 bounds_type: trimf
@@ -333,42 +333,42 @@ nodes:
               - Co_slag_trend
               - metal_sum_matte_error1
               consequent_names:
-              - oxygen_u_slag
+              - oxygen_delta_slag
               granularity: 1000
               rules:
               - name: rule_1
                 label: Со в шлаке падает
                 antecedent: Co_slag_trend-ns & ~metal_sum_matte_error1-high
                 consequent:
-                - name: oxygen_u_slag
+                - name: oxygen_delta_slag
                   term: ps
                   factor: 1
               - name: rule_2
                 label: Со в шлаке падает и cумма ЦМ в штейне высокая
                 antecedent: Co_slag_trend-ns & metal_sum_matte_error1-high
                 consequent:
-                - name: oxygen_u_slag
+                - name: oxygen_delta_slag
                   term: ze
                   factor: 1
               - name: rule_3
                 label: Со в шлаке не меняется
                 antecedent: Co_slag_trend-ze
                 consequent:
-                - name: oxygen_u_slag
+                - name: oxygen_delta_slag
                   term: ze
                   factor: 1
               - name: rule_4
                 label: Со в шлаке растет
                 antecedent: Co_slag_trend-ps & ~metal_sum_matte_error1-low
                 consequent:
-                - name: oxygen_u_slag
+                - name: oxygen_delta_slag
                   term: ns
                   factor: 1
               - name: rule_5
                 label: Со в шлаке растет и cумма ЦМ в штейне низкая
                 antecedent: Co_slag_trend-ps & metal_sum_matte_error1-low
                 consequent:
-                - name: oxygen_u_slag
+                - name: oxygen_delta_slag
                   term: ze
                   factor: 1
           antecedent_fuzzy_params:
@@ -425,7 +425,7 @@ nodes:
           consequent_fuzzy_params:
           - __instance__: Type1ConsequentVariableConfig
             params:
-              name: oxygen_u_slag
+              name: oxygen_delta_slag
               terms:
               - term_label: ns
                 bounds_type: trimf
@@ -462,14 +462,14 @@ nodes:
               - Fe3O4__Fe_conc_trend
               - metal_sum_matte_error1
               consequent_names:
-              - oxygen_u_conc
+              - oxygen_delta_conc
               granularity: 1000
               rules:
               - name: rule_1
                 label: Сумма ЦМ в отношении к Fe в концентрате падает
                 antecedent: metal_sum__Fe_conc_trend-ns & ~metal_sum_matte_error1-high
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ps
                   factor: 1
               - name: rule_2
@@ -477,21 +477,21 @@ nodes:
                   штейне высокая
                 antecedent: metal_sum__Fe_conc_trend-ns & metal_sum_matte_error1-high
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ze
                   factor: 1
               - name: rule_3
                 label: Сумма ЦМ в отношении к Fe в концентрате не меняется
                 antecedent: metal_sum__Fe_conc_trend-ze
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ze
                   factor: 1
               - name: rule_4
                 label: Сумма ЦМ в отношении к Fe в концентрате растет
                 antecedent: metal_sum__Fe_conc_trend-ps & ~metal_sum_matte_error1-low
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ns
                   factor: 1
               - name: rule_5
@@ -499,14 +499,14 @@ nodes:
                   штейне низкая
                 antecedent: metal_sum__Fe_conc_trend-ps & metal_sum_matte_error1-low
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ze
                   factor: 1
               - name: rule_6
                 label: Магнетит в отношении к Fe в концентрате падает
                 antecedent: Fe3O4__Fe_conc_trend-ns & ~metal_sum_matte_error1-high
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ps
                   factor: 1
               - name: rule_7
@@ -514,21 +514,21 @@ nodes:
                   штейне высокая
                 antecedent: Fe3O4__Fe_conc_trend-ns & metal_sum_matte_error1-high
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ze
                   factor: 1
               - name: rule_8
                 label: Магнетит в отношении к Fe в концентрате не меняется
                 antecedent: Fe3O4__Fe_conc_trend-ze
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ze
                   factor: 1
               - name: rule_9
                 label: Магнетит в отношении к Fe в концентрате растет
                 antecedent: Fe3O4__Fe_conc_trend-ps & ~metal_sum_matte_error1-low
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ns
                   factor: 1
               - name: rule_10
@@ -536,7 +536,7 @@ nodes:
                   штейне низкая
                 antecedent: Fe3O4__Fe_conc_trend-ps & metal_sum_matte_error1-low
                 consequent:
-                - name: oxygen_u_conc
+                - name: oxygen_delta_conc
                   term: ze
                   factor: 1
           antecedent_fuzzy_params:
@@ -618,7 +618,7 @@ nodes:
           consequent_fuzzy_params:
           - __instance__: Type1ConsequentVariableConfig
             params:
-              name: oxygen_u_conc
+              name: oxygen_delta_conc
               terms:
               - term_label: ns
                 bounds_type: trimf
@@ -644,21 +644,24 @@ nodes:
       signals_ids:
       - nmz_fsf1_metal_sum_matte
       - PIMS_Flow_000483.PV
-      - nmz_fsf1_oxygen_u
+      - nmz_fsf1_oxygen_u_fuzzy
       - nmz_fsf1_oxygen_delta_cumulative
       - nmz_fsf1_oxygen_max
       - nmz_fsf1_oxygen_min
       - PIMS_Flow_000035.PV
+      - nmz_fsf12_high_freq_heartbeat
       - NiCuCo_matte_true_fsf_1_target_rel_ub
       - NiCuCo_matte_true_fsf_1_target_rel_lb
       - NiCuCo_matte_true_fsf_1_set_target
       - nmz_fsf1_mpc_is_selected_flag
+      - nmz_fsf1_stable_mode_flag
   split_df_1:
     type: df_split
     params:
       column_groups:
       - - PIMS_Flow_000035.PV
         - nmz_fsf1_mpc_is_selected_flag
+        - nmz_fsf1_stable_mode_flag
       - - PIMS_Flow_000035.PV
   subscription:
     type: platform_raw_subscription
@@ -666,18 +669,6 @@ nodes:
       history_size: 10h
       freeze_warning_every: 2
       listen_signals:
-      - LIMS_41-1.24_Выборка_Ni
-      - LIMS_41-1.24a_Выборка_Ni
-      - LIMS_41-1.24b_Выборка_Ni
-      - LIMS_41-1.24c_Выборка_Ni
-      - LIMS_41-1.24_Выборка_Cu
-      - LIMS_41-1.24a_Выборка_Cu
-      - LIMS_41-1.24b_Выборка_Cu
-      - LIMS_41-1.24c_Выборка_Cu
-      - LIMS_41-1.24_Выборка_Co
-      - LIMS_41-1.24a_Выборка_Co
-      - LIMS_41-1.24b_Выборка_Co
-      - LIMS_41-1.24c_Выборка_Co
       - LIMS_41-1.24_Выборка_SiO2
       - LIMS_41-1.24a_Выборка_SiO2
       - LIMS_41-1.24b_Выборка_SiO2
@@ -695,24 +686,13 @@ nodes:
       - nmz_fsf1_metal_sum_matte_nofill
       - nmz_fsf1_Co_slag_nofill
       - nmz_fsf1_metal_sum__Fe_conc_nofill
+      - nmz_fsf1_metal_sum_matte_corrected
   merge_df_1:
     type: df_merge
   rename_input:
     type: df_rename
     params:
       rename_dict:
-        LIMS_41-1.24_Выборка_Ni: Ni_matte_1
-        LIMS_41-1.24a_Выборка_Ni: Ni_matte_2
-        LIMS_41-1.24b_Выборка_Ni: Ni_matte_3
-        LIMS_41-1.24c_Выборка_Ni: Ni_matte_4
-        LIMS_41-1.24_Выборка_Cu: Cu_matte_1
-        LIMS_41-1.24a_Выборка_Cu: Cu_matte_2
-        LIMS_41-1.24b_Выборка_Cu: Cu_matte_3
-        LIMS_41-1.24c_Выборка_Cu: Cu_matte_4
-        LIMS_41-1.24_Выборка_Co: Co_matte_1
-        LIMS_41-1.24a_Выборка_Co: Co_matte_2
-        LIMS_41-1.24b_Выборка_Co: Co_matte_3
-        LIMS_41-1.24c_Выборка_Co: Co_matte_4
         LIMS_41-1.24_Выборка_SiO2: SiO2_matte_1
         LIMS_41-1.24a_Выборка_SiO2: SiO2_matte_2
         LIMS_41-1.24b_Выборка_SiO2: SiO2_matte_3
@@ -728,7 +708,8 @@ nodes:
         LIMS_41-1.1_Двачаса_Fe3O4: Fe3O4_conc
         PIMS_Flow_000483.PV: oxygen_sp
         PIMS_Flow_000035.PV: fsf_conc_feedrate_2
-        nmz_fsf1_oxygen_u: oxygen_u_prev
+        nmz_fsf1_oxygen_u_fuzzy: oxygen_u_prev
+        nmz_fsf1_metal_sum_matte_corrected: metal_sum_matte_nofill
         nmz_fsf1_metal_sum_matte: metal_sum_matte_prev
         nmz_fsf1_metal_sum_matte_nofill: metal_sum_matte_nofill_prev
         nmz_fsf1_Co_slag_nofill: Co_slag_nofill_prev
@@ -740,6 +721,7 @@ nodes:
         NiCuCo_matte_true_fsf_1_target_rel_lb: metal_sum_matte_lower_bound
         NiCuCo_matte_true_fsf_1_set_target: metal_sum_matte_target
         nmz_fsf1_mpc_is_selected_flag: mpc_is_selected_flag
+        nmz_fsf1_stable_mode_flag: stable_mode_flag
   preprocessing_pipeline:
     type: mdk_sequential_pipeline
     params:
@@ -760,30 +742,6 @@ nodes:
                 - SiO2_matte_1.fillna(SiO2_matte_2).fillna(SiO2_matte_3).fillna(SiO2_matte_4).ffill()
               - - contaminated_matte
                 - SiO2_matte > 0.8
-              - - Ni_matte
-                - Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4).ffill()
-              - - Cu_matte
-                - Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4).ffill()
-              - - Co_matte
-                - Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4).ffill()
-              - - metal_sum_matte_true
-                - Ni_matte + Cu_matte + Co_matte
-              - - Ni_matte_1
-                - Ni_matte_1 - 0.6
-              - - Ni_matte_2
-                - Ni_matte_2 + 0.5
-              - - Ni_matte_3
-                - Ni_matte_3 + 0.4
-              - - Ni_matte_4
-                - Ni_matte_4 - 0.5
-              - - Ni_matte
-                - Ni_matte_1.fillna(Ni_matte_2).fillna(Ni_matte_3).fillna(Ni_matte_4)
-              - - Cu_matte
-                - Cu_matte_1.fillna(Cu_matte_2).fillna(Cu_matte_3).fillna(Cu_matte_4)
-              - - Co_matte
-                - Co_matte_1.fillna(Co_matte_2).fillna(Co_matte_3).fillna(Co_matte_4)
-              - - metal_sum_matte_nofill
-                - Ni_matte + Cu_matte + Co_matte
               - - new_data_flag_matte
                 - metal_sum_matte_nofill.shift(-1).isna().ne(metal_sum_matte_nofill_prev.shift(-1).isna(),
                   axis=0)
@@ -857,11 +815,11 @@ nodes:
                 - Fe3O4__Fe_conc.ffill()
               - - metal_sum__Fe_conc
                 - metal_sum__Fe_conc_nofill.ffill()
-              - - oxygen_u_matte
+              - - oxygen_delta_matte
                 - '0'
-              - - oxygen_u_slag
+              - - oxygen_delta_slag
                 - '0'
-              - - oxygen_u_conc
+              - - oxygen_delta_conc
                 - '0'
   execute_matte_fuzzy_controller:
     type: mdk_controller_execute
@@ -893,7 +851,7 @@ nodes:
               eval_engine: python
               expressions:
               - - oxygen_delta
-                - oxygen_u_matte + oxygen_u_slag + oxygen_u_conc
+                - oxygen_delta_matte + oxygen_delta_slag + oxygen_delta_conc
               - - oxygen_delta
                 - oxygen_delta.round(3)
               - - oxygen_delta_cumulative
@@ -912,14 +870,14 @@ nodes:
                   + (~deltas_codirected_pos & ~deltas_codirected_neg) * oxygen_delta_cumulative
               - - threshold_condition
                 - oxygen_delta_cumulative.abs().ge(0.7).max()
-              - - oxygen_u
+              - - oxygen_delta_filtered
                 - threshold_condition * oxygen_delta_cumulative.round()
               - - oxygen_delta_cumulative
-                - oxygen_delta_cumulative - oxygen_u
+                - oxygen_delta_cumulative - oxygen_delta_filtered
+              - - oxygen_delta_filtered
+                - oxygen_delta_filtered.fillna(0)
               - - oxygen_u
-                - oxygen_u.fillna(0)
-              - - oxygen_u
-                - oxygen_sp + oxygen_u
+                - oxygen_sp + oxygen_delta_filtered
               - - oxygen_u
                 - oxygen_u.clip(oxygen_min, oxygen_max)
               - - oxygen_u_rec
@@ -943,7 +901,6 @@ nodes:
     type: df_rename
     params:
       rename_dict:
-        metal_sum_matte_true: nmz_fsf1_metal_sum_matte_true
         metal_sum_matte_nofill: nmz_fsf1_metal_sum_matte_nofill
         metal_sum_matte: nmz_fsf1_metal_sum_matte
         metal_sum_matte_trend: nmz_fsf1_metal_sum_matte_trend
@@ -964,11 +921,11 @@ nodes:
         control_explanation: nmz_fsf1_control_explanation
         metal_sum_matte_target: nmz_fsf1_metal_sum_matte_target
         oxygen_delta_cumulative: nmz_fsf1_oxygen_delta_cumulative
-        oxygen_u_matte: nmz_fsf1_oxygen_u_matte
-        oxygen_u_slag: nmz_fsf1_oxygen_u_slag
-        oxygen_u_conc: nmz_fsf1_oxygen_u_conc
-        oxygen_u: nmz_fsf1_oxygen_u
-        oxygen_u_rec: nmz_fsf1_oxygen_u_rec
+        oxygen_delta_matte: nmz_fsf1_oxygen_delta_matte
+        oxygen_delta_slag: nmz_fsf1_oxygen_delta_slag
+        oxygen_delta_conc: nmz_fsf1_oxygen_delta_conc
+        oxygen_u: nmz_fsf1_oxygen_u_fuzzy
+        oxygen_u_rec: nmz_fsf1_oxygen_u_fuzzy_rec
         oxygen_sp: nmz_fsf1_oxygen_sp_prev
         new_data_flag_matte: nmz_fsf1_new_data_flag_matte
         new_data_flag_slag: nmz_fsf1_new_data_flag_slag
@@ -988,8 +945,11 @@ nodes:
             params:
               expressions:
               - - nmz_fsf1_oxygen_u_merged
-                - nmz_fsf1_oxygen_u * (1 - nmz_fsf1_mpc_is_selected_flag) + (-999)
-                  * nmz_fsf1_mpc_is_selected_flag
+                - nmz_fsf1_oxygen_u_fuzzy * (1 - nmz_fsf1_mpc_is_selected_flag) +
+                  (-999) * nmz_fsf1_mpc_is_selected_flag
+              - - nmz_fsf1_oxygen_u_merged
+                - nmz_fsf1_oxygen_u_merged * nmz_fsf1_stable_mode_flag + (-999) *
+                  (1 - nmz_fsf1_stable_mode_flag)
           - __instance__: DropAxisItemByValues
             params:
               axis: 1
@@ -1008,7 +968,6 @@ nodes:
     params:
       strict: false
       signals_ids:
-      - nmz_fsf1_metal_sum_matte_true
       - nmz_fsf1_metal_sum_matte
       - nmz_fsf1_metal_sum_matte_trend
       - nmz_fsf1_metal_sum_matte_error
@@ -1022,11 +981,11 @@ nodes:
       - nmz_fsf1_Fe3O4__Fe_conc_trend
       - nmz_fsf1_oxygen_delta
       - nmz_fsf1_oxygen_delta_cumulative
-      - nmz_fsf1_oxygen_u_matte
-      - nmz_fsf1_oxygen_u_slag
-      - nmz_fsf1_oxygen_u_conc
-      - nmz_fsf1_oxygen_u
-      - nmz_fsf1_oxygen_u_rec
+      - nmz_fsf1_oxygen_delta_matte
+      - nmz_fsf1_oxygen_delta_slag
+      - nmz_fsf1_oxygen_delta_conc
+      - nmz_fsf1_oxygen_u_fuzzy
+      - nmz_fsf1_oxygen_u_fuzzy_rec
       - nmz_fsf1_oxygen_sp_prev
       - nmz_fsf1_new_data_flag_matte
       - nmz_fsf1_new_data_flag_slag
@@ -1110,15 +1069,12 @@ runner:
   type: scheduled
   params:
     n_retries: 1
-    heartbeat_signal: nmz_fsf1_controller_heartbeat
+    heartbeat_signal: nmz_fsf1_fuzzy_controller_heartbeat
     triggers:
     - type: on_signal_update
       params:
         signal_public_ids:
-        - LIMS_41-1.24_Выборка_Ni
-        - LIMS_41-1.24a_Выборка_Ni
-        - LIMS_41-1.24b_Выборка_Ni
-        - LIMS_41-1.24c_Выборка_Ni
+        - nmz_fsf1_metal_sum_matte_corrected
         - LIMS_41-1.25_Выборка_Co
         - LIMS_41-1.25a_Выборка_Co
         - LIMS_41-1.1_Двачаса_Ni
