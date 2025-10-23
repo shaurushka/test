@@ -1,4 +1,4 @@
-﻿version: '1'
+version: '1'
 hooks:
 - type: log_node_output
   params: 
@@ -32,8 +32,6 @@ relations:
   new_data_flag_computation:
     inputs: out_2_2
     outputs: out_2_3
-  platform_write:
-    inputs: out_2_1
   write_last:
     inputs: out_2_3
   dropna:
@@ -273,28 +271,28 @@ nodes:
           steps:
           - __instance__: ColumnsResample
             params:
-              interval: 1min
+              interval: 30min
               method: last
           - __instance__: PandasEval
             params:
               expressions:
                 # matte  
                 - - has_new_data_matte
-                  - ~(nmz_fsf2_metal_sum_matte_raw.shift(-1).isna())
+                  - "(~nmz_fsf2_metal_sum_matte_raw.shift(-1).isna())"
                 - - no_old_data_matte
                   - last_lims_matte_prev.shift(-1).isna()
                 - - new_data_matte
                   - (has_new_data_matte & no_old_data_matte) 
                 # slag
                 - - has_new_data_slag
-                  - ~(nmz_fsf2_metal_sum_slag_raw.shift(-1).isna())
+                  - "(~nmz_fsf2_metal_sum_slag_raw.shift(-1).isna())"
                 - - no_old_data_slag
                   - last_lims_slag_prev.shift(-1).isna()
                 - - new_data_slag
                   - (has_new_data_slag & no_old_data_slag) 
                 # conc
                 - - has_new_data_conc
-                  - ~(nmz_fsf2_metal_sum_conc.shift(-1).isna())
+                  - (~nmz_fsf2_metal_sum_conc.shift(-1).isna())
                 - - no_old_data_conc
                   - last_lims_conc_prev.shift(-1).isna()
                 - - new_data_conc
@@ -302,29 +300,29 @@ nodes:
                 # new data trigger
                 - - new_data
                   - (new_data_matte | new_data_slag | new_data_conc) * 1
-                - - nmz_fsf2_new_lims_analysis_trigger
+                - - nmz_fsf2_new_lims_analysis_trigger_test
                   - new_data.max()
                 # new data trigger
                 - - new_data_matte
                   - new_data_matte * 1
-                - - nmz_fsf2_new_lims_analysis_matte_trigger
+                - - nmz_fsf2_new_lims_analysis_matte_trigger_test
                   - new_data_matte.max()
                 - - new_data_slag
                   - new_data_slag * 1
-                - - nmz_fsf2_new_lims_analysis_slag_trigger
+                - - nmz_fsf2_new_lims_analysis_slag_trigger_test
                   - new_data_slag.max()
                 - - new_data_conc
                   - new_data_conc * 1
-                - - nmz_fsf2_new_lims_analysis_conc_trigger
+                - - nmz_fsf2_new_lims_analysis_conc_trigger_test
                   - new_data_conc.max()          
           - __instance__: DropAxisItemByValues
             params:
               axis: 1
               columns:
-              - nmz_fsf2_new_lims_analysis_trigger
-              - nmz_fsf2_new_lims_analysis_matte_trigger
-              - nmz_fsf2_new_lims_analysis_slag_trigger
-              - nmz_fsf2_new_lims_analysis_conc_trigger
+              - nmz_fsf2_new_lims_analysis_trigger_test
+              - nmz_fsf2_new_lims_analysis_matte_trigger_test
+              - nmz_fsf2_new_lims_analysis_slag_trigger_test
+              - nmz_fsf2_new_lims_analysis_conc_trigger_test
               values:
               - 0
   split_df_2:
@@ -376,33 +374,6 @@ nodes:
               values:
               - False
               how: any
-  platform_write:
-    type: platform_write
-    params:
-      strict: false
-      nan_strategy: drop
-      signals_ids:
-      - nmz_fsf2_metal_sum_conc
-      - last_lims_matte_fsf_2_Выборка_SiO2
-      - last_lims_matte_fsf_2_Выборка_S
-      - last_lims_matte_fsf_2_Выборка_Fe
-      - last_lims_matte_fsf_2_Выборка_Fe3O4
-      - last_lims_matte_fsf_2_Выборка_Co
-      - last_lims_matte_fsf_2_Выборка_Cu
-      - last_lims_matte_fsf_2_Выборка_Ni
-      - nmz_fsf2_metal_sum_matte_raw
-      - last_lims_slag_fsf_2_Выборка_SiO2
-      - last_lims_slag_fsf_2_Выборка_S
-      - last_lims_slag_fsf_2_Выборка_Fe
-      - last_lims_slag_fsf_2_Выборка_Fe3O4
-      - last_lims_slag_fsf_2_Выборка_Co
-      - last_lims_slag_fsf_2_Выборка_Cu
-      - last_lims_slag_fsf_2_Выборка_Ni
-      - last_lims_slag_fsf_2_Выборка_Al2O3
-      - last_lims_slag_fsf_2_Выборка_MgO
-      - last_lims_slag_fsf_2_Выборка_CaO
-      - nmz_fsf2_metal_sum_slag_raw
-      - last_lims_analysis_fsf_2
       
   write_last:
     type: platform_write_last
@@ -410,16 +381,15 @@ nodes:
       strict: false
       use_current_timestamp: true
       signals_ids:
-      - nmz_fsf2_new_lims_analysis_trigger
-      - nmz_fsf2_new_lims_analysis_matte_trigger
-      - nmz_fsf2_new_lims_analysis_slag_trigger
-      - nmz_fsf2_new_lims_analysis_conc_trigger
+      - nmz_fsf2_new_lims_analysis_trigger_test
+      - nmz_fsf2_new_lims_analysis_matte_trigger_test
+      - nmz_fsf2_new_lims_analysis_slag_trigger_test
+      - nmz_fsf2_new_lims_analysis_conc_trigger_test
 
 runner:
   type: scheduled
   params:
     n_retries: 1
-    heartbeat_signal: nmz_fsf2_lims_evals_heartbeat
     fail_allowed: false
     triggers:
       - type: interval_trigger
